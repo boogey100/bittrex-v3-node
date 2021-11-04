@@ -77,6 +77,21 @@ class BittrexClient {
     })
   }
 
+  /*-------------------------------------------------------------------------*
+   * V3 BALANCES ENDPOINTS (3 endpoints)
+   *-------------------------------------------------------------------------*/
+
+  async getBalances() {
+    return this.request('get', '/balances');
+  }
+
+  async getBalance(marketSymbol) {
+    return this.request('get', '/balances/' + marketSymbol);
+  }
+
+  async balanceSnapshot() {
+    return this.request('head', '/balances')
+  }
 
   /*-------------------------------------------------------------------------*
    * Public
