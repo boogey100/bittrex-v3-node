@@ -105,6 +105,18 @@ xdescribe('batch', () => {
   })
 })
 
+describe('currencies', () => {
+  it('should get currencies', async () => {
+    let results = await client.currencies()
+    results.length.should.be.aboveOrEqual(0)
+  })
+
+  it('should get currencies w/ marketSymbol', async () => {
+    let results = await client.currencies('BTC')
+    results.symbol.should.be.equals('BTC')
+  })
+})
+
 
 xdescribe('bittrex-node', () => {
   describe('public', () => {

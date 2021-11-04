@@ -210,12 +210,16 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 ConditionalOrders ENDPOINTS (6 endpoints)
-     *-------------------------------------------------------------------------*/
-    /*-------------------------------------------------------------------------*
-     * V3 CURRENCIES ENDPOINTS (2 endpoints)
-     *-------------------------------------------------------------------------*/
+    BittrexClient.prototype.currencies = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (marketSymbol) {
+                    return [2 /*return*/, this.request('get', '/currencies/' + marketSymbol)];
+                }
+                return [2 /*return*/, this.request('get', '/currencies')];
+            });
+        });
+    };
     /*-------------------------------------------------------------------------*
      * V3 DEPOSITS ENDPOINTS (5 endpoints)
      *-------------------------------------------------------------------------*/
@@ -260,17 +264,6 @@ var BittrexClient = /** @class */ (function () {
                         results = _a.sent();
                         return [2 /*return*/, this.parseDates(results, ['Created'])];
                 }
-            });
-        });
-    };
-    /**
-     * @method currencies
-     * @return {Promise}
-     */
-    BittrexClient.prototype.currencies = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/public/getcurrencies')];
             });
         });
     };

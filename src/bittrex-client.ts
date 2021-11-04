@@ -259,6 +259,40 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 CURRENCIES ENDPOINTS (2 endpoints)
    *-------------------------------------------------------------------------*/
+  async currencies(): Promise<{
+    symbol: string
+    name: string
+    coinType: string
+    status: 'online' | 'offline'
+    minConfirmations: number
+    notice: string
+    txFee: number
+    logoUrl: string
+    prohibitedIn: string[]
+    baseAddress: string
+    associatedTermsOfService: string[]
+    tags: string[]
+  }[]>;
+  async currencies(marketSymbol: string): Promise<{
+    symbol: string
+    name: string
+    coinType: string
+    status: 'online' | 'offline'
+    minConfirmations: number
+    notice: string
+    txFee: number
+    logoUrl: string
+    prohibitedIn: string[]
+    baseAddress: string
+    associatedTermsOfService: string[]
+    tags: string[]
+  }>;
+  async currencies(marketSymbol?: string) {
+    if (marketSymbol) {
+      return this.request('get', '/currencies/' + marketSymbol)
+    }
+    return this.request('get', '/currencies');
+  }
   /*-------------------------------------------------------------------------*
    * V3 DEPOSITS ENDPOINTS (5 endpoints)
    *-------------------------------------------------------------------------*/
@@ -298,14 +332,6 @@ class BittrexClient {
   async markets() {
     const results = await this.request('get', '/public/getmarkets')
     return this.parseDates(results, ['Created'])
-  }
-
-  /**
-   * @method currencies
-   * @return {Promise}
-   */
-  async currencies() {
-    return this.request('get', '/public/getcurrencies')
   }
 
   /**

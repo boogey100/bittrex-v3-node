@@ -174,16 +174,39 @@ declare class BittrexClient {
         status: number;
         payload: any;
     }[]>;
+    currencies(): Promise<{
+        symbol: string;
+        name: string;
+        coinType: string;
+        status: 'online' | 'offline';
+        minConfirmations: number;
+        notice: string;
+        txFee: number;
+        logoUrl: string;
+        prohibitedIn: string[];
+        baseAddress: string;
+        associatedTermsOfService: string[];
+        tags: string[];
+    }[]>;
+    currencies(marketSymbol: string): Promise<{
+        symbol: string;
+        name: string;
+        coinType: string;
+        status: 'online' | 'offline';
+        minConfirmations: number;
+        notice: string;
+        txFee: number;
+        logoUrl: string;
+        prohibitedIn: string[];
+        baseAddress: string;
+        associatedTermsOfService: string[];
+        tags: string[];
+    }>;
     /**
      * @method markets
      * @return {Promise}
      */
     markets(): Promise<any>;
-    /**
-     * @method currencies
-     * @return {Promise}
-     */
-    currencies(): Promise<unknown>;
     /**
      * @method ticker
      * @param {String} market
