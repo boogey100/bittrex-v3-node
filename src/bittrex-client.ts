@@ -3,36 +3,6 @@ import * as crypto from 'crypto'
 import * as https from 'https'
 import * as querystring from 'querystring'
 
-interface NewOrder {
-  marketSymbol: string
-  direction: 'buy' | 'sell'
-  type: 'limit' | 'market' | 'ceiling_limit' | 'ceiling_market'
-  quantity?: number
-  ceiling?: number
-  limit?: number
-  timeInForce: 'good_til_cancelled' | 'immediate_or_cancel' | 'fill_or_kill' | 'post_only_good_til_cancelled' | 'buy_now' | 'instant'
-  clientOrderId?: string
-  useAwards: boolean
-}
-
-interface DeleteOrder {
-  id: string
-}
-
-interface BatchSchemaDelete {
-  resource: 'order'
-  operation: 'delete'
-  payload: DeleteOrder
-}
-interface BatchSchemaPost {
-  resource: 'order'
-  operation: 'post'
-  payload: NewOrder
-}
-type BatchSchema = BatchSchemaDelete | BatchSchemaPost
-
-type BatchSchemaBody = BatchSchema[]
-
 class BittrexClient {
 
   private _apiKey: string
@@ -68,10 +38,8 @@ class BittrexClient {
    * More fields will be added later.
    * @returns {Promise}
    */
-  async account() {
-    return this.request<{
-      accountId: string
-    }>('get', '/account')
+  async account(): Promise<Account> {
+    return this.request('get', '/account')
   }
 
   /**
@@ -80,12 +48,8 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountFeesTrading(): Promise<{
-    marketSymbol: string, makerRate: string, takerRate: string
-  }[]>;
-  async accountFeesTrading(marketSymbol: string): Promise<{
-    marketSymbol: string, makerRate: string, takerRate: string
-  }>;
+  async accountFeesTrading(): Promise<CommissionRatesWithMarket[]>;
+  async accountFeesTrading(marketSymbol: string): Promise<CommissionRatesWithMarket>;
   async accountFeesTrading(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/account/fees/trading/' + marketSymbol)
@@ -97,11 +61,8 @@ class BittrexClient {
    * Get 30 day volume for account
    * @returns {Promise}
    */
-  async accountVolume() {
-    return this.request<{
-      updated: string
-      volume30days: string
-    }>('get', '/account/volume')
+  async accountVolume(): Promise<AccountVolume> {
+    return this.request('get', '/account/volume')
   }
 
   /**
@@ -110,9 +71,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountPermissionsMarkets(marketSymbol?: string): Promise<{
-    symbol: string, view: boolean, buy: boolean, sell: boolean
-  }[]> {
+  async accountPermissionsMarkets(marketSymbol?: string): Promise<MarketPolicy[]> {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/markets/' + marketSymbol)
     }
@@ -125,21 +84,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountPermissionsCurrencies(marketSymbol?: string): Promise<{
-    symbol: string,
-    view: boolean,
-    deposit: {
-      blockchain?: boolean
-      creditCard?: boolean
-      wireTransfer?: boolean
-      ach?: boolean
-    },
-    withdraw: {
-      blockchain?: boolean
-      wireTransfer?: boolean
-      ach?: boolean
-    }
-  }[]> {
+  async accountPermissionsCurrencies(marketSymbol?: string): Promise<CurrencyPolicy[]> {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/currencies/' + marketSymbol)
     }
@@ -156,18 +101,8 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async addresses(): Promise<{
-    status: 'REQUESTED' | 'PROVISIONED',
-    currencySymbol: string,
-    cryptoAddress: string,
-    cryptoAddressTag?: string
-  }[]>
-  async addresses(marketSymbol: string): Promise<{
-    status: 'REQUESTED' | 'PROVISIONED',
-    currencySymbol: string,
-    cryptoAddress: string,
-    cryptoAddressTag?: string
-  }>
+  async addresses(): Promise<Address[]>
+  async addresses(marketSymbol: string): Promise<Address>
   async addresses(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/addresses/' + marketSymbol)
@@ -185,12 +120,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async addressCreate(marketSymbol: string): Promise<{
-    status: 'REQUESTED' | 'PROVISIONED',
-    currencySymbol: string,
-    cryptoAddress: string,
-    cryptoAddressTag?: string
-  }> {
+  async addressCreate(marketSymbol: string): Promise<Address> {
     return this.request('post', '/addresses', {
       body: {
         currencySymbol: marketSymbol
@@ -208,12 +138,7 @@ class BittrexClient {
    * is either a balance or an address.
    * @returns {Promise}
    */
-  async getBalances(): Promise<{
-    currencySymbol: string,
-    total: string
-    available: string
-    updatedAt: string
-  }[]> {
+  async balances(): Promise<Balance[]> {
     return this.request('get', '/balances');
   }
 
@@ -224,12 +149,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async getBalance(marketSymbol: string): Promise<{
-    currencySymbol: string,
-    total: string
-    available: string
-    updatedAt: string
-  }> {
+  async balance(marketSymbol: string): Promise<Balance> {
     return this.request('get', '/balances/' + marketSymbol);
   }
 
@@ -259,34 +179,8 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 CURRENCIES ENDPOINTS (2 endpoints)
    *-------------------------------------------------------------------------*/
-  async currencies(): Promise<{
-    symbol: string
-    name: string
-    coinType: string
-    status: 'online' | 'offline'
-    minConfirmations: number
-    notice: string
-    txFee: number
-    logoUrl: string
-    prohibitedIn: string[]
-    baseAddress: string
-    associatedTermsOfService: string[]
-    tags: string[]
-  }[]>;
-  async currencies(marketSymbol: string): Promise<{
-    symbol: string
-    name: string
-    coinType: string
-    status: 'online' | 'offline'
-    minConfirmations: number
-    notice: string
-    txFee: number
-    logoUrl: string
-    prohibitedIn: string[]
-    baseAddress: string
-    associatedTermsOfService: string[]
-    tags: string[]
-  }>;
+  async currencies(): Promise<Currency[]>;
+  async currencies(marketSymbol: string): Promise<Currency>;
   async currencies(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/currencies/' + marketSymbol)
@@ -370,6 +264,10 @@ class BittrexClient {
    * V3 Ping ENDPOINTS (1 endpoints)
    *-------------------------------------------------------------------------*/
 
+  /**
+   * 
+   * @returns {Promise}
+   */
   async ping() {
     return this.request('get', '/ping');
   }

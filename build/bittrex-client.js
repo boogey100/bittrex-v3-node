@@ -166,7 +166,7 @@ var BittrexClient = /** @class */ (function () {
      * is either a balance or an address.
      * @returns {Promise}
      */
-    BittrexClient.prototype.getBalances = function () {
+    BittrexClient.prototype.balances = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.request('get', '/balances')];
@@ -180,7 +180,7 @@ var BittrexClient = /** @class */ (function () {
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    BittrexClient.prototype.getBalance = function (marketSymbol) {
+    BittrexClient.prototype.balance = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.request('get', '/balances/' + marketSymbol)];
@@ -348,6 +348,10 @@ var BittrexClient = /** @class */ (function () {
     /*-------------------------------------------------------------------------*
      * V3 Ping ENDPOINTS (1 endpoints)
      *-------------------------------------------------------------------------*/
+    /**
+     *
+     * @returns {Promise}
+     */
     BittrexClient.prototype.ping = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

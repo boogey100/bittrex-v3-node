@@ -1,29 +1,3 @@
-interface NewOrder {
-    marketSymbol: string;
-    direction: 'buy' | 'sell';
-    type: 'limit' | 'market' | 'ceiling_limit' | 'ceiling_market';
-    quantity?: number;
-    ceiling?: number;
-    limit?: number;
-    timeInForce: 'good_til_cancelled' | 'immediate_or_cancel' | 'fill_or_kill' | 'post_only_good_til_cancelled' | 'buy_now' | 'instant';
-    clientOrderId?: string;
-    useAwards: boolean;
-}
-interface DeleteOrder {
-    id: string;
-}
-interface BatchSchemaDelete {
-    resource: 'order';
-    operation: 'delete';
-    payload: DeleteOrder;
-}
-interface BatchSchemaPost {
-    resource: 'order';
-    operation: 'post';
-    payload: NewOrder;
-}
-declare type BatchSchema = BatchSchemaDelete | BatchSchemaPost;
-declare type BatchSchemaBody = BatchSchema[];
 declare class BittrexClient {
     private _apiKey;
     private _apiSecret;
@@ -43,114 +17,57 @@ declare class BittrexClient {
      * More fields will be added later.
      * @returns {Promise}
      */
-    account(): Promise<{
-        accountId: string;
-    }>;
+    account(): Promise<Account>;
     /**
      * Get trade fee for the given marketSymbol.
      * Get trade fees for each markets when marketSymbol is not provided.
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    accountFeesTrading(): Promise<{
-        marketSymbol: string;
-        makerRate: string;
-        takerRate: string;
-    }[]>;
-    accountFeesTrading(marketSymbol: string): Promise<{
-        marketSymbol: string;
-        makerRate: string;
-        takerRate: string;
-    }>;
+    accountFeesTrading(): Promise<CommissionRatesWithMarket[]>;
+    accountFeesTrading(marketSymbol: string): Promise<CommissionRatesWithMarket>;
     /**
      * Get 30 day volume for account
      * @returns {Promise}
      */
-    accountVolume(): Promise<{
-        updated: string;
-        volume30days: string;
-    }>;
+    accountVolume(): Promise<AccountVolume>;
     /**
      * Get trading permissions when marketSymbol is not provided.
      * Get trading permissions for a single market.
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    accountPermissionsMarkets(marketSymbol?: string): Promise<{
-        symbol: string;
-        view: boolean;
-        buy: boolean;
-        sell: boolean;
-    }[]>;
+    accountPermissionsMarkets(marketSymbol?: string): Promise<MarketPolicy[]>;
     /**
      * Get currency permissions for a single currency.
      * Get all currency permissions when marketSymbol is not provided.
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    accountPermissionsCurrencies(marketSymbol?: string): Promise<{
-        symbol: string;
-        view: boolean;
-        deposit: {
-            blockchain?: boolean;
-            creditCard?: boolean;
-            wireTransfer?: boolean;
-            ach?: boolean;
-        };
-        withdraw: {
-            blockchain?: boolean;
-            wireTransfer?: boolean;
-            ach?: boolean;
-        };
-    }[]>;
+    accountPermissionsCurrencies(marketSymbol?: string): Promise<CurrencyPolicy[]>;
     /**
      * List deposit addresses that have been requested or provisioned.
      * Retrieve the status of the deposit address for a particular currency for which one has been requested or provisioned.
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    addresses(): Promise<{
-        status: 'REQUESTED' | 'PROVISIONED';
-        currencySymbol: string;
-        cryptoAddress: string;
-        cryptoAddressTag?: string;
-    }[]>;
-    addresses(marketSymbol: string): Promise<{
-        status: 'REQUESTED' | 'PROVISIONED';
-        currencySymbol: string;
-        cryptoAddress: string;
-        cryptoAddressTag?: string;
-    }>;
-    addressStatus(marketSymbol: string): Promise<{
-        status: "REQUESTED" | "PROVISIONED";
-        currencySymbol: string;
-        cryptoAddress: string;
-        cryptoAddressTag?: string | undefined;
-    }>;
+    addresses(): Promise<Address[]>;
+    addresses(marketSymbol: string): Promise<Address>;
+    addressStatus(marketSymbol: string): Promise<Address>;
     /**
      * Request provisioning of a deposit address for a currency
      * for which no address has been requested or provisioned.
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    addressCreate(marketSymbol: string): Promise<{
-        status: 'REQUESTED' | 'PROVISIONED';
-        currencySymbol: string;
-        cryptoAddress: string;
-        cryptoAddressTag?: string;
-    }>;
+    addressCreate(marketSymbol: string): Promise<Address>;
     /**
      * List account balances across available currencies.
      * Returns a Balance entry for each currency for which there
      * is either a balance or an address.
      * @returns {Promise}
      */
-    getBalances(): Promise<{
-        currencySymbol: string;
-        total: string;
-        available: string;
-        updatedAt: string;
-    }[]>;
+    balances(): Promise<Balance[]>;
     /**
      * Retrieve account balance for a specific currency.
      * Request will always succeed when the currency exists,
@@ -158,12 +75,7 @@ declare class BittrexClient {
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    getBalance(marketSymbol: string): Promise<{
-        currencySymbol: string;
-        total: string;
-        available: string;
-        updatedAt: string;
-    }>;
+    balance(marketSymbol: string): Promise<Balance>;
     /**
      * Get sequence of balances snapshot.
      * @returns {Promise}
@@ -173,34 +85,8 @@ declare class BittrexClient {
         status: number;
         payload: any;
     }[]>;
-    currencies(): Promise<{
-        symbol: string;
-        name: string;
-        coinType: string;
-        status: 'online' | 'offline';
-        minConfirmations: number;
-        notice: string;
-        txFee: number;
-        logoUrl: string;
-        prohibitedIn: string[];
-        baseAddress: string;
-        associatedTermsOfService: string[];
-        tags: string[];
-    }[]>;
-    currencies(marketSymbol: string): Promise<{
-        symbol: string;
-        name: string;
-        coinType: string;
-        status: 'online' | 'offline';
-        minConfirmations: number;
-        notice: string;
-        txFee: number;
-        logoUrl: string;
-        prohibitedIn: string[];
-        baseAddress: string;
-        associatedTermsOfService: string[];
-        tags: string[];
-    }>;
+    currencies(): Promise<Currency[]>;
+    currencies(marketSymbol: string): Promise<Currency>;
     markets(): Promise<any>;
     marketsSummaries(): Promise<any>;
     headMarketsSummaries(): Promise<unknown>;
@@ -215,6 +101,10 @@ declare class BittrexClient {
     marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<unknown>;
     headMarketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<unknown>;
     marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<unknown>;
+    /**
+     *
+     * @returns {Promise}
+     */
     ping(): Promise<unknown>;
     /**
      * @private
