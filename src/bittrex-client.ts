@@ -39,7 +39,9 @@ class BittrexClient {
    * @returns {Promise}
    */
   async account() {
-    return this.request('get', '/account')
+    return this.request<{
+      accountId: string
+    }>('get', '/account')
   }
 
   /**
@@ -48,6 +50,12 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
+  async accountFeesTrading(): Promise<{
+    marketSymbol: string, makerRate: string, takerRate: string
+  }[]>;
+  async accountFeesTrading(marketSymbol: string): Promise<{
+    marketSymbol: string, makerRate: string, takerRate: string
+  }>;
   async accountFeesTrading(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/account/fees/trading/' + marketSymbol)
@@ -60,7 +68,10 @@ class BittrexClient {
    * @returns {Promise}
    */
   async accountVolume() {
-    return this.request('get', '/account/volume')
+    return this.request<{
+      updated: string
+      volume30days: string
+    }>('get', '/account/volume')
   }
 
   /**
@@ -69,7 +80,9 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountPermissionsMarkets(marketSymbol?: string) {
+  async accountPermissionsMarkets(marketSymbol?: string): Promise<{
+    symbol: string, view: boolean, buy: boolean, sell: boolean
+  }[]> {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/markets/' + marketSymbol)
     }
@@ -82,7 +95,21 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountPermissionsCurrencies(marketSymbol?: string) {
+  async accountPermissionsCurrencies(marketSymbol?: string): Promise<{
+    symbol: string,
+    view: boolean,
+    deposit: {
+      blockchain?: boolean
+      creditCard?: boolean
+      wireTransfer?: boolean
+      ach?: boolean
+    },
+    withdraw: {
+      blockchain?: boolean
+      wireTransfer?: boolean
+      ach?: boolean
+    }
+  }[]> {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/currencies/' + marketSymbol)
     }
@@ -99,6 +126,16 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
+   async addresses(): Promise<{
+    status: 'REQUESTED' | 'PROVISIONED',
+    currencySymbol: string,
+    cryptoAddress: string
+  }[]>
+  async addresses(marketSymbol: string): Promise<{
+    status: 'REQUESTED' | 'PROVISIONED',
+    currencySymbol: string,
+    cryptoAddress: string
+  }>
   async addresses(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/addresses/' + marketSymbol)
@@ -114,9 +151,9 @@ class BittrexClient {
    */
   async addressCreate(marketSymbol: string) {
     return this.request('post', '/addresses', {
-        body: {
-          currencySymbol: marketSymbol
-        }
+      body: {
+        currencySymbol: marketSymbol
+      }
     })
   }
 
@@ -444,7 +481,7 @@ class BittrexClient {
    * @param {Object} [options.data]
    * @param {Object} [options.params]
    */
-  async request(method: Method, url: string, { headers = {}, params = {}, body = '' }: any = {}) {
+  async request<R>(method: Method, url: string, { headers = {}, params = {}, body = '' }: any = {}): Promise<R> {
     params = this.sanitizeParams(params)
 
     if (this._apiKey) {

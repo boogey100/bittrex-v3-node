@@ -70,12 +70,6 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /**
-     * Get trade fee for the given marketSymbol.
-     * Get trade fees for each markets when marketSymbol is not provided.
-     * @param {string} marketSymbol
-     * @returns {Promise}
-     */
     BittrexClient.prototype.accountFeesTrading = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -129,15 +123,6 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 ADDRESSES ENDPOINTS (3 endpoints)
-     *-------------------------------------------------------------------------*/
-    /**
-     * List deposit addresses that have been requested or provisioned.
-     * Retrieve the status of the deposit address for a particular currency for which one has been requested or provisioned.
-     * @param {string} marketSymbol
-     * @returns {Promise}
-     */
     BittrexClient.prototype.addresses = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

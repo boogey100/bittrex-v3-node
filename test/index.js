@@ -54,7 +54,7 @@ xdescribe('account', () => {
 
 })
 
-xdescribe('addresses', () => {
+describe('addresses', () => {
   it('should get addresses', async () => {
     let results = await client.addresses()
     results.length.should.be.aboveOrEqual(0)
@@ -62,7 +62,6 @@ xdescribe('addresses', () => {
 
   it('should get addresses w/ marketSymbol', async () => {
     let results = await client.addresses('BTC')
-    should.exist(results.status)
     results.currencySymbol.should.be.equals('BTC')
   })
 
@@ -76,7 +75,7 @@ xdescribe('addresses', () => {
   })
 })
 
-describe('balances', () => {
+xdescribe('balances', () => {
   it('should get balances', async () => {
     let results = await client.getBalances()
     results.length.should.be.aboveOrEqual(0)
