@@ -1,4 +1,3 @@
-import { Method } from 'axios';
 interface NewOrder {
     marketSymbol: string;
     direction: 'buy' | 'sell';
@@ -202,41 +201,21 @@ declare class BittrexClient {
         associatedTermsOfService: string[];
         tags: string[];
     }>;
-    /**
-     * @method markets
-     * @return {Promise}
-     */
     markets(): Promise<any>;
-    /**
-     * @method ticker
-     * @param {String} market
-     * @return {Promise}
-     */
-    ticker(market: string): Promise<unknown>;
-    /**
-     * @method marketSummaries
-     * @return {Promise}
-     */
-    marketSummaries(): Promise<any>;
-    /**
-     * @method marketSummary
-     * @param {String} market
-     * @return {Promise}
-     */
-    marketSummary(market: string): Promise<any>;
-    /**
-     * @method marketHistory
-     * @param {String} market
-     * @return {Promise}
-     */
-    marketHistory(market: string): Promise<any>;
-    /**
-     * @method orderBook
-     * @param {String} market
-     * @param {String} type
-     * @return {Promise}
-     */
-    orderBook(market: string, { type }?: any): Promise<unknown>;
+    marketsSummaries(): Promise<any>;
+    headMarketsSummaries(): Promise<unknown>;
+    marketsTickers(): Promise<unknown>;
+    headMarketsTickers(): Promise<unknown>;
+    marketTicker(marketSymbol: string): Promise<unknown>;
+    market(marketSymbol: string): Promise<unknown>;
+    marketSummary(marketSymbol: string): Promise<unknown>;
+    marketOrderBook(marketSymbol: string, depth?: number): Promise<unknown>;
+    headMarketOrderBook(marketSymbol: string, depth?: number): Promise<unknown>;
+    marketTrades(marketSymbol: string): Promise<unknown>;
+    marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<unknown>;
+    headMarketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<unknown>;
+    marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<unknown>;
+    ping(): Promise<unknown>;
     /**
      * @method buyLimit
      * @param {String} market
@@ -265,23 +244,6 @@ declare class BittrexClient {
      * @return {Promise}
      */
     openOrders(market: string): Promise<any>;
-    /**
-     * @method balances
-     * @return {Promise}
-     */
-    balances(): Promise<unknown>;
-    /**
-     * @method balance
-     * @param {String} currency
-     * @return {Promise}
-     */
-    balance(currency: string): Promise<unknown>;
-    /**
-     * @method depositAddress
-     * @param {String} currency
-     * @return {Promise}
-     */
-    depositAddress(currency: string): Promise<unknown>;
     /**
      * @method withdraw
      * @param {String} currency
@@ -323,21 +285,21 @@ declare class BittrexClient {
      * @param {Object} [options.data]
      * @param {Object} [options.params]
      */
-    request<R>(method: Method, url: string, { headers, params, body }?: any): Promise<R>;
+    private request;
     /**
      * @private
      * @method requestSignature
      * @param {String} url
      * @return {String}
      */
-    requestSignature(nonce: number, path: string, method: Method, contentHash: string, params: any): string;
+    private requestSignature;
     /**
      * @private
      * @method sanitizeParams
      * @param {Object} params
      * @return {Object}
      */
-    sanitizeParams(params?: any): any;
+    private sanitizeParams;
     /**
      * @private
      * @method parseDates
@@ -345,6 +307,6 @@ declare class BittrexClient {
      * @param {Array<String>} keys
      * @return {Array<Object>}
      */
-    parseDates(results: any, keys: string[]): any;
+    private parseDates;
 }
 export default BittrexClient;

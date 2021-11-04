@@ -232,12 +232,129 @@ var BittrexClient = /** @class */ (function () {
     /*-------------------------------------------------------------------------*
      * V3 Markets ENDPOINTS (15 endpoints)
      *-------------------------------------------------------------------------*/
+    BittrexClient.prototype.markets = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/markets')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt'])];
+                }
+            });
+        });
+    };
+    BittrexClient.prototype.marketsSummaries = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/markets/summaries')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['updatedAt'])];
+                }
+            });
+        });
+    };
+    BittrexClient.prototype.headMarketsSummaries = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('head', '/markets/summaries')];
+            });
+        });
+    };
+    BittrexClient.prototype.marketsTickers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/markets/tickers')];
+            });
+        });
+    };
+    BittrexClient.prototype.headMarketsTickers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('head', '/markets/tickers')];
+            });
+        });
+    };
+    BittrexClient.prototype.marketTicker = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/ticker')];
+            });
+        });
+    };
+    BittrexClient.prototype.market = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol)];
+            });
+        });
+    };
+    BittrexClient.prototype.marketSummary = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/summary')];
+            });
+        });
+    };
+    BittrexClient.prototype.marketOrderBook = function (marketSymbol, depth) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/orderbook', { params: { depth: depth } })];
+            });
+        });
+    };
+    BittrexClient.prototype.headMarketOrderBook = function (marketSymbol, depth) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('head', '/markets/' + marketSymbol + '/orderbook', { params: { depth: depth } })];
+            });
+        });
+    };
+    BittrexClient.prototype.marketTrades = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('head', '/markets/' + marketSymbol + '/trades')];
+            });
+        });
+    };
+    BittrexClient.prototype.marketCandles = function (marketSymbol, candleInterval, candleType) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')];
+            });
+        });
+    };
+    BittrexClient.prototype.headMarketCandles = function (marketSymbol, candleInterval, candleType) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('head', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')];
+            });
+        });
+    };
+    BittrexClient.prototype.marketCandlesDate = function (marketSymbol, candleInterval, year, candleType, month, day) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/historical/' + year + (month && '/' + month) + (day && '/' + day))];
+            });
+        });
+    };
     /*-------------------------------------------------------------------------*
      * V3 Orders ENDPOINTS (8 endpoints)
      *-------------------------------------------------------------------------*/
     /*-------------------------------------------------------------------------*
      * V3 Ping ENDPOINTS (1 endpoints)
      *-------------------------------------------------------------------------*/
+    BittrexClient.prototype.ping = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/ping')];
+            });
+        });
+    };
     /*-------------------------------------------------------------------------*
      * V3 Subaccounts ENDPOINTS (7 endpoints)
      *-------------------------------------------------------------------------*/
@@ -247,123 +364,6 @@ var BittrexClient = /** @class */ (function () {
     /*-------------------------------------------------------------------------*
      * V3 Withdrawals ENDPOINTS (7 endpoints)
      *-------------------------------------------------------------------------*/
-    /*-------------------------------------------------------------------------*
-     * Public
-     *-------------------------------------------------------------------------*/
-    /**
-     * @method markets
-     * @return {Promise}
-     */
-    BittrexClient.prototype.markets = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request('get', '/public/getmarkets')];
-                    case 1:
-                        results = _a.sent();
-                        return [2 /*return*/, this.parseDates(results, ['Created'])];
-                }
-            });
-        });
-    };
-    /**
-     * @method ticker
-     * @param {String} market
-     * @return {Promise}
-     */
-    BittrexClient.prototype.ticker = function (market) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params;
-            return __generator(this, function (_a) {
-                if (!market)
-                    throw new Error('market is required');
-                params = { market: market };
-                return [2 /*return*/, this.request('get', '/public/getticker', { params: params })];
-            });
-        });
-    };
-    /**
-     * @method marketSummaries
-     * @return {Promise}
-     */
-    BittrexClient.prototype.marketSummaries = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request('get', '/public/getmarketsummaries')];
-                    case 1:
-                        results = _a.sent();
-                        return [2 /*return*/, this.parseDates(results, ['TimeStamp', 'Created'])];
-                }
-            });
-        });
-    };
-    /**
-     * @method marketSummary
-     * @param {String} market
-     * @return {Promise}
-     */
-    BittrexClient.prototype.marketSummary = function (market) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!market)
-                            throw new Error('market is required');
-                        params = { market: market };
-                        return [4 /*yield*/, this.request('get', '/public/getmarketsummary', { params: params })];
-                    case 1:
-                        results = _a.sent();
-                        return [2 /*return*/, this.parseDates(results, ['TimeStamp', 'Created'])];
-                }
-            });
-        });
-    };
-    /**
-     * @method marketHistory
-     * @param {String} market
-     * @return {Promise}
-     */
-    BittrexClient.prototype.marketHistory = function (market) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!market)
-                            throw new Error('market is required');
-                        params = { market: market };
-                        return [4 /*yield*/, this.request('get', '/public/getmarkethistory', { params: params })];
-                    case 1:
-                        results = _a.sent();
-                        return [2 /*return*/, this.parseDates(results, ['TimeStamp'])];
-                }
-            });
-        });
-    };
-    /**
-     * @method orderBook
-     * @param {String} market
-     * @param {String} type
-     * @return {Promise}
-     */
-    BittrexClient.prototype.orderBook = function (market, _a) {
-        var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? 'both' : _c;
-        return __awaiter(this, void 0, void 0, function () {
-            var params;
-            return __generator(this, function (_d) {
-                if (!market)
-                    throw new Error('market is required');
-                if (!type)
-                    throw new Error('options.type is required');
-                params = { market: market, type: type };
-                return [2 /*return*/, this.request('get', '/public/getorderbook', { params: params })];
-            });
-        });
-    };
     /*-------------------------------------------------------------------------*
      * Market
      *-------------------------------------------------------------------------*/
@@ -466,49 +466,6 @@ var BittrexClient = /** @class */ (function () {
     /*-------------------------------------------------------------------------*
      * Account
      *-------------------------------------------------------------------------*/
-    /**
-     * @method balances
-     * @return {Promise}
-     */
-    BittrexClient.prototype.balances = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/account/getbalances')];
-            });
-        });
-    };
-    /**
-     * @method balance
-     * @param {String} currency
-     * @return {Promise}
-     */
-    BittrexClient.prototype.balance = function (currency) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params;
-            return __generator(this, function (_a) {
-                if (!currency)
-                    throw new Error('currency is required');
-                params = { currency: currency };
-                return [2 /*return*/, this.request('get', '/account/getbalance', { params: params })];
-            });
-        });
-    };
-    /**
-     * @method depositAddress
-     * @param {String} currency
-     * @return {Promise}
-     */
-    BittrexClient.prototype.depositAddress = function (currency) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params;
-            return __generator(this, function (_a) {
-                if (!currency)
-                    throw new Error('currency is required');
-                params = { currency: currency };
-                return [2 /*return*/, this.request('get', '/account/getdepositaddress', { params: params })];
-            });
-        });
-    };
     /**
      * @method withdraw
      * @param {String} currency
@@ -704,7 +661,7 @@ var BittrexClient = /** @class */ (function () {
                 var key = keys_1[_a];
                 if (!result[key])
                     continue;
-                result[key] = new Date(result[key] + "Z");
+                result[key] = new Date("" + result[key]);
             }
         }
         return results;
