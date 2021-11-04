@@ -163,3 +163,8 @@ interface Candle {
   volume: number
   quoteVolume: number
 }
+
+interface Subaccount {
+  id: string
+  createdAt: string
+}

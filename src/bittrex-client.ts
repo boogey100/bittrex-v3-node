@@ -269,7 +269,7 @@ class BittrexClient {
    *-------------------------------------------------------------------------*/
 
   /**
-   * 
+   * Pings the service
    * @returns {Promise}
    */
   async ping(): Promise<ServicePing> {
@@ -278,6 +278,14 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 Subaccounts ENDPOINTS (7 endpoints)
    *-------------------------------------------------------------------------*/
+  
+  async subaccounts(): Promise<Subaccount[]> {
+    return this.request('get', '/subaccounts')
+  }
+
+  // Subaccount endpoints are for partners.
+  // Won't be implemented yet since I don't need it.
+
   /*-------------------------------------------------------------------------*
    * V3 Transfers ENDPOINTS (4 endpoints)
    *-------------------------------------------------------------------------*/
