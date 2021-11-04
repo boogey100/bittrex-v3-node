@@ -24,16 +24,23 @@
     "axios": "0.19.0"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.6",
     "dotenv": "^10.0.0",
     "eslint": "5.16.0",
     "mocha": "6.1.4",
+    "nyc": "^15.1.0",
     "should": "13.2.3",
+    "ts-mocha": "^8.0.0",
     "typescript": "^4.4.4"
   },
   "scripts": {
     "lint": "npx eslint ./",
-    "test": "npx mocha --exit --bail --slow 1000 --timeout 5000 ./test",
-    "build": "tsc --build"
+    "test": "ts-mocha --exit --bail --slow 1000 --timeout 5000 ./test",
+    "build": "tsc --build",
+    "cover": "nyc npm run test",
+    "cover:report": "nyc report --reporter=lcov --reporter=text"
   }
 }

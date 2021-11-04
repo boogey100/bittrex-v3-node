@@ -217,67 +217,6 @@ declare class BittrexClient {
     marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<unknown>;
     ping(): Promise<unknown>;
     /**
-     * @method buyLimit
-     * @param {String} market
-     * @param {String|Number} options.quantity
-     * @param {String|Number} options.price
-     * @return {Promise}
-     */
-    buyLimit(market: string, { quantity, rate, timeInForce }?: any): Promise<unknown>;
-    /**
-     * @method sellLimit
-     * @param {String} market
-     * @param {String|Number} options.quantity
-     * @param {String|Number} options.price
-     * @return {Promise}
-     */
-    sellLimit(market: string, { quantity, rate, timeInForce }?: any): Promise<unknown>;
-    /**
-     * @method cancelOrder
-     * @param {String} uuid
-     * @return {Promise}
-     */
-    cancelOrder(uuid: string): Promise<unknown>;
-    /**
-     * @method openOrders
-     * @param {String} market
-     * @return {Promise}
-     */
-    openOrders(market: string): Promise<any>;
-    /**
-     * @method withdraw
-     * @param {String} currency
-     * @param {String|Number} options.quantity
-     * @param {String} options.address
-     * @param {String} [options.paymentid]
-     * @return {Promise}
-     */
-    withdraw(currency: string, { quantity, address, paymentid }?: any): Promise<unknown>;
-    /**
-     * @method orderHistory
-     * @param {String} market
-     * @return {Promise}
-     */
-    orderHistory(market: string): Promise<any>;
-    /**
-     * @method order
-     * @param {String} uuid
-     * @return {Promise}
-     */
-    order(uuid: string): Promise<any>;
-    /**
-     * @method withdrawalHistory
-     * @param {String} [currency]
-     * @return {Promise}
-     */
-    withdrawalHistory(currency: string): Promise<any>;
-    /**
-     * @method depositHistory
-     * @param {String} [currency]
-     * @return {Promise}
-     */
-    depositHistory(currency: string): Promise<any>;
-    /**
      * @private
      * @method request
      * @param {String} method
