@@ -16,7 +16,7 @@ class BittrexClient {
     this._apiSecret = apiSecret
     this._nonce = Date.now()
     this._client = axios.create({
-      baseURL: 'https://bittrex.com/api/v1.1',
+      baseURL: 'https://api.bittrex.com/v3',
       httpsAgent: new https.Agent({ keepAlive })
     })
   }
@@ -279,18 +279,33 @@ class BittrexClient {
     params = this.sanitizeParams(params)
 
     if (this._apiKey) {
-      params.nonce = ++this._nonce
-      params.apikey = this._apiKey
-      headers.apisign = this.requestSignature(url, params)
+      params.nonce = Date.now()
+      params.apikey = this._apiSecret
+      params.contentHash = crypto.createHash('sha512').update(params.body ? JSON.stringify(params.body) : '').digest('hex');
+      params.method = method;
+      headers['Api-Key'] = this._apiKey
+      headers['Api-Timestamp'] = params.nonce
+      headers['Api-Content-Hash'] = params.contentHash;
+      headers['Api-Signature'] = this.requestSignature(url, params)
+      delete params.contentHash
+      delete params.method
+      delete params.apikey
+      delete params.nonce
     }
 
-    const { data } = await this._client.request({ method, url, headers, params })
+    const { data } = await this._client.request({ method, url, headers, params }).catch(err => {
+      if (err.isAxiosError) {
+        return err.response;
+      } else {
+        throw err;
+      }
+    })
 
-    if (!data.success) {
-      throw new Error(data.message)
+    if (data.code) {
+      throw new Error(data.code)
     }
 
-    return data.result
+    return data
   }
 
   /**
@@ -300,10 +315,10 @@ class BittrexClient {
    * @return {String}
    */
   requestSignature(path, params) {
-    const query = querystring.stringify(params)
-    const url = `${this._client.defaults.baseURL}${path}?${query}`
+    const url = `${this._client.defaults.baseURL}${path}`
+    const preSign = [params.nonce, url, params.method.toUpperCase(), params.contentHash, ''].join('')
     const hmac = crypto.createHmac('sha512', this._apiSecret)
-    return hmac.update(url).digest('hex')
+    return hmac.update(preSign).digest('hex')
   }
 
   /**
