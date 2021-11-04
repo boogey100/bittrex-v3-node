@@ -5,7 +5,52 @@ const client = new BittrexClient({
   apiSecret: process.env.API_SECRET
 })
 
-describe('bittrex-node', () => {
+describe('account', () => {
+  it('should get account', async () => {
+    let results = await client.account()
+    should.exist(results.accountId)
+  })
+
+  it('should get account fees trading', async () => {
+    let results = await client.accountFeesTrading()
+    results.length.should.be.aboveOrEqual(0)
+  })
+
+  it('should get account fees trading w/ market symbol', async () => {
+    let results = await client.accountFeesTrading('BTC-USD')
+    should.exist(results.marketSymbol)
+  })
+
+  it('should get account volume', async () => {
+    let results = await client.accountVolume()
+    should.exist(results.volume30days)
+  })
+
+  it('should get account permissions markets', async () => {
+    let results = await client.accountPermissionsMarkets()
+    results.length.should.be.aboveOrEqual(0)
+  })
+
+  it('should get account permissions markets w/ marketSymbol', async () => {
+    let results = await client.accountPermissionsMarkets('BTC-USD')
+    results.length.should.be.aboveOrEqual(0)
+  })
+
+  it('should get account permissions currencies', async () => {
+    let results = await client.accountPermissionsCurrencies()
+    results.length.should.be.aboveOrEqual(0)
+    should.exist(results[0].symbol)
+  })
+
+  it('should get account permissions currencies w/ marketSymbol', async () => {
+    let results = await client.accountPermissionsCurrencies('BTC')
+    results.length.should.be.aboveOrEqual(0)
+    results[0].symbol.should.be.equals('BTC')
+  })
+
+})
+
+xdescribe('bittrex-node', () => {
   describe('public', () => {
     it('should get markets', async () => {
       let results = await client.markets()

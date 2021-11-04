@@ -1,7 +1,6 @@
 const axios = require('axios')
 const crypto = require('crypto')
 const https = require('https')
-const querystring = require('querystring')
 
 class BittrexClient {
 
@@ -19,6 +18,43 @@ class BittrexClient {
       baseURL: 'https://api.bittrex.com/v3',
       httpsAgent: new https.Agent({ keepAlive })
     })
+  }
+
+  /**
+   * REFERENCE: https://bittrex.github.io/api/v3
+   */
+
+  /*-------------------------------------------------------------------------*
+   * V3 ACCOUNT ENDPOINTS
+   *-------------------------------------------------------------------------*/
+
+  async account() {
+    return this.request('get', '/account')
+  }
+
+  async accountFeesTrading(marketSymbol) {
+    if (marketSymbol) {
+      return this.request('get', '/account/fees/trading/' + marketSymbol)
+    }
+    return this.request('get', '/account/fees/trading')
+  }
+
+  async accountVolume() {
+    return this.request('get', '/account/volume')
+  }
+
+  async accountPermissionsMarkets(marketSymbol) {
+    if (marketSymbol) {
+      return this.request('get', '/account/permissions/markets/' + marketSymbol)
+    }
+    return this.request('get', '/account/permissions/markets')
+  }
+
+  async accountPermissionsCurrencies(marketSymbol) {
+    if (marketSymbol) {
+      return this.request('get', '/account/permissions/currencies/' + marketSymbol)
+    }
+    return this.request('get', '/account/permissions/currencies')
   }
 
   /*-------------------------------------------------------------------------*
