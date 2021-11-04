@@ -1,9 +1,13 @@
-const axios = require('axios')
-const crypto = require('crypto')
-const https = require('https')
-const querystring = require('querystring')
+import axios, { AxiosInstance, Method } from 'axios'
+import * as crypto from 'crypto'
+import * as https from 'https'
+import * as querystring from 'querystring'
 
 class BittrexClient {
+
+  private _apiKey: string
+  private _apiSecret: string
+  private _client: AxiosInstance
 
   /**
    * @constructor
@@ -11,10 +15,10 @@ class BittrexClient {
    * @param {String} [options.apiSecret=null]
    * @param {Boolean} [options.keepAlive=true]
    */
-  constructor({ apiKey = null, apiSecret = null, keepAlive = true } = {}) {
+  constructor({ apiKey = '', apiSecret = '', keepAlive = true } = {}) {
     this._apiKey = apiKey
     this._apiSecret = apiSecret
-    this._nonce = Date.now()
+
     this._client = axios.create({
       baseURL: 'https://api.bittrex.com/v3',
       httpsAgent: new https.Agent({ keepAlive })
@@ -46,7 +50,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountFeesTrading(marketSymbol) {
+  async accountFeesTrading(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/account/fees/trading/' + marketSymbol)
     }
@@ -67,7 +71,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountPermissionsMarkets(marketSymbol) {
+  async accountPermissionsMarkets(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/markets/' + marketSymbol)
     }
@@ -80,7 +84,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountPermissionsCurrencies(marketSymbol) {
+  async accountPermissionsCurrencies(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/currencies/' + marketSymbol)
     }
@@ -97,7 +101,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async addresses(marketSymbol) {
+  async addresses(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/addresses/' + marketSymbol)
     }
@@ -110,7 +114,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async addressCreate(marketSymbol) {
+  async addressCreate(marketSymbol: string) {
     return this.request('post', '/addresses', {
         body: {
           currencySymbol: marketSymbol
@@ -139,7 +143,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async getBalance(marketSymbol) {
+  async getBalance(marketSymbol: string) {
     return this.request('get', '/balances/' + marketSymbol);
   }
 
@@ -150,6 +154,43 @@ class BittrexClient {
   async balanceSnapshot() {
     return this.request('head', '/balances')
   }
+
+  /*-------------------------------------------------------------------------*
+   * V3 BATCH ENDPOINTS (1 endpoint)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 ConditionalOrders ENDPOINTS (6 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 CURRENCIES ENDPOINTS (2 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 DEPOSITS ENDPOINTS (5 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 EXECUTIONS ENDPOINTS (4 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 FundsTransferMethods ENDPOINTS (1 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 Markets ENDPOINTS (15 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 Orders ENDPOINTS (8 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 Ping ENDPOINTS (1 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 Subaccounts ENDPOINTS (7 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 Transfers ENDPOINTS (4 endpoints)
+   *-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*
+   * V3 Withdrawals ENDPOINTS (7 endpoints)
+   *-------------------------------------------------------------------------*/
 
   /*-------------------------------------------------------------------------*
    * Public
@@ -177,7 +218,7 @@ class BittrexClient {
    * @param {String} market
    * @return {Promise}
    */
-  async ticker(market) {
+  async ticker(market: string) {
     if (!market) throw new Error('market is required')
     const params = { market }
     return this.request('get', '/public/getticker', { params })
@@ -197,7 +238,7 @@ class BittrexClient {
    * @param {String} market
    * @return {Promise}
    */
-  async marketSummary(market) {
+  async marketSummary(market: string) {
     if (!market) throw new Error('market is required')
     const params = { market }
     const results = await this.request('get', '/public/getmarketsummary', { params })
@@ -209,7 +250,7 @@ class BittrexClient {
    * @param {String} market
    * @return {Promise}
    */
-  async marketHistory(market) {
+  async marketHistory(market: string) {
     if (!market) throw new Error('market is required')
     const params = { market }
     const results = await this.request('get', '/public/getmarkethistory', { params })
@@ -222,7 +263,7 @@ class BittrexClient {
    * @param {String} type
    * @return {Promise}
    */
-  async orderBook(market, { type = 'both' } = {}) {
+  async orderBook(market: string, { type = 'both' }: any = {}) {
     if (!market) throw new Error('market is required')
     if (!type) throw new Error('options.type is required')
     const params = { market, type }
@@ -240,7 +281,7 @@ class BittrexClient {
    * @param {String|Number} options.price
    * @return {Promise}
    */
-  async buyLimit(market, { quantity, rate, timeInForce = 'GTC' } = {}) {
+  async buyLimit(market: string, { quantity, rate, timeInForce = 'GTC' }: any = {}) {
     if (!market) throw new Error('market is required')
     if (!quantity) throw new Error('options.quantity is required')
     if (!rate) throw new Error('options.rate is required')
@@ -261,7 +302,7 @@ class BittrexClient {
    * @param {String|Number} options.price
    * @return {Promise}
    */
-  async sellLimit(market, { quantity, rate, timeInForce = 'GTC' } = {}) {
+  async sellLimit(market: string, { quantity, rate, timeInForce = 'GTC' }: any = {}) {
     if (!market) throw new Error('market is required')
     if (!quantity) throw new Error('options.quantity is required')
     if (!rate) throw new Error('options.rate is required')
@@ -281,7 +322,7 @@ class BittrexClient {
    * @param {String} uuid
    * @return {Promise}
    */
-  async cancelOrder(uuid) {
+  async cancelOrder(uuid: string) {
     if (!uuid) throw new Error('uuid is required')
     const params = { uuid }
     return this.request('get', '/market/cancel', { params })
@@ -292,7 +333,7 @@ class BittrexClient {
    * @param {String} market
    * @return {Promise}
    */
-  async openOrders(market) {
+  async openOrders(market: string) {
     const params = { market }
     const results = await this.request('get', '/market/getopenorders', { params })
     return this.parseDates(results, ['Opened'])
@@ -315,7 +356,7 @@ class BittrexClient {
    * @param {String} currency
    * @return {Promise}
    */
-  async balance(currency) {
+  async balance(currency: string) {
     if (!currency) throw new Error('currency is required')
     const params = { currency }
     return this.request('get', '/account/getbalance', { params })
@@ -326,7 +367,7 @@ class BittrexClient {
    * @param {String} currency
    * @return {Promise}
    */
-  async depositAddress(currency) {
+  async depositAddress(currency: string) {
     if (!currency) throw new Error('currency is required')
     const params = { currency }
     return this.request('get', '/account/getdepositaddress', { params })
@@ -340,7 +381,7 @@ class BittrexClient {
    * @param {String} [options.paymentid]
    * @return {Promise}
    */
-  async withdraw(currency, { quantity, address, paymentid } = {}) {
+  async withdraw(currency: string, { quantity, address, paymentid }: any = {}) {
     if (!currency) throw new Error('currency is required')
     if (!quantity) throw new Error('options.quantity is required')
     if (!address) throw new Error('options.address is required')
@@ -353,7 +394,7 @@ class BittrexClient {
    * @param {String} market
    * @return {Promise}
    */
-  async orderHistory(market) {
+  async orderHistory(market: string) {
     const params = { market }
     const results = await this.request('get', '/account/getorderhistory', { params })
     return this.parseDates(results, ['TimeStamp', 'Closed'])
@@ -364,7 +405,7 @@ class BittrexClient {
    * @param {String} uuid
    * @return {Promise}
    */
-  async order(uuid) {
+  async order(uuid: string) {
     if (!uuid) throw new Error('uuid is required')
     const params = { uuid }
     const result = await this.request('get', '/account/getorder', { params })
@@ -376,7 +417,7 @@ class BittrexClient {
    * @param {String} [currency]
    * @return {Promise}
    */
-  async withdrawalHistory(currency) {
+  async withdrawalHistory(currency: string) {
     const params = { currency }
     const results = await this.request('get', '/account/getwithdrawalhistory', { params })
     return this.parseDates(results, ['LastUpdated'])
@@ -387,7 +428,7 @@ class BittrexClient {
    * @param {String} [currency]
    * @return {Promise}
    */
-  async depositHistory(currency) {
+  async depositHistory(currency: string) {
     const params = { currency }
     const results = await this.request('get', '/account/getdeposithistory', { params })
     return this.parseDates(results, ['LastUpdated'])
@@ -405,7 +446,7 @@ class BittrexClient {
    * @param {Object} [options.data]
    * @param {Object} [options.params]
    */
-  async request(method, url, { headers = {}, params = {}, body } = {}) {
+  async request(method: Method, url: string, { headers = {}, params = {}, body = '' }: any = {}) {
     params = this.sanitizeParams(params)
 
     if (this._apiKey) {
@@ -438,7 +479,7 @@ class BittrexClient {
    * @param {String} url
    * @return {String}
    */
-  requestSignature(nonce, path, method, contentHash, params) {
+  requestSignature(nonce: number, path: string, method: Method, contentHash: string, params: any) {
     const query = querystring.stringify(params)
     const url = `${this._client.defaults.baseURL}${path}${query ? '?' + query : ''}`
     const preSign = [nonce, url, method.toUpperCase(), contentHash, ''].join('')
@@ -452,8 +493,8 @@ class BittrexClient {
    * @param {Object} params
    * @return {Object}
    */
-  sanitizeParams(params = {}) {
-    const obj = {}
+  sanitizeParams(params: any = {}) {
+    const obj: any = {}
     for (const key of Object.keys(params)) {
       if (params[key] === undefined) continue
       obj[key] = params[key]
@@ -468,7 +509,7 @@ class BittrexClient {
    * @param {Array<String>} keys
    * @return {Array<Object>}
    */
-  parseDates(results, keys) {
+  parseDates(results: any, keys: string[]) {
     for (const result of results) {
       for (const key of keys) {
         if (!result[key]) continue
@@ -479,4 +520,4 @@ class BittrexClient {
   }
 }
 
-module.exports = BittrexClient
+export default BittrexClient
