@@ -34,7 +34,7 @@ class BittrexClient {
    * For now, it only echoes the subaccount if one was specified in the header,
    * which can be used to verify that one is operating on the intended account.
    * More fields will be added later.
-   * @returns 
+   * @returns {Promise}
    */
   async account() {
     return this.request('get', '/account')
@@ -44,7 +44,7 @@ class BittrexClient {
    * Get trade fee for the given marketSymbol.
    * Get trade fees for each markets when marketSymbol is not provided.
    * @param {string} marketSymbol 
-   * @returns 
+   * @returns {Promise}
    */
   async accountFeesTrading(marketSymbol) {
     if (marketSymbol) {
@@ -55,7 +55,7 @@ class BittrexClient {
 
   /**
    * Get 30 day volume for account
-   * @returns 
+   * @returns {Promise}
    */
   async accountVolume() {
     return this.request('get', '/account/volume')
@@ -65,7 +65,7 @@ class BittrexClient {
    * Get trading permissions when marketSymbol is not provided.
    * Get trading permissions for a single market.
    * @param {string} marketSymbol 
-   * @returns 
+   * @returns {Promise}
    */
   async accountPermissionsMarkets(marketSymbol) {
     if (marketSymbol) {
@@ -78,7 +78,7 @@ class BittrexClient {
    * Get currency permissions for a single currency.
    * Get all currency permissions when marketSymbol is not provided.
    * @param {string} marketSymbol 
-   * @returns 
+   * @returns {Promise}
    */
   async accountPermissionsCurrencies(marketSymbol) {
     if (marketSymbol) {
@@ -95,7 +95,7 @@ class BittrexClient {
    * List deposit addresses that have been requested or provisioned.
    * Retrieve the status of the deposit address for a particular currency for which one has been requested or provisioned.
    * @param {string} marketSymbol 
-   * @returns 
+   * @returns {Promise}
    */
   async addresses(marketSymbol) {
     if (marketSymbol) {
@@ -107,8 +107,8 @@ class BittrexClient {
   /**
    * Request provisioning of a deposit address for a currency
    * for which no address has been requested or provisioned.
-   * @param {*} marketSymbol 
-   * @returns 
+   * @param {string} marketSymbol 
+   * @returns {Promise}
    */
   async addressCreate(marketSymbol) {
     return this.request('post', '/addresses', {
@@ -126,7 +126,7 @@ class BittrexClient {
    * List account balances across available currencies.
    * Returns a Balance entry for each currency for which there
    * is either a balance or an address.
-   * @returns 
+   * @returns {Promise}
    */
   async getBalances() {
     return this.request('get', '/balances');
@@ -137,7 +137,7 @@ class BittrexClient {
    * Request will always succeed when the currency exists,
    * regardless of whether there is a balance or address.
    * @param {string} marketSymbol 
-   * @returns 
+   * @returns {Promise}
    */
   async getBalance(marketSymbol) {
     return this.request('get', '/balances/' + marketSymbol);
@@ -145,7 +145,7 @@ class BittrexClient {
 
   /**
    * Get sequence of balances snapshot.
-   * @returns 
+   * @returns {Promise}
    */
   async balanceSnapshot() {
     return this.request('head', '/balances')
