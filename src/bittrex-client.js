@@ -69,6 +69,15 @@ class BittrexClient {
     return this.request('get', '/addresses')
   }
 
+  async addressCreate(marketSymbol) {
+    return this.request('post', '/addresses', {
+        body: {
+          currencySymbol: marketSymbol
+        }
+    })
+  }
+
+
   /*-------------------------------------------------------------------------*
    * Public
    *-------------------------------------------------------------------------*/

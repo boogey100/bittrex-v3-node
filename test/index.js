@@ -62,7 +62,16 @@ describe('addresses', () => {
     results.currencySymbol.should.be.equals('BTC')
   })
 
+  it('should request provisioning of a new deposit address for a given currency', async () => {
+    try {
+      let results = await client.addressCreate('USDT')
+      results.status.should.be.equals("REQUESTED")
+    } catch (err) {
+      err.message.should.be.equals("CRYPTO_ADDRESS_ALREADY_EXISTS")
+    }
+  })
 })
+
 xdescribe('bittrex-node', () => {
   describe('public', () => {
     it('should get markets', async () => {
