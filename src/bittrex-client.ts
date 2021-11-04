@@ -317,7 +317,11 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 Subaccounts ENDPOINTS (7 endpoints)
    *-------------------------------------------------------------------------*/
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> aee2a337a1e4933944c9a70189fd927534611551
   async subaccounts(): Promise<Subaccount[]> {
     return this.request('get', '/subaccounts')
   }

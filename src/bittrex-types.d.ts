@@ -167,6 +167,7 @@ interface Candle {
 interface Subaccount {
   id: string
   createdAt: string
+<<<<<<< HEAD
 }
 
 interface Execution {
@@ -191,4 +192,6 @@ interface ExecutionsRequestParams {
   pageSize?: number
   startDate?: string
   endDate?: string
+=======
+>>>>>>> aee2a337a1e4933944c9a70189fd927534611551
 }
