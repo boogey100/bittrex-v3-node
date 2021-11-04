@@ -54,7 +54,7 @@ xdescribe('account', () => {
 
 })
 
-describe('addresses', () => {
+xdescribe('addresses', () => {
   it('should get addresses', async () => {
     let results = await client.addresses()
     results.length.should.be.aboveOrEqual(0)

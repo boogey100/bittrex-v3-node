@@ -88,11 +88,19 @@ declare class BittrexClient {
         status: 'REQUESTED' | 'PROVISIONED';
         currencySymbol: string;
         cryptoAddress: string;
+        cryptoAddressTag?: string;
     }[]>;
     addresses(marketSymbol: string): Promise<{
         status: 'REQUESTED' | 'PROVISIONED';
         currencySymbol: string;
         cryptoAddress: string;
+        cryptoAddressTag?: string;
+    }>;
+    addressStatus(marketSymbol: string): Promise<{
+        status: "REQUESTED" | "PROVISIONED";
+        currencySymbol: string;
+        cryptoAddress: string;
+        cryptoAddressTag?: string | undefined;
     }>;
     /**
      * Request provisioning of a deposit address for a currency
@@ -100,14 +108,24 @@ declare class BittrexClient {
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    addressCreate(marketSymbol: string): Promise<unknown>;
+    addressCreate(marketSymbol: string): Promise<{
+        status: 'REQUESTED' | 'PROVISIONED';
+        currencySymbol: string;
+        cryptoAddress: string;
+        cryptoAddressTag?: string;
+    }>;
     /**
      * List account balances across available currencies.
      * Returns a Balance entry for each currency for which there
      * is either a balance or an address.
      * @returns {Promise}
      */
-    getBalances(): Promise<unknown>;
+    getBalances(): Promise<{
+        currencySymbol: string;
+        total: string;
+        available: string;
+        updatedAt: string;
+    }[]>;
     /**
      * Retrieve account balance for a specific currency.
      * Request will always succeed when the currency exists,
@@ -115,7 +133,12 @@ declare class BittrexClient {
      * @param {string} marketSymbol
      * @returns {Promise}
      */
-    getBalance(marketSymbol: string): Promise<unknown>;
+    getBalance(marketSymbol: string): Promise<{
+        currencySymbol: string;
+        total: string;
+        available: string;
+        updatedAt: string;
+    }>;
     /**
      * Get sequence of balances snapshot.
      * @returns {Promise}

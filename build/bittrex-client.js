@@ -133,6 +133,13 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
+    BittrexClient.prototype.addressStatus = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.addresses(marketSymbol)];
+            });
+        });
+    };
     /**
      * Request provisioning of a deposit address for a currency
      * for which no address has been requested or provisioned.

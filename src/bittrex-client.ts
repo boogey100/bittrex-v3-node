@@ -129,12 +129,14 @@ class BittrexClient {
    async addresses(): Promise<{
     status: 'REQUESTED' | 'PROVISIONED',
     currencySymbol: string,
-    cryptoAddress: string
+    cryptoAddress: string,
+    cryptoAddressTag?: string
   }[]>
   async addresses(marketSymbol: string): Promise<{
     status: 'REQUESTED' | 'PROVISIONED',
     currencySymbol: string,
-    cryptoAddress: string
+    cryptoAddress: string,
+    cryptoAddressTag?: string
   }>
   async addresses(marketSymbol?: string) {
     if (marketSymbol) {
@@ -143,13 +145,22 @@ class BittrexClient {
     return this.request('get', '/addresses')
   }
 
+  async addressStatus(marketSymbol: string) {
+    return this.addresses(marketSymbol);
+  }
+
   /**
    * Request provisioning of a deposit address for a currency
    * for which no address has been requested or provisioned.
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async addressCreate(marketSymbol: string) {
+  async addressCreate(marketSymbol: string): Promise<{
+    status: 'REQUESTED' | 'PROVISIONED',
+    currencySymbol: string,
+    cryptoAddress: string,
+    cryptoAddressTag?: string
+  }> {
     return this.request('post', '/addresses', {
       body: {
         currencySymbol: marketSymbol
@@ -167,7 +178,12 @@ class BittrexClient {
    * is either a balance or an address.
    * @returns {Promise}
    */
-  async getBalances() {
+  async getBalances(): Promise<{
+    currencySymbol: string,
+    total: string
+    available: string
+    updatedAt: string
+  }[]> {
     return this.request('get', '/balances');
   }
 
@@ -178,7 +194,12 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async getBalance(marketSymbol: string) {
+  async getBalance(marketSymbol: string): Promise<{
+    currencySymbol: string,
+    total: string
+    available: string
+    updatedAt: string
+  }> {
     return this.request('get', '/balances/' + marketSymbol);
   }
 
