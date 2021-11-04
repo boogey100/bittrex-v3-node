@@ -41,14 +41,8 @@ var crypto = require("crypto");
 var https = require("https");
 var querystring = require("querystring");
 var BittrexClient = /** @class */ (function () {
-    /**
-     * @constructor
-     * @param {String} [options.apiKey=null]
-     * @param {String} [options.apiSecret=null]
-     * @param {Boolean} [options.keepAlive=true]
-     */
     function BittrexClient(_a) {
-        var _b = _a === void 0 ? {} : _a, _c = _b.apiKey, apiKey = _c === void 0 ? '' : _c, _d = _b.apiSecret, apiSecret = _d === void 0 ? '' : _d, _e = _b.keepAlive, keepAlive = _e === void 0 ? true : _e;
+        var _b = _a.apiKey, apiKey = _b === void 0 ? '' : _b, _c = _a.apiSecret, apiSecret = _c === void 0 ? '' : _c, _d = _a.keepAlive, keepAlive = _d === void 0 ? true : _d;
         this._apiKey = apiKey;
         this._apiSecret = apiSecret;
         this._client = axios_1.default.create({

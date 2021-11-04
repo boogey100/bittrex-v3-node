@@ -9,13 +9,11 @@ class BittrexClient {
   private _apiSecret: string
   private _client: AxiosInstance
 
-  /**
-   * @constructor
-   * @param {String} [options.apiKey=null]
-   * @param {String} [options.apiSecret=null]
-   * @param {Boolean} [options.keepAlive=true]
-   */
-  constructor({ apiKey = '', apiSecret = '', keepAlive = true } = {}) {
+  constructor({ apiKey = '', apiSecret = '', keepAlive = true }: {
+    apiKey: string,
+    apiSecret: string,
+    keepAlive: boolean
+  }) {
     this._apiKey = apiKey
     this._apiSecret = apiSecret
 

@@ -2,7 +2,7 @@ const should = require('should')
 
 const xdescribe = () => { }
 
-const { BittrexClient } = require('../')
+const { BittrexClient } = require('../build')
 require('dotenv').config()
 const client = new BittrexClient({
   apiKey: process.env.API_KEY,
