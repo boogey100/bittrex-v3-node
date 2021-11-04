@@ -1,6 +1,7 @@
 const axios = require('axios')
 const crypto = require('crypto')
 const https = require('https')
+const querystring = require('querystring')
 
 class BittrexClient {
 
@@ -25,7 +26,7 @@ class BittrexClient {
    */
 
   /*-------------------------------------------------------------------------*
-   * V3 ACCOUNT ENDPOINTS
+   * V3 ACCOUNT ENDPOINTS (8 endpoints)
    *-------------------------------------------------------------------------*/
 
   async account() {
@@ -311,25 +312,19 @@ class BittrexClient {
    * @param {Object} [options.data]
    * @param {Object} [options.params]
    */
-  async request(method, url, { headers = {}, params = {} } = {}) {
+  async request(method, url, { headers = {}, params = {}, body } = {}) {
     params = this.sanitizeParams(params)
 
     if (this._apiKey) {
-      params.nonce = Date.now()
-      params.apikey = this._apiSecret
-      params.contentHash = crypto.createHash('sha512').update(params.body ? JSON.stringify(params.body) : '').digest('hex')
-      params.method = method
+      const nonce = Date.now()
+      const contentHash = crypto.createHash('sha512').update(body ? JSON.stringify(body) : '').digest('hex')
       headers['Api-Key'] = this._apiKey
-      headers['Api-Timestamp'] = params.nonce
-      headers['Api-Content-Hash'] = params.contentHash
-      headers['Api-Signature'] = this.requestSignature(url, params)
-      delete params.contentHash
-      delete params.method
-      delete params.apikey
-      delete params.nonce
+      headers['Api-Timestamp'] = nonce
+      headers['Api-Content-Hash'] = contentHash
+      headers['Api-Signature'] = this.requestSignature(nonce, url, method, contentHash, params)
     }
 
-    const { data } = await this._client.request({ method, url, headers, params }).catch(err => {
+    const { data } = await this._client.request({ method, url, headers, params, data: params.body }).catch(err => {
       if (err.isAxiosError) {
         return err.response
       } else {
@@ -350,9 +345,10 @@ class BittrexClient {
    * @param {String} url
    * @return {String}
    */
-  requestSignature(path, params) {
-    const url = `${this._client.defaults.baseURL}${path}`
-    const preSign = [params.nonce, url, params.method.toUpperCase(), params.contentHash, ''].join('')
+  requestSignature(nonce, path, method, contentHash, params) {
+    const query = querystring.stringify(params)
+    const url = `${this._client.defaults.baseURL}${path}${query ? '?' + query : ''}`
+    const preSign = [nonce, url, method.toUpperCase(), contentHash, ''].join('')
     const hmac = crypto.createHmac('sha512', this._apiSecret)
     return hmac.update(preSign).digest('hex')
   }
