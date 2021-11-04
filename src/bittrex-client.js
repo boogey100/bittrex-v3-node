@@ -281,11 +281,11 @@ class BittrexClient {
     if (this._apiKey) {
       params.nonce = Date.now()
       params.apikey = this._apiSecret
-      params.contentHash = crypto.createHash('sha512').update(params.body ? JSON.stringify(params.body) : '').digest('hex');
-      params.method = method;
+      params.contentHash = crypto.createHash('sha512').update(params.body ? JSON.stringify(params.body) : '').digest('hex')
+      params.method = method
       headers['Api-Key'] = this._apiKey
       headers['Api-Timestamp'] = params.nonce
-      headers['Api-Content-Hash'] = params.contentHash;
+      headers['Api-Content-Hash'] = params.contentHash
       headers['Api-Signature'] = this.requestSignature(url, params)
       delete params.contentHash
       delete params.method
@@ -295,9 +295,9 @@ class BittrexClient {
 
     const { data } = await this._client.request({ method, url, headers, params }).catch(err => {
       if (err.isAxiosError) {
-        return err.response;
+        return err.response
       } else {
-        throw err;
+        throw err
       }
     })
 
