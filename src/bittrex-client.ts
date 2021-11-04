@@ -199,12 +199,12 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 Markets ENDPOINTS (15 endpoints)
    *-------------------------------------------------------------------------*/
-  async markets() {
+  async markets(): Promise<Market[]> {
     const results = await this.request('get', '/markets')
     return this.parseDates(results, ['createdAt'])
   }
 
-  async marketsSummaries() {
+  async marketsSummaries(): Promise<MarketSummary[]> {
     const results = await this.request('get', '/markets/summaries')
     return this.parseDates(results, ['updatedAt'])
   }
@@ -213,7 +213,7 @@ class BittrexClient {
     return this.request('head', '/markets/summaries')
   }
 
-  async marketsTickers() {
+  async marketsTickers(): Promise<Ticker[]> {
     return this.request('get', '/markets/tickers')
   }
 
@@ -221,19 +221,19 @@ class BittrexClient {
     return this.request('head', '/markets/tickers')
   }
 
-  async marketTicker(marketSymbol: string) {
+  async marketTicker(marketSymbol: string): Promise<Ticker> {
     return this.request('get', '/markets/' + marketSymbol + '/ticker')
   }
 
-  async market(marketSymbol: string) {
+  async market(marketSymbol: string): Promise<Market> {
     return this.request('get', '/markets/' + marketSymbol)
   }
 
-  async marketSummary(marketSymbol: string) {
+  async marketSummary(marketSymbol: string): Promise<MarketSummary> {
     return this.request('get', '/markets/' + marketSymbol + '/summary')
   }
 
-  async marketOrderBook(marketSymbol: string, depth?: number) {
+  async marketOrderBook(marketSymbol: string, depth?: number): Promise<OrderBook> {
     return this.request('get', '/markets/' + marketSymbol + '/orderbook', { params: { depth } })
   }
 
@@ -241,11 +241,15 @@ class BittrexClient {
     return this.request('head', '/markets/' + marketSymbol + '/orderbook', { params: { depth } })
   }
 
-  async marketTrades(marketSymbol: string) {
-    return this.request('head', '/markets/' + marketSymbol + '/trades')
+  async marketTrades(marketSymbol: string): Promise<Trade[]> {
+    return this.request('get', '/markets/' + marketSymbol + '/trades')
   }
 
-  async marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT') {
+  async headMarketTrades(marketSymbol: string) {
+    return this.request('head', '/markets/' + marketSymbol + '/trade')
+  }
+
+  async marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<Candle[]> {
     return this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')
   }
 
@@ -253,7 +257,7 @@ class BittrexClient {
     return this.request('head', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')
   }
 
-  async marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number) {
+  async marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<Candle[]> {
     return this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/historical/' + year + (month && '/' + month) + (day && '/' + day))
   }
 
@@ -268,7 +272,7 @@ class BittrexClient {
    * 
    * @returns {Promise}
    */
-  async ping() {
+  async ping(): Promise<ServicePing> {
     return this.request('get', '/ping');
   }
   /*-------------------------------------------------------------------------*

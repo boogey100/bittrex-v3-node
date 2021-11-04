@@ -317,7 +317,14 @@ var BittrexClient = /** @class */ (function () {
     BittrexClient.prototype.marketTrades = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('head', '/markets/' + marketSymbol + '/trades')];
+                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/trades')];
+            });
+        });
+    };
+    BittrexClient.prototype.headMarketTrades = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('head', '/markets/' + marketSymbol + '/trade')];
             });
         });
     };

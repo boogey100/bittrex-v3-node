@@ -100,3 +100,66 @@ interface Currency {
   associatedTermsOfService: string[]
   tags: string[]
 }
+
+interface ServicePing {
+  serverTime: number
+}
+
+interface Market {
+  symbol: string
+  baseCurrencySymbol: string
+  quoteCurrencySymbol: string
+  minTradeSize: number
+  precision: number
+  status: 'online' | 'offline'
+  createdAt: string
+  notice: string
+  prohibitedIn: string[]
+  associatedTermsOfService: string[]
+  tags: string[]
+}
+
+interface MarketSummary {
+  symbol: string
+  high: number
+  low: number
+  volume: number
+  quoteVolume: number
+  percentChange: number
+  updatedAt: string
+}
+
+interface Ticker {
+  symbol: string
+  lastTradeRate: number
+  bidRate: number
+  askRate: number
+}
+
+interface OrderBookEntry {
+  quantity: number
+  rate: number
+}
+
+interface OrderBook {
+  bid: OrderBookEntry[]
+  ask: OrderBookEntry[]
+}
+
+interface Trade {
+  id: string
+  executedAt: string
+  quantity: number
+  rate: number
+  takerSide: 'buy' | 'sell'
+}
+
+interface Candle {
+  startsAt: string
+  open: number
+  high: number
+  low: number
+  close: number
+  volume: number
+  quoteVolume: number
+}

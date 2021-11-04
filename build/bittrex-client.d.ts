@@ -87,25 +87,26 @@ declare class BittrexClient {
     }[]>;
     currencies(): Promise<Currency[]>;
     currencies(marketSymbol: string): Promise<Currency>;
-    markets(): Promise<any>;
-    marketsSummaries(): Promise<any>;
+    markets(): Promise<Market[]>;
+    marketsSummaries(): Promise<MarketSummary[]>;
     headMarketsSummaries(): Promise<unknown>;
-    marketsTickers(): Promise<unknown>;
+    marketsTickers(): Promise<Ticker[]>;
     headMarketsTickers(): Promise<unknown>;
-    marketTicker(marketSymbol: string): Promise<unknown>;
-    market(marketSymbol: string): Promise<unknown>;
-    marketSummary(marketSymbol: string): Promise<unknown>;
-    marketOrderBook(marketSymbol: string, depth?: number): Promise<unknown>;
+    marketTicker(marketSymbol: string): Promise<Ticker>;
+    market(marketSymbol: string): Promise<Market>;
+    marketSummary(marketSymbol: string): Promise<MarketSummary>;
+    marketOrderBook(marketSymbol: string, depth?: number): Promise<OrderBook>;
     headMarketOrderBook(marketSymbol: string, depth?: number): Promise<unknown>;
-    marketTrades(marketSymbol: string): Promise<unknown>;
-    marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<unknown>;
+    marketTrades(marketSymbol: string): Promise<Trade[]>;
+    headMarketTrades(marketSymbol: string): Promise<unknown>;
+    marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<Candle[]>;
     headMarketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<unknown>;
-    marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<unknown>;
+    marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<Candle[]>;
     /**
      *
      * @returns {Promise}
      */
-    ping(): Promise<unknown>;
+    ping(): Promise<ServicePing>;
     /**
      * @private
      * @method request
