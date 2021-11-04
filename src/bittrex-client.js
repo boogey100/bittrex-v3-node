@@ -59,6 +59,17 @@ class BittrexClient {
   }
 
   /*-------------------------------------------------------------------------*
+   * V3 ADDRESSES ENDPOINTS (3 endpoints)
+   *-------------------------------------------------------------------------*/
+
+  async addresses(marketSymbol) {
+    if (marketSymbol) {
+      return this.request('get', '/addresses/' + marketSymbol)
+    }
+    return this.request('get', '/addresses')
+  }
+
+  /*-------------------------------------------------------------------------*
    * Public
    *-------------------------------------------------------------------------*/
 

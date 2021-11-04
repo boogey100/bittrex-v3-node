@@ -50,6 +50,19 @@ describe('account', () => {
 
 })
 
+describe('addresses', () => {
+  it('should get addresses', async () => {
+    let results = await client.addresses()
+    results.length.should.be.aboveOrEqual(0)
+  })
+
+  it('should get addresses w/ marketSymbol', async () => {
+    let results = await client.addresses('BTC')
+    should.exist(results.status)
+    results.currencySymbol.should.be.equals('BTC')
+  })
+
+})
 xdescribe('bittrex-node', () => {
   describe('public', () => {
     it('should get markets', async () => {
