@@ -29,10 +29,23 @@ class BittrexClient {
    * V3 ACCOUNT ENDPOINTS (8 endpoints)
    *-------------------------------------------------------------------------*/
 
+  /**
+   * Retrieve information for the account associated with the request.
+   * For now, it only echoes the subaccount if one was specified in the header,
+   * which can be used to verify that one is operating on the intended account.
+   * More fields will be added later.
+   * @returns 
+   */
   async account() {
     return this.request('get', '/account')
   }
 
+  /**
+   * Get trade fee for the given marketSymbol.
+   * Get trade fees for each markets when marketSymbol is not provided.
+   * @param {string} marketSymbol 
+   * @returns 
+   */
   async accountFeesTrading(marketSymbol) {
     if (marketSymbol) {
       return this.request('get', '/account/fees/trading/' + marketSymbol)
@@ -40,10 +53,20 @@ class BittrexClient {
     return this.request('get', '/account/fees/trading')
   }
 
+  /**
+   * Get 30 day volume for account
+   * @returns 
+   */
   async accountVolume() {
     return this.request('get', '/account/volume')
   }
 
+  /**
+   * Get trading permissions when marketSymbol is not provided.
+   * Get trading permissions for a single market.
+   * @param {string} marketSymbol 
+   * @returns 
+   */
   async accountPermissionsMarkets(marketSymbol) {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/markets/' + marketSymbol)
@@ -51,6 +74,12 @@ class BittrexClient {
     return this.request('get', '/account/permissions/markets')
   }
 
+  /**
+   * Get currency permissions for a single currency.
+   * Get all currency permissions when marketSymbol is not provided.
+   * @param {string} marketSymbol 
+   * @returns 
+   */
   async accountPermissionsCurrencies(marketSymbol) {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/currencies/' + marketSymbol)
@@ -62,6 +91,12 @@ class BittrexClient {
    * V3 ADDRESSES ENDPOINTS (3 endpoints)
    *-------------------------------------------------------------------------*/
 
+  /**
+   * List deposit addresses that have been requested or provisioned.
+   * Retrieve the status of the deposit address for a particular currency for which one has been requested or provisioned.
+   * @param {string} marketSymbol 
+   * @returns 
+   */
   async addresses(marketSymbol) {
     if (marketSymbol) {
       return this.request('get', '/addresses/' + marketSymbol)
@@ -69,6 +104,12 @@ class BittrexClient {
     return this.request('get', '/addresses')
   }
 
+  /**
+   * Request provisioning of a deposit address for a currency
+   * for which no address has been requested or provisioned.
+   * @param {*} marketSymbol 
+   * @returns 
+   */
   async addressCreate(marketSymbol) {
     return this.request('post', '/addresses', {
         body: {
@@ -81,14 +122,31 @@ class BittrexClient {
    * V3 BALANCES ENDPOINTS (3 endpoints)
    *-------------------------------------------------------------------------*/
 
+  /**
+   * List account balances across available currencies.
+   * Returns a Balance entry for each currency for which there
+   * is either a balance or an address.
+   * @returns 
+   */
   async getBalances() {
     return this.request('get', '/balances');
   }
 
+  /**
+   * Retrieve account balance for a specific currency.
+   * Request will always succeed when the currency exists,
+   * regardless of whether there is a balance or address.
+   * @param {string} marketSymbol 
+   * @returns 
+   */
   async getBalance(marketSymbol) {
     return this.request('get', '/balances/' + marketSymbol);
   }
 
+  /**
+   * Get sequence of balances snapshot.
+   * @returns 
+   */
   async balanceSnapshot() {
     return this.request('head', '/balances')
   }
