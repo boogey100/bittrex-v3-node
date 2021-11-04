@@ -220,12 +220,35 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 DEPOSITS ENDPOINTS (5 endpoints)
-     *-------------------------------------------------------------------------*/
-    /*-------------------------------------------------------------------------*
-     * V3 EXECUTIONS ENDPOINTS (4 endpoints)
-     *-------------------------------------------------------------------------*/
+    BittrexClient.prototype.executions = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/executions', { params: props })];
+            });
+        });
+    };
+    /**
+     * Gets sequence number and last execution id.
+     * @returns {Promise}
+     */
+    BittrexClient.prototype.executionLastId = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/executions/last-id')];
+            });
+        });
+    };
+    /**
+     * Get sequence number for executions.
+     * @returns
+     */
+    BittrexClient.prototype.headExecutionLastId = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('head', '/executions/last-id')];
+            });
+        });
+    };
     /*-------------------------------------------------------------------------*
      * V3 FundsTransferMethods ENDPOINTS (1 endpoints)
      *-------------------------------------------------------------------------*/
@@ -356,7 +379,7 @@ var BittrexClient = /** @class */ (function () {
      * V3 Ping ENDPOINTS (1 endpoints)
      *-------------------------------------------------------------------------*/
     /**
-     *
+     * Pings the service
      * @returns {Promise}
      */
     BittrexClient.prototype.ping = function () {
@@ -369,6 +392,15 @@ var BittrexClient = /** @class */ (function () {
     /*-------------------------------------------------------------------------*
      * V3 Subaccounts ENDPOINTS (7 endpoints)
      *-------------------------------------------------------------------------*/
+    BittrexClient.prototype.subaccounts = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/subaccounts')];
+            });
+        });
+    };
+    // Subaccount endpoints are for partners.
+    // Won't be implemented yet since I don't need it.
     /*-------------------------------------------------------------------------*
      * V3 Transfers ENDPOINTS (4 endpoints)
      *-------------------------------------------------------------------------*/

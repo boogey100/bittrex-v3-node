@@ -87,6 +87,34 @@ declare class BittrexClient {
     }[]>;
     currencies(): Promise<Currency[]>;
     currencies(marketSymbol: string): Promise<Currency>;
+    /**
+     * Retrieve information on a specific execution.
+     * NOTE: Executions from before 5/27/2019 are not available.
+     * Also, there may be a delay before an executed trade is visible in this endpoint.
+     * @param executionId (uuid-formatted string) - ID of execution to retrieve
+     */
+    executions(executionId: string): Promise<Execution>;
+    /**
+     * List historical executions for account.
+     * Pagination and the sort order of the results are
+     * in inverse order of the Executed field.
+     *
+     * NOTE: Executions from before 5/27/2019 are not available.
+     * Also, there may be a delay before an executed trade
+     * is visible in this endpoint.
+     * @param props
+     */
+    executions(props: ExecutionsRequestParams): Promise<Execution[]>;
+    /**
+     * Gets sequence number and last execution id.
+     * @returns {Promise}
+     */
+    executionLastId(): Promise<ExecutionLastId>;
+    /**
+     * Get sequence number for executions.
+     * @returns
+     */
+    headExecutionLastId(): Promise<unknown>;
     markets(): Promise<Market[]>;
     marketsSummaries(): Promise<MarketSummary[]>;
     headMarketsSummaries(): Promise<unknown>;
@@ -103,10 +131,11 @@ declare class BittrexClient {
     headMarketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<unknown>;
     marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<Candle[]>;
     /**
-     *
+     * Pings the service
      * @returns {Promise}
      */
     ping(): Promise<ServicePing>;
+    subaccounts(): Promise<Subaccount[]>;
     /**
      * @private
      * @method request

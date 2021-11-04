@@ -163,3 +163,32 @@ interface Candle {
   volume: number
   quoteVolume: number
 }
+
+interface Subaccount {
+  id: string
+  createdAt: string
+}
+
+interface Execution {
+  id: string
+  marketSymbol: string
+  executedAt: string
+  quantity: number
+  rate: number
+  orderId: string
+  commission: number
+  isTaker: boolean
+}
+
+interface ExecutionLastId {
+  lastId: string
+}
+
+interface ExecutionsRequestParams {
+  marketSymbol?: string
+  nextPageToken?: string
+  previousPageToken?: string
+  pageSize?: number
+  startDate?: string
+  endDate?: string
+}

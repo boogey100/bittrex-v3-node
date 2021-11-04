@@ -193,6 +193,45 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 EXECUTIONS ENDPOINTS (4 endpoints)
    *-------------------------------------------------------------------------*/
+
+  /**
+   * Retrieve information on a specific execution.
+   * NOTE: Executions from before 5/27/2019 are not available.
+   * Also, there may be a delay before an executed trade is visible in this endpoint.
+   * @param executionId (uuid-formatted string) - ID of execution to retrieve
+   */
+  async executions(executionId: string): Promise<Execution>;
+  /**
+   * List historical executions for account.
+   * Pagination and the sort order of the results are
+   * in inverse order of the Executed field.
+   * 
+   * NOTE: Executions from before 5/27/2019 are not available.
+   * Also, there may be a delay before an executed trade
+   * is visible in this endpoint.
+   * @param props 
+   */
+  async executions(props: ExecutionsRequestParams): Promise<Execution[]>;
+  async executions(props: any) {
+    return this.request('get', '/executions', { params: props });
+  }
+
+  /**
+   * Gets sequence number and last execution id.
+   * @returns {Promise}
+   */
+  async executionLastId(): Promise<ExecutionLastId> {
+    return this.request('get', '/executions/last-id')
+  }
+
+  /**
+   * Get sequence number for executions.
+   * @returns 
+   */
+  async headExecutionLastId() {
+    return this.request('head', '/executions/last-id')
+  }
+
   /*-------------------------------------------------------------------------*
    * V3 FundsTransferMethods ENDPOINTS (1 endpoints)
    *-------------------------------------------------------------------------*/
@@ -269,7 +308,7 @@ class BittrexClient {
    *-------------------------------------------------------------------------*/
 
   /**
-   * 
+   * Pings the service
    * @returns {Promise}
    */
   async ping(): Promise<ServicePing> {
@@ -278,6 +317,14 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 Subaccounts ENDPOINTS (7 endpoints)
    *-------------------------------------------------------------------------*/
+
+  async subaccounts(): Promise<Subaccount[]> {
+    return this.request('get', '/subaccounts')
+  }
+
+  // Subaccount endpoints are for partners.
+  // Won't be implemented yet since I don't need it.
+
   /*-------------------------------------------------------------------------*
    * V3 Transfers ENDPOINTS (4 endpoints)
    *-------------------------------------------------------------------------*/
