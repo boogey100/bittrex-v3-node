@@ -335,7 +335,7 @@ class BittrexClient {
       headers['Api-Signature'] = this.requestSignature(nonce, url, method, contentHash, params)
     }
 
-    const { data } = await this._client.request({ method, url, headers, params, data: params.body }).catch(err => {
+    const { data } = await this._client.request({ method, url, headers, params, data: body }).catch(err => {
       if (err.isAxiosError) {
         return err.response
       } else {
