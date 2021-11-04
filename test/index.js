@@ -91,6 +91,21 @@ xdescribe('balances', () => {
   });
 })
 
+xdescribe('batch', () => {
+  it('should create batch', async () => {
+    let results = await client.createBatch([
+      {
+        operation: 'post',
+        resource: 'order',
+        payload: {
+
+        }
+      }
+    ])
+  })
+})
+
+
 xdescribe('bittrex-node', () => {
   describe('public', () => {
     it('should get markets', async () => {

@@ -201,6 +201,15 @@ var BittrexClient = /** @class */ (function () {
     /*-------------------------------------------------------------------------*
      * V3 BATCH ENDPOINTS (1 endpoint)
      *-------------------------------------------------------------------------*/
+    BittrexClient.prototype.createBatch = function (payload) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('post', '/batch', {
+                        body: payload
+                    })];
+            });
+        });
+    };
     /*-------------------------------------------------------------------------*
      * V3 ConditionalOrders ENDPOINTS (6 endpoints)
      *-------------------------------------------------------------------------*/

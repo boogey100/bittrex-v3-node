@@ -3,6 +3,36 @@ import * as crypto from 'crypto'
 import * as https from 'https'
 import * as querystring from 'querystring'
 
+interface NewOrder {
+  marketSymbol: string
+  direction: 'buy' | 'sell'
+  type: 'limit' | 'market' | 'ceiling_limit' | 'ceiling_market'
+  quantity?: number
+  ceiling?: number
+  limit?: number
+  timeInForce: 'good_til_cancelled' | 'immediate_or_cancel' | 'fill_or_kill' | 'post_only_good_til_cancelled' | 'buy_now' | 'instant'
+  clientOrderId?: string
+  useAwards: boolean
+}
+
+interface DeleteOrder {
+  id: string
+}
+
+interface BatchSchemaDelete {
+  resource: 'order'
+  operation: 'delete'
+  payload: DeleteOrder
+}
+interface BatchSchemaPost {
+  resource: 'order'
+  operation: 'post'
+  payload: NewOrder
+}
+type BatchSchema = BatchSchemaDelete | BatchSchemaPost
+
+type BatchSchemaBody = BatchSchema[]
+
 class BittrexClient {
 
   private _apiKey: string
@@ -214,6 +244,15 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 BATCH ENDPOINTS (1 endpoint)
    *-------------------------------------------------------------------------*/
+
+  async createBatch(payload: BatchSchemaBody): Promise<{
+    status: number
+    payload: any
+  }[]> {
+    return this.request('post', '/batch', {
+      body: payload
+    })
+  }
   /*-------------------------------------------------------------------------*
    * V3 ConditionalOrders ENDPOINTS (6 endpoints)
    *-------------------------------------------------------------------------*/

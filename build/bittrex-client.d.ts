@@ -1,4 +1,30 @@
 import { Method } from 'axios';
+interface NewOrder {
+    marketSymbol: string;
+    direction: 'buy' | 'sell';
+    type: 'limit' | 'market' | 'ceiling_limit' | 'ceiling_market';
+    quantity?: number;
+    ceiling?: number;
+    limit?: number;
+    timeInForce: 'good_til_cancelled' | 'immediate_or_cancel' | 'fill_or_kill' | 'post_only_good_til_cancelled' | 'buy_now' | 'instant';
+    clientOrderId?: string;
+    useAwards: boolean;
+}
+interface DeleteOrder {
+    id: string;
+}
+interface BatchSchemaDelete {
+    resource: 'order';
+    operation: 'delete';
+    payload: DeleteOrder;
+}
+interface BatchSchemaPost {
+    resource: 'order';
+    operation: 'post';
+    payload: NewOrder;
+}
+declare type BatchSchema = BatchSchemaDelete | BatchSchemaPost;
+declare type BatchSchemaBody = BatchSchema[];
 declare class BittrexClient {
     private _apiKey;
     private _apiSecret;
@@ -144,6 +170,10 @@ declare class BittrexClient {
      * @returns {Promise}
      */
     balanceSnapshot(): Promise<unknown>;
+    createBatch(payload: BatchSchemaBody): Promise<{
+        status: number;
+        payload: any;
+    }[]>;
     /**
      * @method markets
      * @return {Promise}
