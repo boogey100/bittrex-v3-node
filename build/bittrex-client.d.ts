@@ -85,8 +85,59 @@ declare class BittrexClient {
         status: number;
         payload: any;
     }[]>;
+    /**
+     * List currencies.
+     */
     currencies(): Promise<Currency[]>;
+    /**
+     * Retrieve info on a specified currency.
+     * @param marketSymbol symbol of the currency to retrieve
+     */
     currencies(marketSymbol: string): Promise<Currency>;
+    /**
+     * List open deposits.
+     * Results are sorted in inverse order of UpdatedAt,
+     * and are limited to the first 1000.
+     * @param props
+     * @returns
+     */
+    depositsOpen(props?: {
+        status: string;
+        currencySymbol: string;
+    }): Promise<Deposit[]>;
+    /**
+     * Get open deposits sequence.
+     * @returns {Promise}
+     */
+    headDepositsOpen(): Promise<unknown>;
+    /**
+     * List closed deposits.
+     * StartDate and EndDate filters apply to the CompletedAt field.
+     * Pagination and the sort order of the results are in inverse
+     * order of the CompletedAt field.
+     * @returns
+     */
+    depositsClosed(props?: {
+        status?: 'completed' | 'orphaned' | 'invalidated';
+        currencySymbol?: string;
+        nextPageToken?: string;
+        previousPageToken?: string;
+        pageSize?: number;
+        startSate?: string;
+        endDate?: string;
+    }): Promise<Deposit[]>;
+    /**
+     * Retrieves all deposits for this account with the given TxId
+     * @param txId the transaction id to lookup
+     * @returns
+     */
+    depositsByTxId(txId: string): Promise<Deposit[]>;
+    /**
+     * Retrieve information for a specific deposit.
+     * @param depositId (uuid-formatted string) - ID of the deposit to retrieve
+     * @returns
+     */
+    deposits(depositId: string): Promise<unknown>;
     /**
      * Retrieve information on a specific execution.
      * NOTE: Executions from before 5/27/2019 are not available.
@@ -115,26 +166,124 @@ declare class BittrexClient {
      * @returns
      */
     headExecutionLastId(): Promise<unknown>;
+    /**
+     * List markets.
+     * @returns
+     */
     markets(): Promise<Market[]>;
+    /**
+     * List summaries of the last 24 hours of activity for all markets.
+     * @returns
+     */
     marketsSummaries(): Promise<MarketSummary[]>;
+    /**
+     * Retrieve the current sequence number for the market summaries snapshot.
+     * @returns
+     */
     headMarketsSummaries(): Promise<unknown>;
+    /**
+     * List tickers for all markets.
+     * @returns
+     */
     marketsTickers(): Promise<Ticker[]>;
+    /**
+     * Retrieve the current sequence number for the tickers snapshot.
+     * @returns
+     */
     headMarketsTickers(): Promise<unknown>;
+    /**
+     * Retrieve the ticker for a specific market.
+     * @param marketSymbol symbol of market to retrieve ticker for
+     * @returns
+     */
     marketTicker(marketSymbol: string): Promise<Ticker>;
+    /**
+     * Retrieve information for a specific market.
+     * @param marketSymbol symbol of market to retrieve
+     * @returns
+     */
     market(marketSymbol: string): Promise<Market>;
+    /**
+     * Retrieve summary of the last 24 hours of activity for a specific market.
+     * @param marketSymbol symbol of market to retrieve summary for
+     * @returns
+     */
     marketSummary(marketSymbol: string): Promise<MarketSummary>;
+    /**
+     * Retrieve the order book for a specific market.
+     * @param marketSymbol symbol of market to retrieve order book for
+     * @param depth maximum depth of order book to return (optional, allowed values are [1, 25, 500], default is 25)
+     * @returns
+     */
     marketOrderBook(marketSymbol: string, depth?: number): Promise<OrderBook>;
+    /**
+     * Retrieve the current sequence number for the specified market's order book snapshot.
+     * @param marketSymbol symbol of market to retrieve order book for
+     * @param depth maximum depth of order book to return (optional, allowed values are [1, 25, 500], default is 25)
+     * @returns
+     */
     headMarketOrderBook(marketSymbol: string, depth?: number): Promise<unknown>;
+    /**
+     * Retrieve the recent trades for a specific market.
+     * @param marketSymbol symbol of market to retrieve recent trades for
+     * @returns
+     */
     marketTrades(marketSymbol: string): Promise<Trade[]>;
+    /**
+     * Retrieve the current sequence number for the specified market's recent trades snapshot.
+     * @param marketSymbol symbol of market to retrieve order book for
+     * @returns
+     */
     headMarketTrades(marketSymbol: string): Promise<unknown>;
+    /**
+     * Retrieve recent candles for a specific market and candle interval.
+     * The maximum age of the returned candles
+     * depends on the interval as follows:
+     * (MINUTE_1: 1 day, MINUTE_5: 1 day, HOUR_1: 31 days, DAY_1: 366 days).
+     * Candles for intervals without any trading activity
+     * will match the previous close and volume will be zero.
+     * @param marketSymbol symbol of market to retrieve candles for
+     * @param candleInterval desired time interval between candles
+     * @param candleType type of candles (trades or midpoint). This portion of the url may be omitted if trade based candles are desired (e.g. /candles/{candleInterval}/recent will return trade based candles)
+     * @returns
+     */
     marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<Candle[]>;
+    /**
+     * Retrieve the current sequence number for the specified market's candles snapshot.
+     * @param marketSymbol symbol of market to retrieve candles for
+     * @param candleInterval desired time interval between candles
+     * @param candleType type of candles (trades or midpoint). This portion of the url may be omitted if trade based candles are desired (e.g. /candles/{candleInterval}/recent will return trade based candles)
+     * @returns
+     */
     headMarketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<unknown>;
+    /**
+     * Retrieve recent candles for a specific market and candle interval.
+     * The date range of returned candles depends on the interval as follows:
+     * (MINUTE_1: 1 day, MINUTE_5: 1 day, HOUR_1: 31 days, DAY_1: 366 days).
+     * Candles for intervals without any trading activity
+     * will match the previous close and volume will be zero.
+     * @param marketSymbol symbol of market to retrieve candles for
+     * @param candleInterval desired time interval between candles
+     * @param year desired year to start from
+     * @param candleType type of candles (trades or midpoint). This portion of the url may be omitted if trade based candles are desired (e.g. /candles/{candleInterval}/historical/{year} will return trade based candles)
+     * @param month desired month to start from (if applicable)
+     * @param day desired day to start from (if applicable)
+     * @returns
+     */
     marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<Candle[]>;
     /**
      * Pings the service
      * @returns {Promise}
      */
     ping(): Promise<ServicePing>;
+    /**
+     * List subaccounts.
+     *
+     * (NOTE: This API is limited to partners and not available for traders.)
+     * Pagination and the sort order of the results
+     * are in inverse order of the CreatedAt field.
+     * @returns
+     */
     subaccounts(): Promise<Subaccount[]>;
     /**
      * @private

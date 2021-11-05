@@ -179,17 +179,86 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 CURRENCIES ENDPOINTS (2 endpoints)
    *-------------------------------------------------------------------------*/
+
+  /**
+   * List currencies.
+   */
   async currencies(): Promise<Currency[]>;
+  /**
+   * Retrieve info on a specified currency.
+   * @param marketSymbol symbol of the currency to retrieve
+   */
   async currencies(marketSymbol: string): Promise<Currency>;
-  async currencies(marketSymbol?: string) {
+  async currencies(marketSymbol?: any) {
     if (marketSymbol) {
       return this.request('get', '/currencies/' + marketSymbol)
     }
     return this.request('get', '/currencies');
   }
+
   /*-------------------------------------------------------------------------*
    * V3 DEPOSITS ENDPOINTS (5 endpoints)
    *-------------------------------------------------------------------------*/
+
+  /**
+   * List open deposits.
+   * Results are sorted in inverse order of UpdatedAt,
+   * and are limited to the first 1000.
+   * @param props 
+   * @returns 
+   */
+  async depositsOpen(props?: {
+    status: string
+    currencySymbol: string
+  }): Promise<Deposit[]> {
+    return this.request('get', '/deposits/open', { params: props })
+  }
+
+  /**
+   * Get open deposits sequence.
+   * @returns {Promise}
+   */
+  async headDepositsOpen() {
+    return this.request('head', '/deposits/open')
+  }
+
+  /**
+   * List closed deposits.
+   * StartDate and EndDate filters apply to the CompletedAt field.
+   * Pagination and the sort order of the results are in inverse
+   * order of the CompletedAt field.
+   * @returns 
+   */
+  async depositsClosed(props?: {
+    status?: 'completed' | 'orphaned' | 'invalidated'
+    currencySymbol?: string
+    nextPageToken?: string
+    previousPageToken?: string
+    pageSize?: number
+    startSate?: string
+    endDate?: string
+  }): Promise<Deposit[]> {
+    return this.request('get', '/deposit/closed', { params: props })
+  }
+
+  /**
+   * Retrieves all deposits for this account with the given TxId
+   * @param txId the transaction id to lookup
+   * @returns 
+   */
+  async depositsByTxId(txId: string): Promise<Deposit[]> {
+    return this.request('get', '/deposits/ByTxId/' + txId)
+  }
+
+  /**
+   * Retrieve information for a specific deposit.
+   * @param depositId (uuid-formatted string) - ID of the deposit to retrieve
+   * @returns 
+   */
+  async deposits(depositId: string) {
+    return this.request('get', '/deposits/' + depositId)
+  }
+
   /*-------------------------------------------------------------------------*
    * V3 EXECUTIONS ENDPOINTS (4 endpoints)
    *-------------------------------------------------------------------------*/
@@ -409,6 +478,14 @@ class BittrexClient {
    * V3 Subaccounts ENDPOINTS (7 endpoints)
    *-------------------------------------------------------------------------*/
 
+  /**
+   * List subaccounts.
+   * 
+   * (NOTE: This API is limited to partners and not available for traders.)
+   * Pagination and the sort order of the results
+   * are in inverse order of the CreatedAt field.
+   * @returns 
+   */
   async subaccounts(): Promise<Subaccount[]> {
     return this.request('get', '/subaccounts')
   }

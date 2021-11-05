@@ -167,9 +167,7 @@ interface Candle {
 interface Subaccount {
   id: string
   createdAt: string
-<<<<<<< HEAD
 }
-
 interface Execution {
   id: string
   marketSymbol: string
@@ -192,6 +190,27 @@ interface ExecutionsRequestParams {
   pageSize?: number
   startDate?: string
   endDate?: string
-=======
->>>>>>> aee2a337a1e4933944c9a70189fd927534611551
+}
+
+interface Deposit {
+  id: string
+  currencySymbol: string
+  quantity: number
+  cryptoAddress: string
+  fundsTransferMethodId: string
+  cryptoAddressTag: string
+  txId: string
+  confirmations: number
+  updatedAt: string
+  completedAt: string
+  status: 'pending' | 'completed' | 'orphaned' | 'invalidated'
+  source: 'blockchain' | 'wire_transfer' | 'credit_card' | 'ach' | 'airdrop'
+  accountId: string
+  error: Error
+}
+
+interface Error {
+  code: string
+  detail?: string
+  data?: any
 }
