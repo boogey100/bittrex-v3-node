@@ -1,6 +1,45 @@
-# bittrex-node
+# bittrex-v3-node
 
 [![wercker status](https://app.wercker.com/status/feb7e7d87d5a4a29ea9c04b4a1350a44/s/master "wercker status")](https://app.wercker.com/project/byKey/feb7e7d87d5a4a29ea9c04b4a1350a44)
+
+This project is based on [Andrew Barba](https://github.com/AndrewBarba) [bittrex-node](https://github.com/AndrewBarba/bittrex-node). It is mainly developed for personal use, but feel free to fork, notify issues or pull request contributions.
+
+## Development status
+
+### Assumptions
+
+* This project will be written in TypeScript. Params and responses will be strictly typed according to official docs.
+* Endpoint details will be documented with the official [bittrex API V3 documentation](https://bittrex.github.io/api/v3).
+* This project won't be compatible with any v1.1 API version. Use [bittrex-node](https://github.com/AndrewBarba/bittrex-node) for that purpose.
+* Libraries will be updated to latest version, specially axios, to avoid the latest well-known security issues with old versions.
+* Tests + coverage will be provided.
+
+### General overview
+
+- [x] V3 Authenticated requests
+- [ ] Rate Limits control
+- [ ] Pagination support
+- [ ] Error codes
+- [ ] Parse number and Date response fields
+- [ ] Websockets support
+
+### API Endpoints
+
+- [x] Account
+- [x] Addresses
+- [x] Balances
+- [x] Batch
+- [ ] ConditionalOrders
+- [x] Currencies
+- [x] Deposits
+- [x] Executions
+- [ ] FundsTransferMethods
+- [x] Markets
+- [ ] Orders
+- [x] Ping
+- [ ] Subaccounts
+- [ ] Transfers
+- [ ] Withdrawals
 
 A full-featured Bittrex API client for Node.js
 
@@ -21,7 +60,7 @@ If you're using the Bittrex REST API, I can assure you this is the only library 
 ## Initialize Client
 
 ```javascript
-const { BittrexClient } = require('bittrex-node')
+const { BittrexClient } = require('bittrex-v3-node')
 
 let client = new BittrexClient({
   apiKey: '12345',
