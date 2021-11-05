@@ -84,16 +84,16 @@ describe('balances', () => {
   it('should get balances', async () => {
     let results = await client.getBalances()
     results.length.should.be.aboveOrEqual(0)
-  });
+  })
 
   it('should get specific balance', async () => {
     let results = await client.getBalance('BTC')
     results.currencySymbol.should.be.equals('BTC')
-  });
+  })
 
   xit('should get sequence of balances snapshot', async () => {
     let results = await client.headBalances()
-  });
+  })
 })
 
 xdescribe('batch', () => {
@@ -137,4 +137,3 @@ describe('markets', () => {
     results.length.should.be.aboveOrEqual(0)
   })
 })
-
