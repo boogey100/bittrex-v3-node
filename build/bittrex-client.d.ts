@@ -81,10 +81,68 @@ declare class BittrexClient {
      * @returns {Promise}
      */
     balanceSnapshot(): Promise<unknown>;
+    /**
+     * Create a new batch request.
+     * Currently batch requests are limited to placing and cancelling orders.
+     * The request model corresponds to the equivalent individual operations.
+     * Batch operations are executed sequentially in the order
+     * they are listed in the request.
+     * The response will return one result for each operation in the request
+     * in the same order.
+     * The status and response payload are the same as the responses
+     * would be if individual API requests were made for each operation.
+     * @param payload List of operations in the batch
+     * @returns
+     */
     createBatch(payload: BatchSchemaBody): Promise<{
         status: number;
         payload: any;
     }[]>;
+    /**
+     * Retrieve information on a specific conditional order.
+     * @param conditionalOrderId (uuid-formatted string) - ID of conditional order to retrieve
+     * @returns
+     */
+    conditionalOrders(conditionalOrderId: string): Promise<ConditionalOrder>;
+    /**
+     * Cancel a conditional order.
+     * @param conditionalOrderId (uuid-formatted string) - ID of order to cancel
+     * @returns
+     */
+    conditionalOrderDelete(conditionalOrderId: string): Promise<ConditionalOrder>;
+    /**
+     * List closed conditional orders.
+     * StartDate and EndDate filters apply to the ClosedAt field.
+     * Pagination and the sort order of the results are in inverse
+     * order of the ClosedAt field.
+     * @param props
+     * @returns
+     */
+    conditionalOrdersClosed(props?: {
+        marketSymbol: string;
+        nextPageToken: string;
+        previousPageToken: string;
+        pageSize: number;
+        startDate: string;
+        endDate: string;
+    }): Promise<ConditionalOrder[]>;
+    /**
+     * List open conditional orders.
+     * @param marketSymbol filter by market (optional)
+     * @returns
+     */
+    conditionalOrdersOpen(marketSymbol?: string): Promise<ConditionalOrder[]>;
+    /**
+     * Get sequence of open conditional orders snapshot.
+     * @returns
+     */
+    headConditionalOrdersOpen(): Promise<unknown>;
+    /**
+     * Create a new conditional order.
+     * @param newConditionalOrder information specifying the conditional order to create
+     * @returns
+     */
+    conditionalOrdersCreate(newConditionalOrder: NewConditionalOrder): Promise<ConditionalOrder>;
     /**
      * List currencies.
      */

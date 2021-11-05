@@ -165,6 +165,19 @@ class BittrexClient {
    * V3 BATCH ENDPOINTS (1 endpoint)
    *-------------------------------------------------------------------------*/
 
+  /**
+   * Create a new batch request.
+   * Currently batch requests are limited to placing and cancelling orders.
+   * The request model corresponds to the equivalent individual operations.
+   * Batch operations are executed sequentially in the order
+   * they are listed in the request.
+   * The response will return one result for each operation in the request
+   * in the same order.
+   * The status and response payload are the same as the responses
+   * would be if individual API requests were made for each operation.
+   * @param payload List of operations in the batch
+   * @returns 
+   */
   async createBatch(payload: BatchSchemaBody): Promise<{
     status: number
     payload: any
@@ -177,14 +190,32 @@ class BittrexClient {
    * V3 ConditionalOrders ENDPOINTS (6 endpoints)
    *-------------------------------------------------------------------------*/
 
+  /**
+   * Retrieve information on a specific conditional order.
+   * @param conditionalOrderId (uuid-formatted string) - ID of conditional order to retrieve
+   * @returns 
+   */
   async conditionalOrders(conditionalOrderId: string): Promise<ConditionalOrder> {
     return this.request('get', '/conditional-orders/' + conditionalOrderId)
   }
 
+  /**
+   * Cancel a conditional order.
+   * @param conditionalOrderId (uuid-formatted string) - ID of order to cancel
+   * @returns 
+   */
   async conditionalOrderDelete(conditionalOrderId: string): Promise<ConditionalOrder> {
     return this.request('delete', '/conditional-orders/' + conditionalOrderId)
   }
 
+  /**
+   * List closed conditional orders.
+   * StartDate and EndDate filters apply to the ClosedAt field.
+   * Pagination and the sort order of the results are in inverse
+   * order of the ClosedAt field.
+   * @param props 
+   * @returns 
+   */
   async conditionalOrdersClosed(props?: {
     marketSymbol: string
     nextPageToken: string
@@ -196,14 +227,28 @@ class BittrexClient {
     return this.request('get', '/conditional-orders/closed', { params: props })
   }
 
+  /**
+   * List open conditional orders.
+   * @param marketSymbol filter by market (optional)
+   * @returns 
+   */
   async conditionalOrdersOpen(marketSymbol?: string): Promise<ConditionalOrder[]> {
     return this.request('get', '/conditional-orders/open', { params: { marketSymbol } })
   }
 
+  /**
+   * Get sequence of open conditional orders snapshot.
+   * @returns 
+   */
   async headConditionalOrdersOpen() {
-    this.request('head', '/conditional-orders/open')
+    return this.request('head', '/conditional-orders/open')
   }
 
+  /**
+   * Create a new conditional order.
+   * @param newConditionalOrder information specifying the conditional order to create
+   * @returns 
+   */
   async conditionalOrdersCreate(newConditionalOrder: NewConditionalOrder): Promise<ConditionalOrder> {
     return this.request('post', '/conditional-orders', { body: newConditionalOrder })
   }
