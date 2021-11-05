@@ -246,3 +246,13 @@ interface NewConditionalOrder {
   orderToCancel?: NewCancelConditionalOrder
   clientConditionalOrderId?: string
 }
+
+interface FundsTransferMethod {
+  id: string
+  friendlyName: string
+  bankName: string
+  accountNumber: string
+  state: 'disabled' | 'enabled' | 'deleted' | 'pending' | 'verification_required' | 'validation_failed'
+  type: 'wire' | 'sepa' | 'instant_settlement' | 'ach' | 'sen'
+  depositOnly: boolean
+}

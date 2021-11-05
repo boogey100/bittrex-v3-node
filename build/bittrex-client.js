@@ -217,9 +217,7 @@ var BittrexClient = /** @class */ (function () {
     BittrexClient.prototype.createBatch = function (payload) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('post', '/batch', {
-                        body: payload
-                    })];
+                return [2 /*return*/, this.request('post', '/batch', { body: payload })];
             });
         });
     };
@@ -408,6 +406,18 @@ var BittrexClient = /** @class */ (function () {
     /*-------------------------------------------------------------------------*
      * V3 FundsTransferMethods ENDPOINTS (1 endpoints)
      *-------------------------------------------------------------------------*/
+    /**
+     * Get details about a linked bank account
+     * @param fundsTransferMethodId (uuid-formatted string) - ID of funds transfer method to retrieve
+     * @returns
+     */
+    BittrexClient.prototype.fundsTransferMethods = function (fundsTransferMethodId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/funds-transfer-methods/' + fundsTransferMethodId)];
+            });
+        });
+    };
     /*-------------------------------------------------------------------------*
      * V3 Markets ENDPOINTS (15 endpoints)
      *-------------------------------------------------------------------------*/

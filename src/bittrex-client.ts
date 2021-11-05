@@ -182,9 +182,7 @@ class BittrexClient {
     status: number
     payload: any
   }[]> {
-    return this.request('post', '/batch', {
-      body: payload
-    })
+    return this.request('post', '/batch', { body: payload })
   }
   /*-------------------------------------------------------------------------*
    * V3 ConditionalOrders ENDPOINTS (6 endpoints)
@@ -381,6 +379,16 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 FundsTransferMethods ENDPOINTS (1 endpoints)
    *-------------------------------------------------------------------------*/
+
+  /**
+   * Get details about a linked bank account
+   * @param fundsTransferMethodId (uuid-formatted string) - ID of funds transfer method to retrieve
+   * @returns 
+   */
+  async fundsTransferMethods(fundsTransferMethodId: string): Promise<FundsTransferMethod> {
+    return this.request('get', '/funds-transfer-methods/' + fundsTransferMethodId)
+  }
+
   /*-------------------------------------------------------------------------*
    * V3 Markets ENDPOINTS (15 endpoints)
    *-------------------------------------------------------------------------*/

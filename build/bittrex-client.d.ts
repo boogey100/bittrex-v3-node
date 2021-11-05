@@ -225,6 +225,12 @@ declare class BittrexClient {
      */
     headExecutionLastId(): Promise<unknown>;
     /**
+     * Get details about a linked bank account
+     * @param fundsTransferMethodId (uuid-formatted string) - ID of funds transfer method to retrieve
+     * @returns
+     */
+    fundsTransferMethods(fundsTransferMethodId: string): Promise<FundsTransferMethod>;
+    /**
      * List markets.
      * @returns
      */
