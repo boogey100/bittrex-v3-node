@@ -2,6 +2,7 @@ import axios, { AxiosInstance, Method } from 'axios'
 import * as crypto from 'crypto'
 import * as https from 'https'
 import * as querystring from 'querystring'
+import * as BTT from './bittrex-types'
 
 class BittrexClient {
   private _apiKey: string
@@ -12,10 +13,10 @@ class BittrexClient {
    * Create a new client instance with API Keys
    * @param param0 
    */
-  constructor({ apiKey = '', apiSecret = '', keepAlive = true }: {
+  constructor({ apiKey, apiSecret, keepAlive = true }: {
     apiKey: string,
     apiSecret: string,
-    keepAlive: boolean
+    keepAlive?: boolean
   }) {
     this._apiKey = apiKey
     this._apiSecret = apiSecret
@@ -41,7 +42,7 @@ class BittrexClient {
    * More fields will be added later.
    * @returns {Promise}
    */
-  async account(): Promise<Account> {
+  async account(): Promise<BTT.Account> {
     return this.request('get', '/account')
   }
 
@@ -51,12 +52,12 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountFeesTrading(): Promise<CommissionRatesWithMarket[]>;
+  async accountFeesTrading(): Promise<BTT.CommissionRatesWithMarket[]>;
   /**
    * Get trade fee for the given marketSymbol.
    * @param marketSymbol 
    */
-  async accountFeesTrading(marketSymbol: string): Promise<CommissionRatesWithMarket>;
+  async accountFeesTrading(marketSymbol: string): Promise<BTT.CommissionRatesWithMarket>;
   async accountFeesTrading(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/account/fees/trading/' + marketSymbol)
@@ -68,7 +69,7 @@ class BittrexClient {
    * Get 30 day volume for account
    * @returns {Promise}
    */
-  async accountVolume(): Promise<AccountVolume> {
+  async accountVolume(): Promise<BTT.AccountVolume> {
     return this.request('get', '/account/volume')
   }
 
@@ -78,7 +79,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountPermissionsMarkets(marketSymbol?: string): Promise<MarketPolicy[]> {
+  async accountPermissionsMarkets(marketSymbol?: string): Promise<BTT.MarketPolicy[]> {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/markets/' + marketSymbol)
     }
@@ -91,7 +92,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async accountPermissionsCurrencies(marketSymbol?: string): Promise<CurrencyPolicy[]> {
+  async accountPermissionsCurrencies(marketSymbol?: string): Promise<BTT.CurrencyPolicy[]> {
     if (marketSymbol) {
       return this.request('get', '/account/permissions/currencies/' + marketSymbol)
     }
@@ -108,14 +109,14 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async addresses(): Promise<Address[]>
+  async addresses(): Promise<BTT.Address[]>
   /**
    * Retrieve the status of the deposit address for a particular currency for which one has been requested or provisioned.
    * Alias of addressesStatus(marketSymbol)
    * @param marketSymbol symbol of the currency to retrieve the deposit address for
    * @returns 
    */
-  async addresses(marketSymbol: string): Promise<Address>
+  async addresses(marketSymbol: string): Promise<BTT.Address>
   async addresses(marketSymbol?: string) {
     if (marketSymbol) {
       return this.request('get', '/addresses/' + marketSymbol)
@@ -139,7 +140,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async addressCreate(marketSymbol: string): Promise<Address> {
+  async addressCreate(marketSymbol: string): Promise<BTT.Address> {
     return this.request('post', '/addresses', {
       body: {
         currencySymbol: marketSymbol
@@ -157,7 +158,7 @@ class BittrexClient {
    * is either a balance or an address.
    * @returns {Promise}
    */
-  async balances(): Promise<Balance[]> {
+  async balances(): Promise<BTT.Balance[]> {
     return this.request('get', '/balances');
   }
 
@@ -168,7 +169,7 @@ class BittrexClient {
    * @param {string} marketSymbol 
    * @returns {Promise}
    */
-  async balance(marketSymbol: string): Promise<Balance> {
+  async balance(marketSymbol: string): Promise<BTT.Balance> {
     return this.request('get', '/balances/' + marketSymbol);
   }
 
@@ -176,7 +177,7 @@ class BittrexClient {
    * Get sequence of balances snapshot.
    * @returns {Promise}
    */
-  async balanceSnapshot(): Promise<void> {
+  async headBalances(): Promise<void> {
     return this.request('head', '/balances')
   }
 
@@ -197,7 +198,7 @@ class BittrexClient {
    * @param payload List of operations in the batch
    * @returns 
    */
-  async createBatch(payload: BatchSchemaBody): Promise<{
+  async batch(payload: BTT.BatchSchemaBody): Promise<{
     status: number
     payload: any
   }[]> {
@@ -212,7 +213,7 @@ class BittrexClient {
    * @param conditionalOrderId (uuid-formatted string) - ID of conditional order to retrieve
    * @returns 
    */
-  async conditionalOrders(conditionalOrderId: string): Promise<ConditionalOrder> {
+  async conditionalOrders(conditionalOrderId: string): Promise<BTT.ConditionalOrder> {
     return this.request('get', '/conditional-orders/' + conditionalOrderId)
   }
 
@@ -221,7 +222,7 @@ class BittrexClient {
    * @param conditionalOrderId (uuid-formatted string) - ID of order to cancel
    * @returns 
    */
-  async conditionalOrderDelete(conditionalOrderId: string): Promise<ConditionalOrder> {
+  async conditionalOrderDelete(conditionalOrderId: string): Promise<BTT.ConditionalOrder> {
     return this.request('delete', '/conditional-orders/' + conditionalOrderId)
   }
 
@@ -240,7 +241,7 @@ class BittrexClient {
     pageSize: number
     startDate: string
     endDate: string
-  }): Promise<ConditionalOrder[]> {
+  }): Promise<BTT.ConditionalOrder[]> {
     return this.request('get', '/conditional-orders/closed', { params: props })
   }
 
@@ -249,7 +250,7 @@ class BittrexClient {
    * @param marketSymbol filter by market (optional)
    * @returns 
    */
-  async conditionalOrdersOpen(marketSymbol?: string): Promise<ConditionalOrder[]> {
+  async conditionalOrdersOpen(marketSymbol?: string): Promise<BTT.ConditionalOrder[]> {
     return this.request('get', '/conditional-orders/open', { params: { marketSymbol } })
   }
 
@@ -266,7 +267,7 @@ class BittrexClient {
    * @param newConditionalOrder information specifying the conditional order to create
    * @returns 
    */
-  async conditionalOrdersCreate(newConditionalOrder: NewConditionalOrder): Promise<ConditionalOrder> {
+  async conditionalOrdersCreate(newConditionalOrder: BTT.NewConditionalOrder): Promise<BTT.ConditionalOrder> {
     return this.request('post', '/conditional-orders', { body: newConditionalOrder })
   }
 
@@ -277,12 +278,12 @@ class BittrexClient {
   /**
    * List currencies.
    */
-  async currencies(): Promise<Currency[]>;
+  async currencies(): Promise<BTT.Currency[]>;
   /**
    * Retrieve info on a specified currency.
    * @param marketSymbol symbol of the currency to retrieve
    */
-  async currencies(marketSymbol: string): Promise<Currency>;
+  async currencies(marketSymbol: string): Promise<BTT.Currency>;
   async currencies(marketSymbol?: any) {
     if (marketSymbol) {
       return this.request('get', '/currencies/' + marketSymbol)
@@ -304,7 +305,7 @@ class BittrexClient {
   async depositsOpen(props?: {
     status: string
     currencySymbol: string
-  }): Promise<Deposit[]> {
+  }): Promise<BTT.Deposit[]> {
     return this.request('get', '/deposits/open', { params: props })
   }
 
@@ -331,7 +332,7 @@ class BittrexClient {
     pageSize?: number
     startSate?: string
     endDate?: string
-  }): Promise<Deposit[]> {
+  }): Promise<BTT.Deposit[]> {
     return this.request('get', '/deposit/closed', { params: props })
   }
 
@@ -340,7 +341,7 @@ class BittrexClient {
    * @param txId the transaction id to lookup
    * @returns 
    */
-  async depositsByTxId(txId: string): Promise<Deposit[]> {
+  async depositsByTxId(txId: string): Promise<BTT.Deposit[]> {
     return this.request('get', '/deposits/ByTxId/' + txId)
   }
 
@@ -363,7 +364,7 @@ class BittrexClient {
    * Also, there may be a delay before an executed trade is visible in this endpoint.
    * @param executionId (uuid-formatted string) - ID of execution to retrieve
    */
-  async executions(executionId: string): Promise<Execution>;
+  async executions(executionId: string): Promise<BTT.Execution>;
   /**
    * List historical executions for account.
    * Pagination and the sort order of the results are
@@ -374,7 +375,7 @@ class BittrexClient {
    * is visible in this endpoint.
    * @param props 
    */
-  async executions(props: ExecutionsRequestParams): Promise<Execution[]>;
+  async executions(props: BTT.ExecutionsRequestParams): Promise<BTT.Execution[]>;
   async executions(props: any) {
     return this.request('get', '/executions', { params: props });
   }
@@ -383,7 +384,7 @@ class BittrexClient {
    * Gets sequence number and last execution id.
    * @returns {Promise}
    */
-  async executionLastId(): Promise<ExecutionLastId> {
+  async executionLastId(): Promise<BTT.ExecutionLastId> {
     return this.request('get', '/executions/last-id')
   }
 
@@ -404,7 +405,7 @@ class BittrexClient {
    * @param fundsTransferMethodId (uuid-formatted string) - ID of funds transfer method to retrieve
    * @returns 
    */
-  async fundsTransferMethods(fundsTransferMethodId: string): Promise<FundsTransferMethod> {
+  async fundsTransferMethods(fundsTransferMethodId: string): Promise<BTT.FundsTransferMethod> {
     return this.request('get', '/funds-transfer-methods/' + fundsTransferMethodId)
   }
 
@@ -416,7 +417,7 @@ class BittrexClient {
    * List markets.
    * @returns 
    */
-  async markets(): Promise<Market[]> {
+  async markets(): Promise<BTT.Market[]> {
     const results = await this.request('get', '/markets')
     return this.parseDates(results, ['createdAt'])
   }
@@ -425,7 +426,7 @@ class BittrexClient {
    * List summaries of the last 24 hours of activity for all markets.
    * @returns 
    */
-  async marketsSummaries(): Promise<MarketSummary[]> {
+  async marketsSummaries(): Promise<BTT.MarketSummary[]> {
     const results = await this.request('get', '/markets/summaries')
     return this.parseDates(results, ['updatedAt'])
   }
@@ -442,7 +443,7 @@ class BittrexClient {
    * List tickers for all markets.
    * @returns 
    */
-  async marketsTickers(): Promise<Ticker[]> {
+  async marketsTickers(): Promise<BTT.Ticker[]> {
     return this.request('get', '/markets/tickers')
   }
 
@@ -459,7 +460,7 @@ class BittrexClient {
    * @param marketSymbol symbol of market to retrieve ticker for
    * @returns 
    */
-  async marketTicker(marketSymbol: string): Promise<Ticker> {
+  async marketTicker(marketSymbol: string): Promise<BTT.Ticker> {
     return this.request('get', '/markets/' + marketSymbol + '/ticker')
   }
 
@@ -468,7 +469,7 @@ class BittrexClient {
    * @param marketSymbol symbol of market to retrieve
    * @returns 
    */
-  async market(marketSymbol: string): Promise<Market> {
+  async market(marketSymbol: string): Promise<BTT.Market> {
     return this.request('get', '/markets/' + marketSymbol)
   }
 
@@ -477,7 +478,7 @@ class BittrexClient {
    * @param marketSymbol symbol of market to retrieve summary for
    * @returns 
    */
-  async marketSummary(marketSymbol: string): Promise<MarketSummary> {
+  async marketSummary(marketSymbol: string): Promise<BTT.MarketSummary> {
     return this.request('get', '/markets/' + marketSymbol + '/summary')
   }
 
@@ -487,7 +488,7 @@ class BittrexClient {
    * @param depth maximum depth of order book to return (optional, allowed values are [1, 25, 500], default is 25)
    * @returns 
    */
-  async marketOrderBook(marketSymbol: string, depth?: number): Promise<OrderBook> {
+  async marketOrderBook(marketSymbol: string, depth?: number): Promise<BTT.OrderBook> {
     return this.request('get', '/markets/' + marketSymbol + '/orderbook', { params: { depth } })
   }
 
@@ -506,7 +507,7 @@ class BittrexClient {
    * @param marketSymbol symbol of market to retrieve recent trades for
    * @returns 
    */
-  async marketTrades(marketSymbol: string): Promise<Trade[]> {
+  async marketTrades(marketSymbol: string): Promise<BTT.Trade[]> {
     return this.request('get', '/markets/' + marketSymbol + '/trades')
   }
 
@@ -531,7 +532,7 @@ class BittrexClient {
    * @param candleType type of candles (trades or midpoint). This portion of the url may be omitted if trade based candles are desired (e.g. /candles/{candleInterval}/recent will return trade based candles)
    * @returns 
    */
-  async marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<Candle[]> {
+  async marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<BTT.Candle[]> {
     return this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')
   }
 
@@ -560,7 +561,7 @@ class BittrexClient {
    * @param day desired day to start from (if applicable)
    * @returns 
    */
-  async marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<Candle[]> {
+  async marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<BTT.Candle[]> {
     return this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/historical/' + year + (month && '/' + month) + (day && '/' + day))
   }
 
@@ -575,7 +576,7 @@ class BittrexClient {
    * Pings the service
    * @returns {Promise<ServicePing>}
    */
-  async ping(): Promise<ServicePing> {
+  async ping(): Promise<BTT.ServicePing> {
     return this.request('get', '/ping');
   }
   /*-------------------------------------------------------------------------*
@@ -592,12 +593,12 @@ class BittrexClient {
    * are in inverse order of the CreatedAt field.
    * @returns 
    */
-  async subaccounts(): Promise<Subaccount[]>;
+  async subaccounts(): Promise<BTT.Subaccount[]>;
   /**
    * Retrieve details for a specified subaccount. (NOTE: This API is limited to partners and not available for traders.)
    * @param subaccountId (uuid-formatted string) - ID of the subaccount to retrieve details for
    */
-  async subaccounts(subaccountId: string): Promise<Subaccount>;
+  async subaccounts(subaccountId: string): Promise<BTT.Subaccount>;
   async subaccounts(subaccountId?: string) {
     if (subaccountId) {
       return this.request('get', '/subaccounts/' + subaccountId)
@@ -610,7 +611,7 @@ class BittrexClient {
    * @param payload information specifying the subaccount to create (WARNING: Official docs doesn't specify the structure of body payload)
    * @returns 
    */
-  async subaccountCreate(newSubaccount: {}): Promise<Subaccount> {
+  async subaccountCreate(newSubaccount: {}): Promise<BTT.Subaccount> {
     return this.request('post', '/subaccounts', { body: newSubaccount })
   }
 
@@ -627,7 +628,7 @@ class BittrexClient {
     pageSize?: number
     startDate?: string
     endDate?: string
-  }): Promise<Withdrawal> {
+  }): Promise<BTT.Withdrawal> {
     return this.request('get', '/subaccounts/withdrawals/open', { params: options })
   }
 
@@ -644,7 +645,7 @@ class BittrexClient {
     pageSize?: number
     startDate?: string
     endDate?: string
-  }): Promise<Withdrawal> {
+  }): Promise<BTT.Withdrawal> {
     return this.request('get', '/subaccounts/withdrawals/closed', { params: options })
   }
 
@@ -685,7 +686,7 @@ class BittrexClient {
     pageSize?: number
     startDate?: string
     endDate?: string
-  }): Promise<SentTransferInfo[]> {
+  }): Promise<BTT.SentTransferInfo[]> {
     return this.request('get', '/transfers/sent', { params: options })
   }
 
@@ -705,7 +706,7 @@ class BittrexClient {
     pageSize?: number
     startDate?: string
     endDate?: string
-  }): Promise<ReceivedTransferInfo[]> {
+  }): Promise<BTT.ReceivedTransferInfo[]> {
     return this.request('get', '/transfers/received', { params: options })
   }
 
@@ -715,7 +716,7 @@ class BittrexClient {
    * @param transferId (uuid-formatted string) - ID of the transfer to retrieve
    * @returns 
    */
-  async transfer(transferId: string): Promise<ReceivedTransferInfo> {
+  async transfer(transferId: string): Promise<BTT.ReceivedTransferInfo> {
     return this.request('get', '/transfers/' + transferId)
   }
 
@@ -725,7 +726,7 @@ class BittrexClient {
    * @param newTransfer information specifying the transfer to execute
    * @returns 
    */
-  async transferCreate(newTransfer: NewTransfer): Promise<NewTransfer> {
+  async transferCreate(newTransfer: BTT.NewTransfer): Promise<BTT.NewTransfer> {
     return this.request('post', '/transfers', { body: newTransfer })
   }
 

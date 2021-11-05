@@ -1,4 +1,4 @@
-interface NewOrder {
+export interface NewOrder {
   marketSymbol: string
   direction: 'buy' | 'sell'
   type: 'limit' | 'market' | 'ceiling_limit' | 'ceiling_market'
@@ -10,83 +10,83 @@ interface NewOrder {
   useAwards?: boolean
 }
 
-interface DeleteOrder {
+export interface DeleteOrder {
   id: string
 }
 
-interface BatchSchemaDelete {
+export interface BatchSchemaDelete {
   resource: 'order'
   operation: 'delete'
   payload: DeleteOrder
 }
-interface BatchSchemaPost {
+export interface BatchSchemaPost {
   resource: 'order'
   operation: 'post'
   payload: NewOrder
 }
 type BatchSchema = BatchSchemaDelete | BatchSchemaPost
 
-type BatchSchemaBody = BatchSchema[]
+export type BatchSchemaBody = BatchSchema[]
 
-interface CommissionRatesWithMarket {
+export interface CommissionRatesWithMarket {
   marketSymbol: string
   makerRate: number
   takerRate: number
 }
 
-interface Account {
+export interface Account {
   subaccountId: string
   accountId: string
   actionsNeeded: string[]
 }
 
-interface AccountVolume {
+export interface AccountVolume {
   updated: string
   volume30days: number
 }
 
-interface MarketPolicy {
+export interface MarketPolicy {
   symbol: string
   view: boolean
   buy: boolean
   sell: boolean
 }
 
-interface CurrencyPolicy {
+export interface CurrencyPolicy {
   symbol: string
   view: boolean
   deposit: DepositMethods
   withdraw: WithdrawMethods
 }
 
-interface DepositMethods {
+export interface DepositMethods {
   blockchain: boolean
   creditCard: boolean
   wireTransfer: boolean
   ach: boolean
 }
 
-interface WithdrawMethods {
+export interface WithdrawMethods {
   blockchain: boolean
   wireTransfer: boolean
   ach: boolean
 }
 
-interface Address {
+export interface Address {
   status: 'REQUESTED' | 'PROVISIONED',
   currencySymbol: string,
   cryptoAddress: string,
   cryptoAddressTag?: string
 }
 
-interface Balance {
+export interface Balance {
   currencySymbol: string,
   total: string
   available: string
   updatedAt: string
 }
 
-interface Currency {
+export interface Currency {
   symbol: string
   name: string
   coinType: string
@@ -101,11 +101,11 @@ interface Currency {
   tags: string[]
 }
 
-interface ServicePing {
+export interface ServicePing {
   serverTime: number
 }
 
-interface Market {
+export interface Market {
   symbol: string
   baseCurrencySymbol: string
   quoteCurrencySymbol: string
@@ -119,7 +119,7 @@ interface Market {
   tags: string[]
 }
 
-interface MarketSummary {
+export interface MarketSummary {
   symbol: string
   high: number
   low: number
@@ -129,24 +129,24 @@ interface MarketSummary {
   updatedAt: string
 }
 
-interface Ticker {
+export interface Ticker {
   symbol: string
   lastTradeRate: number
   bidRate: number
   askRate: number
 }
 
-interface OrderBookEntry {
+export interface OrderBookEntry {
   quantity: number
   rate: number
 }
 
-interface OrderBook {
+export interface OrderBook {
   bid: OrderBookEntry[]
   ask: OrderBookEntry[]
 }
 
-interface Trade {
+export interface Trade {
   id: string
   executedAt: string
   quantity: number
@@ -154,7 +154,7 @@ interface Trade {
   takerSide: 'buy' | 'sell'
 }
 
-interface Candle {
+export interface Candle {
   startsAt: string
   open: number
   high: number
@@ -164,11 +164,11 @@ interface Candle {
   quoteVolume: number
 }
 
-interface Subaccount {
+export interface Subaccount {
   id: string
   createdAt: string
 }
-interface Execution {
+export interface Execution {
   id: string
   marketSymbol: string
   executedAt: string
@@ -179,11 +179,11 @@ interface Execution {
   isTaker: boolean
 }
 
-interface ExecutionLastId {
+export interface ExecutionLastId {
   lastId: string
 }
 
-interface ExecutionsRequestParams {
+export interface ExecutionsRequestParams {
   marketSymbol?: string
   nextPageToken?: string
   previousPageToken?: string
@@ -192,7 +192,7 @@ interface ExecutionsRequestParams {
   endDate?: string
 }
 
-interface Deposit {
+export interface Deposit {
   id: string
   currencySymbol: string
   quantity: number
@@ -209,18 +209,18 @@ interface Deposit {
   error: Error
 }
 
-interface Error {
+export interface Error {
   code: string
   detail?: string
   data?: any
 }
 
-interface NewCancelConditionalOrder {
+export interface NewCancelConditionalOrder {
   type: 'order' | 'conditional_order'
   id?: string
 }
 
-interface ConditionalOrder {
+export interface ConditionalOrder {
   id: string
   marketSymbol: string
   operand: 'lte' | 'gte'
@@ -237,7 +237,7 @@ interface ConditionalOrder {
   closedAt: string
 }
 
-interface NewConditionalOrder {
+export interface NewConditionalOrder {
   marketSymbol: string
   operand: 'lte' | 'gte'
   triggerPrice?: number
@@ -247,7 +247,7 @@ interface NewConditionalOrder {
   clientConditionalOrderId?: string
 }
 
-interface FundsTransferMethod {
+export interface FundsTransferMethod {
   id: string
   friendlyName: string
   bankName: string
@@ -257,7 +257,7 @@ interface FundsTransferMethod {
   depositOnly: boolean
 }
 
-interface Withdrawal {
+export interface Withdrawal {
   id: string
   currencySymbol: string
   quantity: number
@@ -275,7 +275,7 @@ interface Withdrawal {
   error?: Error
 }
 
-interface SentTransferInfo {
+export interface SentTransferInfo {
   toSubaccountId: string
   toMasterAccount?: boolean
   id: string
@@ -285,7 +285,7 @@ interface SentTransferInfo {
   executedAt: string
 }
 
-interface ReceivedTransferInfo {
+export interface ReceivedTransferInfo {
   fromSubaccountId: string
   frommasterAccount?: boolean
   id: string
@@ -295,7 +295,7 @@ interface ReceivedTransferInfo {
   executedAt: string
 }
 
-interface NewTransfer {
+export interface NewTransfer {
   toSubaccountId?: string
   requestId?: string
   currencySymbol: string

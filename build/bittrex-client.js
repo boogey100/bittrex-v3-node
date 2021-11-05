@@ -41,8 +41,12 @@ var crypto = require("crypto");
 var https = require("https");
 var querystring = require("querystring");
 var BittrexClient = /** @class */ (function () {
+    /**
+     * Create a new client instance with API Keys
+     * @param param0
+     */
     function BittrexClient(_a) {
-        var _b = _a.apiKey, apiKey = _b === void 0 ? '' : _b, _c = _a.apiSecret, apiSecret = _c === void 0 ? '' : _c, _d = _a.keepAlive, keepAlive = _d === void 0 ? true : _d;
+        var apiKey = _a.apiKey, apiSecret = _a.apiSecret, _b = _a.keepAlive, keepAlive = _b === void 0 ? true : _b;
         this._apiKey = apiKey;
         this._apiSecret = apiSecret;
         this._client = axios_1.default.create({
@@ -133,6 +137,12 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Retrieve the status of the deposit address for a particular currency for which one has been requested or provisioned.
+     * Alias of addresses(marketSymbol)
+     * @param marketSymbol symbol of the currency to retrieve the deposit address for
+     * @returns
+     */
     BittrexClient.prototype.addressStatus = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -191,7 +201,7 @@ var BittrexClient = /** @class */ (function () {
      * Get sequence of balances snapshot.
      * @returns {Promise}
      */
-    BittrexClient.prototype.balanceSnapshot = function () {
+    BittrexClient.prototype.headBalances = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.request('head', '/balances')];
@@ -214,7 +224,7 @@ var BittrexClient = /** @class */ (function () {
      * @param payload List of operations in the batch
      * @returns
      */
-    BittrexClient.prototype.createBatch = function (payload) {
+    BittrexClient.prototype.batch = function (payload) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.request('post', '/batch', { body: payload })];
@@ -636,7 +646,7 @@ var BittrexClient = /** @class */ (function () {
      *-------------------------------------------------------------------------*/
     /**
      * Pings the service
-     * @returns {Promise}
+     * @returns {Promise<ServicePing>}
      */
     BittrexClient.prototype.ping = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -645,39 +655,130 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 Subaccounts ENDPOINTS (7 endpoints)
-     *-------------------------------------------------------------------------*/
-    /**
-     * List subaccounts.
-     *
-     * (NOTE: This API is limited to partners and not available for traders.)
-     * Pagination and the sort order of the results
-     * are in inverse order of the CreatedAt field.
-     * @returns
-     */
-    BittrexClient.prototype.subaccounts = function () {
+    BittrexClient.prototype.subaccounts = function (subaccountId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                if (subaccountId) {
+                    return [2 /*return*/, this.request('get', '/subaccounts/' + subaccountId)];
+                }
                 return [2 /*return*/, this.request('get', '/subaccounts')];
             });
         });
     };
-    // Subaccount endpoints are for partners.
-    // Won't be implemented yet since I don't need it.
+    /**
+     * Create a new subaccount. (NOTE: This API is limited to partners and not available for traders.)
+     * @param payload information specifying the subaccount to create (WARNING: Official docs doesn't specify the structure of body payload)
+     * @returns
+     */
+    BittrexClient.prototype.subaccountCreate = function (newSubaccount) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('post', '/subaccounts', { body: newSubaccount })];
+            });
+        });
+    };
+    /**
+     * List open withdrawals for all subaccounts. Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
+     * @param options
+     * @returns
+     */
+    BittrexClient.prototype.subaccountWithdrawalsOpen = function (options) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/subaccounts/withdrawals/open', { params: options })];
+            });
+        });
+    };
+    /**
+     * List closed withdrawals for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+     * @param options
+     * @returns
+     */
+    BittrexClient.prototype.subaccountWithdrawalsClosed = function (options) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/subaccounts/withdrawals/closed', { params: options })];
+            });
+        });
+    };
+    /**
+     * List closed deposits for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+     * @param options
+     * @returns
+     */
+    BittrexClient.prototype.subaccountsDepositsClosed = function (options) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/subaccounts/deposits/closed', { params: options })];
+            });
+        });
+    };
     /*-------------------------------------------------------------------------*
      * V3 Transfers ENDPOINTS (4 endpoints)
      *-------------------------------------------------------------------------*/
+    /**
+     * List sent transfers.
+     * (NOTE: This API is limited to partners and not available for traders.)
+     * Pagination and the sort order of the results are in inverse order of the Executed field.
+     * @param options
+     * @returns
+     */
+    BittrexClient.prototype.transfersSent = function (options) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/transfers/sent', { params: options })];
+            });
+        });
+    };
+    /**
+     * List received transfers.
+     * (NOTE: This API is limited to partners and not available for traders.)
+     * Pagination and the sort order of the results are in inverse order of the Executed field.
+     * @param options
+     * @returns
+     */
+    BittrexClient.prototype.transfersReceived = function (options) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/transfers/received', { params: options })];
+            });
+        });
+    };
+    /**
+     * Retrieve information on the specified transfer.
+     * (NOTE: This API is limited to partners and not available for traders.)
+     * @param transferId (uuid-formatted string) - ID of the transfer to retrieve
+     * @returns
+     */
+    BittrexClient.prototype.transfer = function (transferId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/transfers/' + transferId)];
+            });
+        });
+    };
+    /**
+     * Executes a new transfer.
+     * (NOTE: This API is limited to partners and not available for traders.)
+     * @param newTransfer information specifying the transfer to execute
+     * @returns
+     */
+    BittrexClient.prototype.transferCreate = function (newTransfer) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('post', '/transfers', { body: newTransfer })];
+            });
+        });
+    };
     /*-------------------------------------------------------------------------*
      * V3 Withdrawals ENDPOINTS (7 endpoints)
      *-------------------------------------------------------------------------*/
     /**
-     * @private
-     * @method request
-     * @param {String} method
-     * @param {String} url
-     * @param {Object} [options.data]
-     * @param {Object} [options.params]
+     * Creates an axios request with signed headers
+     * @param method request method (GET, POST, HEAD...)
+     * @param url base url without query string
+     * @param options
+     * @returns
      */
     BittrexClient.prototype.request = function (method, url, _a) {
         var _b = _a === void 0 ? {} : _a, _c = _b.headers, headers = _c === void 0 ? {} : _c, _d = _b.params, params = _d === void 0 ? {} : _d, _e = _b.body, body = _e === void 0 ? '' : _e;
@@ -714,10 +815,13 @@ var BittrexClient = /** @class */ (function () {
         });
     };
     /**
-     * @private
-     * @method requestSignature
-     * @param {String} url
-     * @return {String}
+     * Create a pre-sign string, and sign via HmacSHA512, using your API secret as the signing secret. Hex-encode the result of this operation and populate the Api-Signature header with it.
+     * @param nonce
+     * @param path
+     * @param method
+     * @param contentHash
+     * @param params query string params
+     * @returns
      */
     BittrexClient.prototype.requestSignature = function (nonce, path, method, contentHash, params) {
         var query = querystring.stringify(params);
@@ -727,10 +831,10 @@ var BittrexClient = /** @class */ (function () {
         return hmac.update(preSign).digest('hex');
     };
     /**
-     * @private
-     * @method sanitizeParams
-     * @param {Object} params
-     * @return {Object}
+     * Clean up object removing undefined keys in order to avoid
+     * useless query params in the request.
+     * @param params
+     * @returns
      */
     BittrexClient.prototype.sanitizeParams = function (params) {
         if (params === void 0) { params = {}; }
@@ -744,11 +848,10 @@ var BittrexClient = /** @class */ (function () {
         return obj;
     };
     /**
-     * @private
-     * @method parseDates
-     * @param {Array<Object>} results
-     * @param {Array<String>} keys
-     * @return {Array<Object>}
+     * Convert ISO String dates to Date instances
+     * @param results
+     * @param keys
+     * @returns
      */
     BittrexClient.prototype.parseDates = function (results, keys) {
         for (var _i = 0, results_1 = results; _i < results_1.length; _i++) {
