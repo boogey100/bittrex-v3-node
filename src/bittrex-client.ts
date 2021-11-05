@@ -4,11 +4,14 @@ import * as https from 'https'
 import * as querystring from 'querystring'
 
 class BittrexClient {
-
   private _apiKey: string
   private _apiSecret: string
   private _client: AxiosInstance
 
+  /**
+   * Create a new client instance with API Keys
+   * @param param0 
+   */
   constructor({ apiKey = '', apiSecret = '', keepAlive = true }: {
     apiKey: string,
     apiSecret: string,
@@ -49,6 +52,10 @@ class BittrexClient {
    * @returns {Promise}
    */
   async accountFeesTrading(): Promise<CommissionRatesWithMarket[]>;
+  /**
+   * Get trade fee for the given marketSymbol.
+   * @param marketSymbol 
+   */
   async accountFeesTrading(marketSymbol: string): Promise<CommissionRatesWithMarket>;
   async accountFeesTrading(marketSymbol?: string) {
     if (marketSymbol) {
@@ -102,6 +109,12 @@ class BittrexClient {
    * @returns {Promise}
    */
   async addresses(): Promise<Address[]>
+  /**
+   * Retrieve the status of the deposit address for a particular currency for which one has been requested or provisioned.
+   * Alias of addressesStatus(marketSymbol)
+   * @param marketSymbol symbol of the currency to retrieve the deposit address for
+   * @returns 
+   */
   async addresses(marketSymbol: string): Promise<Address>
   async addresses(marketSymbol?: string) {
     if (marketSymbol) {
@@ -110,6 +123,12 @@ class BittrexClient {
     return this.request('get', '/addresses')
   }
 
+  /**
+   * Retrieve the status of the deposit address for a particular currency for which one has been requested or provisioned.
+   * Alias of addresses(marketSymbol)
+   * @param marketSymbol symbol of the currency to retrieve the deposit address for
+   * @returns 
+   */
   async addressStatus(marketSymbol: string) {
     return this.addresses(marketSymbol);
   }
@@ -157,7 +176,7 @@ class BittrexClient {
    * Get sequence of balances snapshot.
    * @returns {Promise}
    */
-  async balanceSnapshot() {
+  async balanceSnapshot(): Promise<void> {
     return this.request('head', '/balances')
   }
 
@@ -238,7 +257,7 @@ class BittrexClient {
    * Get sequence of open conditional orders snapshot.
    * @returns 
    */
-  async headConditionalOrdersOpen() {
+  async headConditionalOrdersOpen(): Promise<void> {
     return this.request('head', '/conditional-orders/open')
   }
 
@@ -293,7 +312,7 @@ class BittrexClient {
    * Get open deposits sequence.
    * @returns {Promise}
    */
-  async headDepositsOpen() {
+  async headDepositsOpen(): Promise<void> {
     return this.request('head', '/deposits/open')
   }
 
@@ -372,7 +391,7 @@ class BittrexClient {
    * Get sequence number for executions.
    * @returns 
    */
-  async headExecutionLastId() {
+  async headExecutionLastId(): Promise<void> {
     return this.request('head', '/executions/last-id')
   }
 
@@ -415,7 +434,7 @@ class BittrexClient {
    * Retrieve the current sequence number for the market summaries snapshot.
    * @returns 
    */
-  async headMarketsSummaries() {
+  async headMarketsSummaries(): Promise<void> {
     return this.request('head', '/markets/summaries')
   }
 
@@ -431,7 +450,7 @@ class BittrexClient {
    * Retrieve the current sequence number for the tickers snapshot.
    * @returns 
    */
-  async headMarketsTickers() {
+  async headMarketsTickers(): Promise<void> {
     return this.request('head', '/markets/tickers')
   }
 
@@ -478,7 +497,7 @@ class BittrexClient {
    * @param depth maximum depth of order book to return (optional, allowed values are [1, 25, 500], default is 25)
    * @returns 
    */
-  async headMarketOrderBook(marketSymbol: string, depth?: number) {
+  async headMarketOrderBook(marketSymbol: string, depth?: number): Promise<void> {
     return this.request('head', '/markets/' + marketSymbol + '/orderbook', { params: { depth } })
   }
 
@@ -496,7 +515,7 @@ class BittrexClient {
    * @param marketSymbol symbol of market to retrieve order book for
    * @returns 
    */
-  async headMarketTrades(marketSymbol: string) {
+  async headMarketTrades(marketSymbol: string): Promise<void> {
     return this.request('head', '/markets/' + marketSymbol + '/trade')
   }
 
@@ -523,7 +542,7 @@ class BittrexClient {
    * @param candleType type of candles (trades or midpoint). This portion of the url may be omitted if trade based candles are desired (e.g. /candles/{candleInterval}/recent will return trade based candles)
    * @returns 
    */
-  async headMarketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT') {
+  async headMarketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<void> {
     return this.request('head', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')
   }
 
@@ -554,7 +573,7 @@ class BittrexClient {
 
   /**
    * Pings the service
-   * @returns {Promise}
+   * @returns {Promise<ServicePing>}
    */
   async ping(): Promise<ServicePing> {
     return this.request('get', '/ping');
@@ -586,12 +605,11 @@ class BittrexClient {
    *-------------------------------------------------------------------------*/
 
   /**
-   * @private
-   * @method request
-   * @param {String} method
-   * @param {String} url
-   * @param {Object} [options.data]
-   * @param {Object} [options.params]
+   * Creates an axios request with signed headers
+   * @param method request method (GET, POST, HEAD...)
+   * @param url base url without query string
+   * @param options 
+   * @returns 
    */
   private async request<R>(method: Method, url: string, { headers = {}, params = {}, body = '' }: any = {}): Promise<R> {
     params = this.sanitizeParams(params)
@@ -621,10 +639,13 @@ class BittrexClient {
   }
 
   /**
-   * @private
-   * @method requestSignature
-   * @param {String} url
-   * @return {String}
+   * Create a pre-sign string, and sign via HmacSHA512, using your API secret as the signing secret. Hex-encode the result of this operation and populate the Api-Signature header with it.
+   * @param nonce 
+   * @param path 
+   * @param method 
+   * @param contentHash 
+   * @param params query string params
+   * @returns 
    */
   private requestSignature(nonce: number, path: string, method: Method, contentHash: string, params: any) {
     const query = querystring.stringify(params)
@@ -635,10 +656,10 @@ class BittrexClient {
   }
 
   /**
-   * @private
-   * @method sanitizeParams
-   * @param {Object} params
-   * @return {Object}
+   * Clean up object removing undefined keys in order to avoid
+   * useless query params in the request.
+   * @param params 
+   * @returns 
    */
   private sanitizeParams(params: any = {}) {
     const obj: any = {}
@@ -650,11 +671,10 @@ class BittrexClient {
   }
 
   /**
-   * @private
-   * @method parseDates
-   * @param {Array<Object>} results
-   * @param {Array<String>} keys
-   * @return {Array<Object>}
+   * Convert ISO String dates to Date instances
+   * @param results 
+   * @param keys 
+   * @returns 
    */
   private parseDates(results: any, keys: string[]) {
     for (const result of results) {
