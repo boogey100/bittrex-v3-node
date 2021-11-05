@@ -1,9 +1,9 @@
 const should = require('should')
+const { BittrexClient } = require('../src')
+require('dotenv').config()
 
 const xdescribe = () => { }
 
-const { BittrexClient } = require('../src')
-require('dotenv').config()
 const client = new BittrexClient({
   apiKey: process.env.API_KEY,
   apiSecret: process.env.API_SECRET
@@ -82,23 +82,23 @@ describe('addresses', () => {
 
 describe('balances', () => {
   it('should get balances', async () => {
-    let results = await client.getBalances()
+    let results = await client.balances()
     results.length.should.be.aboveOrEqual(0)
   })
 
   it('should get specific balance', async () => {
-    let results = await client.getBalance('BTC')
+    let results = await client.balance('BTC')
     results.currencySymbol.should.be.equals('BTC')
   })
 
   xit('should get sequence of balances snapshot', async () => {
-    let results = await client.headBalances()
+    await client.headBalances()
   })
 })
 
 xdescribe('batch', () => {
-  it('should create batch', async () => {
-    let results = await client.createBatch([
+  xit('should create batch', async () => {
+    await client.createBatch([
       {
         operation: 'post',
         resource: 'order',
