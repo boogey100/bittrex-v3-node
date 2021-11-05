@@ -34,6 +34,7 @@
     "nyc": "^15.1.0",
     "should": "13.2.3",
     "ts-mocha": "^8.0.0",
+    "typedoc": "^0.22.7",
     "typescript": "^4.4.4"
   },
   "scripts": {
@@ -41,6 +42,7 @@
     "test": "ts-mocha --exit --bail --slow 1000 --timeout 5000 ./test",
     "build": "tsc --build",
     "cover": "nyc npm run test",
-    "cover:report": "nyc report --reporter=lcov --reporter=text"
+    "cover:report": "nyc report --reporter=lcov --reporter=text",
+    "docs": "typedoc --out docs src"
   }
 }
