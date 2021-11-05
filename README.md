@@ -6,6 +6,10 @@ This project is based on [Andrew Barba](https://github.com/AndrewBarba) [bittrex
 
 ## Development status
 
+> :warning: **This package is under development**: Use at your own risk.
+
+This warning will be removed when all base endpoints and tests are finished.
+
 ### Assumptions
 
 * This project will be written in TypeScript. Params and responses will be strictly typed according to official docs.
