@@ -176,6 +176,38 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 ConditionalOrders ENDPOINTS (6 endpoints)
    *-------------------------------------------------------------------------*/
+
+  async conditionalOrders(conditionalOrderId: string): Promise<ConditionalOrder> {
+    return this.request('get', '/conditional-orders/' + conditionalOrderId)
+  }
+
+  async conditionalOrderDelete(conditionalOrderId: string): Promise<ConditionalOrder> {
+    return this.request('delete', '/conditional-orders/' + conditionalOrderId)
+  }
+
+  async conditionalOrdersClosed(props?: {
+    marketSymbol: string
+    nextPageToken: string
+    previousPageToken: string
+    pageSize: number
+    startDate: string
+    endDate: string
+  }): Promise<ConditionalOrder[]> {
+    return this.request('get', '/conditional-orders/closed', { params: props })
+  }
+
+  async conditionalOrdersOpen(marketSymbol?: string): Promise<ConditionalOrder[]> {
+    return this.request('get', '/conditional-orders/open', { params: { marketSymbol } })
+  }
+
+  async headConditionalOrdersOpen() {
+    this.request('head', '/conditional-orders/open')
+  }
+
+  async conditionalOrdersCreate(newConditionalOrder: NewConditionalOrder): Promise<ConditionalOrder> {
+    return this.request('post', '/conditional-orders', { body: newConditionalOrder })
+  }
+
   /*-------------------------------------------------------------------------*
    * V3 CURRENCIES ENDPOINTS (2 endpoints)
    *-------------------------------------------------------------------------*/

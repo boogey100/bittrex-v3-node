@@ -7,7 +7,7 @@ interface NewOrder {
   limit?: number
   timeInForce: 'good_til_cancelled' | 'immediate_or_cancel' | 'fill_or_kill' | 'post_only_good_til_cancelled' | 'buy_now' | 'instant'
   clientOrderId?: string
-  useAwards: boolean
+  useAwards?: boolean
 }
 
 interface DeleteOrder {
@@ -213,4 +213,36 @@ interface Error {
   code: string
   detail?: string
   data?: any
+}
+
+interface NewCancelConditionalOrder {
+  type: 'order' | 'conditional_order'
+  id?: string
+}
+
+interface ConditionalOrder {
+  id: string
+  marketSymbol: string
+  operand: 'lte' | 'gte'
+  triggerPrice: number
+  trailingStopPercent: number
+  createdOrderId: string
+  orderToCreate: NewOrder
+  orderToCancel: NewCancelConditionalOrder
+  clientConditionalOrderId: string
+  status: 'open' | 'completed' | 'cancelled' | 'failed'
+  orderCreationErrorCode: string
+  createdAt: string
+  updatedAt: string
+  closedAt: string
+}
+
+interface NewConditionalOrder {
+  marketSymbol: string
+  operand: 'lte' | 'gte'
+  triggerPrice?: number
+  trailingStopPercent?: number
+  orderToCreate?: NewOrder
+  orderToCancel?: NewCancelConditionalOrder
+  clientConditionalOrderId?: string
 }
