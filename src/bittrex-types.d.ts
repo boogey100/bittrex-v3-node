@@ -256,3 +256,49 @@ interface FundsTransferMethod {
   type: 'wire' | 'sepa' | 'instant_settlement' | 'ach' | 'sen'
   depositOnly: boolean
 }
+
+interface Withdrawal {
+  id: string
+  currencySymbol: string
+  quantity: number
+  cryptoAddress: string
+  cryptoAddressTag?: string
+  fundsTransferMethodId?: string
+  txCost?: number
+  txId?: string
+  status: 'requested' | 'authorized' | 'pending' | 'completed' | 'error_invalid_address' | 'cancelled' | 'new'
+  createdAt: string
+  completedAt?: string
+  clientWithdrawalId: string
+  target?: 'blockchain' | 'wire_transfer' | 'credit_card' | 'ach'
+  accountId?: string
+  error?: Error
+}
+
+interface SentTransferInfo {
+  toSubaccountId: string
+  toMasterAccount?: boolean
+  id: string
+  requestId?: string
+  currencySymbol: string
+  amount: number
+  executedAt: string
+}
+
+interface ReceivedTransferInfo {
+  fromSubaccountId: string
+  frommasterAccount?: boolean
+  id: string
+  requestId?: string
+  currencySymbol: string
+  amount: number
+  executedAt: string
+}
+
+interface NewTransfer {
+  toSubaccountId?: string
+  requestId?: string
+  currencySymbol: string
+  amount: number
+  toMasterAccount?: boolean
+}

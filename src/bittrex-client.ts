@@ -580,6 +580,8 @@ class BittrexClient {
   }
   /*-------------------------------------------------------------------------*
    * V3 Subaccounts ENDPOINTS (7 endpoints)
+   * WARNING: Subaccounts API are only for partners.
+   * Regular traders cannot use it.
    *-------------------------------------------------------------------------*/
 
   /**
@@ -590,16 +592,143 @@ class BittrexClient {
    * are in inverse order of the CreatedAt field.
    * @returns 
    */
-  async subaccounts(): Promise<Subaccount[]> {
+  async subaccounts(): Promise<Subaccount[]>;
+  /**
+   * Retrieve details for a specified subaccount. (NOTE: This API is limited to partners and not available for traders.)
+   * @param subaccountId (uuid-formatted string) - ID of the subaccount to retrieve details for
+   */
+  async subaccounts(subaccountId: string): Promise<Subaccount>;
+  async subaccounts(subaccountId?: string) {
+    if (subaccountId) {
+      return this.request('get', '/subaccounts/' + subaccountId)
+    }
     return this.request('get', '/subaccounts')
   }
 
-  // Subaccount endpoints are for partners.
-  // Won't be implemented yet since I don't need it.
+  /**
+   * Create a new subaccount. (NOTE: This API is limited to partners and not available for traders.)
+   * @param payload information specifying the subaccount to create (WARNING: Official docs doesn't specify the structure of body payload)
+   * @returns 
+   */
+  async subaccountCreate(newSubaccount: {}): Promise<Subaccount> {
+    return this.request('post', '/subaccounts', { body: newSubaccount })
+  }
+
+  /**
+   * List open withdrawals for all subaccounts. Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
+   * @param options 
+   * @returns 
+   */
+   async subaccountWithdrawalsOpen(options?: {
+    status?: 'requested' | 'authorized' | 'pending' | 'error_invalid_address'
+    currencySymbol?: string
+    nextPageToken?: string
+    previousPageToken?: string
+    pageSize?: number
+    startDate?: string
+    endDate?: string
+  }): Promise<Withdrawal> {
+    return this.request('get', '/subaccounts/withdrawals/open', { params: options })
+  }
+
+  /**
+   * List closed withdrawals for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+   * @param options 
+   * @returns 
+   */
+  async subaccountWithdrawalsClosed(options?: {
+    status?: 'completed' | 'cancelled'
+    currencySymbol?: string
+    nextPageToken?: string
+    previousPageToken?: string
+    pageSize?: number
+    startDate?: string
+    endDate?: string
+  }): Promise<Withdrawal> {
+    return this.request('get', '/subaccounts/withdrawals/closed', { params: options })
+  }
+
+  /**
+   * List closed deposits for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+   * @param options 
+   * @returns 
+   */
+  async subaccountsDepositsClosed(options?: {
+    status?: 'completed' | 'orphaned' | 'invalidated'
+    currencySymbol?: string
+    nextPageToken?: string
+    previousPageToken?: string
+    pageSize?: number
+    startDate?: string
+    endDate?: string
+  }) {
+    return this.request('get', '/subaccounts/deposits/closed', { params: options })
+  }
 
   /*-------------------------------------------------------------------------*
    * V3 Transfers ENDPOINTS (4 endpoints)
    *-------------------------------------------------------------------------*/
+
+  /**
+   * List sent transfers.
+   * (NOTE: This API is limited to partners and not available for traders.)
+   * Pagination and the sort order of the results are in inverse order of the Executed field.
+   * @param options 
+   * @returns 
+   */
+  async transfersSent(options?: {
+    toSubaccountId?: string
+    toMasterAccount?: boolean
+    currencySymbol?: string
+    nextPageToken?: string
+    previousPageToken?: string
+    pageSize?: number
+    startDate?: string
+    endDate?: string
+  }): Promise<SentTransferInfo[]> {
+    return this.request('get', '/transfers/sent', { params: options })
+  }
+
+  /**
+   * List received transfers.
+   * (NOTE: This API is limited to partners and not available for traders.)
+   * Pagination and the sort order of the results are in inverse order of the Executed field.
+   * @param options 
+   * @returns 
+   */
+  async transfersReceived(options?: {
+    fromSubaccountId?: string
+    fromMasterAccount?: boolean
+    currencySymbol?: string
+    nextPageToken?: string
+    previousPageToken?: string
+    pageSize?: number
+    startDate?: string
+    endDate?: string
+  }): Promise<ReceivedTransferInfo[]> {
+    return this.request('get', '/transfers/received', { params: options })
+  }
+
+  /**
+   * Retrieve information on the specified transfer.
+   * (NOTE: This API is limited to partners and not available for traders.)
+   * @param transferId (uuid-formatted string) - ID of the transfer to retrieve
+   * @returns 
+   */
+  async transfer(transferId: string): Promise<ReceivedTransferInfo> {
+    return this.request('get', '/transfers/' + transferId)
+  }
+
+  /**
+   * Executes a new transfer.
+   * (NOTE: This API is limited to partners and not available for traders.)
+   * @param newTransfer information specifying the transfer to execute
+   * @returns 
+   */
+  async transferCreate(newTransfer: NewTransfer): Promise<NewTransfer> {
+    return this.request('post', '/transfers', { body: newTransfer })
+  }
+
   /*-------------------------------------------------------------------------*
    * V3 Withdrawals ENDPOINTS (7 endpoints)
    *-------------------------------------------------------------------------*/

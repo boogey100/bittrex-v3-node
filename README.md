@@ -41,8 +41,8 @@ This warning will be removed when all base endpoints and tests are finished.
 - [x] Markets
 - [ ] Orders
 - [x] Ping
-- [ ] Subaccounts
-- [ ] Transfers
+- [x] Subaccounts
+- [x] Transfers
 - [ ] Withdrawals
 
 A full-featured Bittrex API client for Node.js
