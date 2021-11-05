@@ -29,7 +29,7 @@ This project is based on [Andrew Barba](https://github.com/AndrewBarba) [bittrex
 - [x] Addresses
 - [x] Balances
 - [x] Batch
-- [ ] ConditionalOrders
+- [x] ConditionalOrders
 - [x] Currencies
 - [x] Deposits
 - [x] Executions
@@ -47,6 +47,11 @@ A full-featured Bittrex API client for Node.js
 - [x] 100% unit-test coverage
 - [x] Heavily documented
 - [x] Promise based with async/await
+
+## Documentation
+
+
+## Get started
 
 If you're using the Bittrex REST API, I can assure you this is the only library worth using. Here's why:
 
