@@ -159,6 +159,35 @@ describe('bittrex v3 api', () => {
     })
   })
 
+  describe('# deposits', () => {
+    it('should get open deposits', async () => {
+      let results = await client.depositsOpen();
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should head open deposits', async () => {
+      await client.headDepositsOpen();
+    })
+
+    it('should get closed deposits', async () => {
+      let results = await client.depositsClosed();
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get deposits by tx id', async () => {
+      let results = await client.depositsByTxId();
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get deposit by id', async () => {
+      try {
+        await client.deposits('00000000-0000-4000-00000000')
+      } catch (err) {
+        err.message.should.be.equals("NOT_FOUND")
+      }
+    })
+  })
+
   describe('# markets', () => {
     it('should get all markets', async () => {
       let results = await client.markets()

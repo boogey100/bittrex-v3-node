@@ -333,7 +333,7 @@ class BittrexClient {
     startSate?: string
     endDate?: string
   }): Promise<BTT.Deposit[]> {
-    return this.request('get', '/deposit/closed', { params: props })
+    return this.request('get', '/deposits/closed', { params: props })
   }
 
   /**
