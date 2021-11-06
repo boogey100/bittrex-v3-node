@@ -246,6 +246,119 @@ describe('bittrex v3 api', () => {
       let results = await client.marketsTickers()
       results.length.should.be.aboveOrEqual(0)
     })
+
+    it('should get market ticker by symbol', async () => {
+      let results = await client.marketTicker('BTC-EUR')
+      results.symbol.should.be.equals('BTC-EUR')
+    })
+
+    it('should get market by symbol', async () => {
+      let results = await client.market('BTC-EUR')
+      results.symbol.should.be.equals('BTC-EUR')
+    })
+
+    it('should get market summary by symbol', async () => {
+      let results = await client.marketSummary('BTC-EUR')
+      results.symbol.should.be.equals('BTC-EUR')
+    })
+
+    it('should get market order book by symbol', async () => {
+      let results = await client.marketOrderBook('BTC-EUR')
+      results.bid.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get market order book by symbol + 1 depth', async () => {
+      let results = await client.marketOrderBook('BTC-EUR', 1)
+      results.bid.length.should.be.equals(1)
+    })
+
+    it('should get market order book by symbol + 25 depth', async () => {
+      let results = await client.marketOrderBook('BTC-EUR', 25)
+      results.bid.length.should.be.equals(25)
+    })
+
+    it('should get market order book by symbol + 500 depth', async () => {
+      let results = await client.marketOrderBook('BTC-EUR', 500)
+      results.bid.length.should.be.equals(500)
+    })
+
+    it('should get market order book by symbol + invalid depth', async () => {
+      let results = await client.marketOrderBook('BTC-EUR', 2).catch(() => null)
+      try {
+        should(results).be.exactly(null)
+      } catch {
+        throw Error('Invalid depth got valid response')
+      }
+    })
+
+    it('should head market order book', async () => {
+      await client.headMarketOrderBook()
+    })
+
+    it ('should get market trades by symbol', async () => {
+      let results = await client.marketTrades('BTC-EUR')
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it ('should head market trades by symbol', async () => {
+      await client.headMarketTrades('BTC-EUR')
+    })
+
+    it ('should get market candles by symbol + 1 day + w/out candle type', async () => {
+      let results = await client.marketCandles('BTC-EUR', 'DAY_1')
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it ('should get market candles by symbol + 1 day + candle type TRADE', async () => {
+      let results = await client.marketCandles('BTC-EUR', 'DAY_1', 'TRADE')
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it ('should get market candles by symbol + 1 day + candle type MIDPOINT', async () => {
+      let results = await client.marketCandles('BTC-EUR', 'DAY_1', 'MIDPOINT')
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it ('should get market candles by symbol + 1 hour', async () => {
+      let results = await client.marketCandles('BTC-EUR', 'HOUR_1')
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it ('should get market candles by symbol + 5 minutes', async () => {
+      let results = await client.marketCandles('BTC-EUR', 'MINUTE_5')
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it ('should get market candles by symbol + 1 minute', async () => {
+      let results = await client.marketCandles('BTC-EUR', 'MINUTE_1')
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should head candles by symbol w/out candle type', async () => {
+      await client.headMarketCandles('BTC-EUR', 'MINUTE_1')
+    })
+
+    it('should head candles by symbol w/ candle type', async () => {
+      await client.headMarketCandles('BTC-EUR', 'MINUTE_1', 'MIDPOINT')
+    })
+
+    it('should get market candles by year', async () => {
+      let results = await client.marketCandlesDate('BTC-EUR', 'DAY_1', 2020)
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get market candles by year + month', async () => {
+      let results = await client.marketCandlesDate('BTC-EUR', 'HOUR_1', 2020, 'MIDPOINT', 10)
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get market candles by year + month + day', async () => {
+      let results1 = await client.marketCandlesDate('BTC-EUR', 'MINUTE_5', 2020, 'MIDPOINT', 10, 2)
+      let results2 = await client.marketCandlesDate('BTC-EUR', 'MINUTE_1', 2020, 'MIDPOINT', 10, 2)
+      results1.length.should.be.aboveOrEqual(0)
+      results2.length.should.be.aboveOrEqual(0)
+    })
+
   })
 
 })

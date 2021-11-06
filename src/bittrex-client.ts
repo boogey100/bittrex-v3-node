@@ -492,6 +492,9 @@ class BittrexClient {
    * @returns 
    */
   async marketOrderBook(marketSymbol: string, depth?: number): Promise<BTT.OrderBook> {
+    if (depth && ![1, 25, 500].includes(depth)) {
+      throw Error('DEPTH_INVALID')
+    }
     return this.request('get', '/markets/' + marketSymbol + '/orderbook', { params: { depth } })
   }
 
@@ -536,7 +539,7 @@ class BittrexClient {
    * @returns 
    */
   async marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<BTT.Candle[]> {
-    return this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')
+    return this.request('get', '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/recent')
   }
 
   /**
@@ -547,7 +550,7 @@ class BittrexClient {
    * @returns 
    */
   async headMarketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<void> {
-    return this.request('head', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')
+    return this.request('head', '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/recent')
   }
 
   /**
@@ -556,6 +559,18 @@ class BittrexClient {
    * (MINUTE_1: 1 day, MINUTE_5: 1 day, HOUR_1: 31 days, DAY_1: 366 days).
    * Candles for intervals without any trading activity
    * will match the previous close and volume will be zero.
+   * 
+   * WARNING: (Not documented in the official API).
+   * The optional params are not arbitrary, are not really "optional".
+   * 
+   * If you specify YEAR, MONTH and DAY, interval must be DAY_1
+   * 
+   * If you specify YEAR and MONTH (omit day), interval must be HOUR_1
+   * 
+   * If you only specify YEAR (omit month and day), interval must be MINUTE_1 or MINUTE_5
+   * 
+   * In the future: Overload function to lock fixed params depending on the candleInterval value to avoid api call errors.
+   * 
    * @param marketSymbol symbol of market to retrieve candles for
    * @param candleInterval desired time interval between candles
    * @param year desired year to start from
@@ -565,7 +580,12 @@ class BittrexClient {
    * @returns 
    */
   async marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<BTT.Candle[]> {
-    return this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/historical/' + year + (month && '/' + month) + (day && '/' + day))
+    if (!year) throw Error('Invalid year')
+    if (!month && candleInterval !== 'DAY_1') throw Error('Years can only be DAY_1 interval')
+    if (year && month && !day && candleInterval !== 'HOUR_1') throw Error('Year+month can only be HOUR_1 interval')
+    if (day && (candleInterval !== 'MINUTE_1' && candleInterval !== 'MINUTE_5')) throw Error('Year+month+day and only be MINUTE_5 or MINUTE_1 interval')
+    const url = '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/historical/' + year + (!!month ? '/' + month : '') + (!!day ? '/' + day : '')
+    return this.request('get', url)
   }
 
   /*-------------------------------------------------------------------------*
@@ -623,7 +643,7 @@ class BittrexClient {
    * @param options 
    * @returns 
    */
-   async subaccountWithdrawalsOpen(options?: {
+  async subaccountWithdrawalsOpen(options?: {
     status?: 'requested' | 'authorized' | 'pending' | 'error_invalid_address'
     currencySymbol?: string
     nextPageToken?: string
