@@ -295,41 +295,41 @@ describe('bittrex v3 api', () => {
       await client.headMarketOrderBook()
     })
 
-    it ('should get market trades by symbol', async () => {
+    it('should get market trades by symbol', async () => {
       let results = await client.marketTrades('BTC-EUR')
       results.length.should.be.aboveOrEqual(0)
     })
 
-    it ('should head market trades by symbol', async () => {
+    it('should head market trades by symbol', async () => {
       await client.headMarketTrades('BTC-EUR')
     })
 
-    it ('should get market candles by symbol + 1 day + w/out candle type', async () => {
+    it('should get market candles by symbol + 1 day + w/out candle type', async () => {
       let results = await client.marketCandles('BTC-EUR', 'DAY_1')
       results.length.should.be.aboveOrEqual(0)
     })
 
-    it ('should get market candles by symbol + 1 day + candle type TRADE', async () => {
+    it('should get market candles by symbol + 1 day + candle type TRADE', async () => {
       let results = await client.marketCandles('BTC-EUR', 'DAY_1', 'TRADE')
       results.length.should.be.aboveOrEqual(0)
     })
 
-    it ('should get market candles by symbol + 1 day + candle type MIDPOINT', async () => {
+    it('should get market candles by symbol + 1 day + candle type MIDPOINT', async () => {
       let results = await client.marketCandles('BTC-EUR', 'DAY_1', 'MIDPOINT')
       results.length.should.be.aboveOrEqual(0)
     })
 
-    it ('should get market candles by symbol + 1 hour', async () => {
+    it('should get market candles by symbol + 1 hour', async () => {
       let results = await client.marketCandles('BTC-EUR', 'HOUR_1')
       results.length.should.be.aboveOrEqual(0)
     })
 
-    it ('should get market candles by symbol + 5 minutes', async () => {
+    it('should get market candles by symbol + 5 minutes', async () => {
       let results = await client.marketCandles('BTC-EUR', 'MINUTE_5')
       results.length.should.be.aboveOrEqual(0)
     })
 
-    it ('should get market candles by symbol + 1 minute', async () => {
+    it('should get market candles by symbol + 1 minute', async () => {
       let results = await client.marketCandles('BTC-EUR', 'MINUTE_1')
       results.length.should.be.aboveOrEqual(0)
     })
