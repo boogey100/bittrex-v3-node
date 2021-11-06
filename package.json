@@ -1,8 +1,8 @@
 {
   "name": "bittrex-v3-node",
   "version": "1.2.2-beta",
-  "description": "Bittrex API client for Node.js",
-  "author": "Andrew Barba <abarba.77@gmail.com>",
+  "description": "Bittrex API V3 client for Node.js",
+  "author": "J. Alberto González",
   "license": "MIT",
   "main": "build/index.js",
   "engines": {
@@ -30,6 +30,7 @@
     "@types/node": "^16.11.6",
     "dotenv": "^10.0.0",
     "eslint": "8.1.0",
+    "gh-pages": "^3.2.3",
     "mocha": "9.1.3",
     "nyc": "^15.1.0",
     "should": "13.2.3",
@@ -43,6 +44,7 @@
     "build": "tsc --build",
     "cover": "nyc npm run test",
     "cover:report": "nyc report --reporter=lcov --reporter=text",
-    "docs": "typedoc --out docs src"
+    "docs": "typedoc --out docs src",
+    "docs:publish": "gh-pages -d docs --repo git@github.com:JAlbertoGonzalez/bittrex-v3-node.git"
   }
 }

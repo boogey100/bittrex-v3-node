@@ -8,7 +8,7 @@ This project is based on [Andrew Barba](https://github.com/AndrewBarba) [bittrex
 
 ### Assumptions
 
-* This project will be written in TypeScript. Params and responses will be strictly typed according to official docs.
+* This project is written in TypeScript. Params and responses will be strictly typed according to official docs.
 * Endpoint details will be documented with the official [bittrex API V3 documentation](https://bittrex.github.io/api/v3).
 * This project won't be compatible with any v1.1 API version. Use [bittrex-node](https://github.com/AndrewBarba/bittrex-node) for that purpose.
 * Libraries will be updated to latest version, specially axios, to avoid the latest well-known security issues with old versions.
@@ -38,7 +38,7 @@ This project is based on [Andrew Barba](https://github.com/AndrewBarba) [bittrex
 - [x] Markets
 - [x] Orders
 - [x] Ping
-- [x] Subaccounts
+- [x] Subaccounts (:warning: only for partners)
 - [x] Transfers
 - [x] Withdrawals
 
@@ -49,20 +49,20 @@ A full-featured Bittrex API client for Node.js
 - [x] Heavily documented
 - [x] Promise based with async/await
 
-## Documentation
-
 ## Get started
 
 If you're using the Bittrex REST API, I can assure you this is the only library worth using. Here's why:
 
 - It doesn't make you parse the Bittrex response and look for errors
-- ~~It properly parses all timestamps to JavaScript Date objects~~ (work in progress)
+- ~~It properly parses all timestamps to JavaScript Date objects~~ (:warning: work in progress)
 - It uses proper JavaScript and Node conventions
-- ~~It throws proper errors when parameters are missing~~ (work in progress)
+- ~~It throws proper errors when parameters are missing~~ (:warning: work in progress)
 - It uses a single https client with Keep-Alive enabled
 - It's faster than every other node Bittrex library
 
-## Initialize Client
+## Documentation
+
+### Initialize Client
 
 ```javascript
 const { BittrexClient } = require('bittrex-v3-node')
@@ -72,3 +72,7 @@ let client = new BittrexClient({
   apiSecret: 'abcde'
 })
 ```
+
+### Docs
+
+Package docs [here](https://jalbertogonzalez.github.io/bittrex-v3-node/).
