@@ -110,7 +110,7 @@ describe('bittrex v3 api', () => {
   describe('# conditional orders', () => {
     it('should get conditional order by id', async () => {
       try {
-        await client.conditionalOrders('00000000-0000-0000-00000000')
+        await client.conditionalOrders('00000000-0000-4000-b000-000000000000')
       } catch (err) {
         err.message.should.be.equals("NOT_FOUND")
       }
@@ -118,7 +118,7 @@ describe('bittrex v3 api', () => {
 
     it('should delete conditional order', async () => {
       try {
-        await client.conditionalOrderDelete('00000000-0000-4000-00000000')
+        await client.conditionalOrderDelete('00000000-0000-4000-b000-000000000000')
       } catch (err) {
         err.message.should.be.equals("NOT_FOUND")
       }
@@ -181,7 +181,7 @@ describe('bittrex v3 api', () => {
 
     it('should get deposit by id', async () => {
       try {
-        await client.deposits('00000000-0000-4000-00000000')
+        await client.deposits('00000000-0000-4000-b000-000000000000')
       } catch (err) {
         err.message.should.be.equals("NOT_FOUND")
       }
@@ -203,7 +203,7 @@ describe('bittrex v3 api', () => {
 
     it('should get execution by id', async () => {
       try {
-        const customExecutionId = '00000000-0000-4000-00000000'
+        const customExecutionId = '00000000-0000-4000-b000-000000000000'
         let results = await client.executions(customExecutionId)
         results.id.should.be.equals(customExecutionId)
       } catch (err) {
@@ -224,7 +224,7 @@ describe('bittrex v3 api', () => {
   describe('# fund transfer methods', () => {
     it('should get fund transfer method', async () => {
       try {
-        const customFundTransferId = '00000000-0000-4000-00000000'
+        const customFundTransferId = '00000000-0000-4000-b000-000000000000'
         let results = await client.fundsTransferMethods(customFundTransferId)
         results.id.should.be.equals(customFundTransferId)
       } catch (err) {
