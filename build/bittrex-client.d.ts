@@ -347,6 +347,18 @@ declare class BittrexClient {
      * (MINUTE_1: 1 day, MINUTE_5: 1 day, HOUR_1: 31 days, DAY_1: 366 days).
      * Candles for intervals without any trading activity
      * will match the previous close and volume will be zero.
+     *
+     * WARNING: (Not documented in the official API).
+     * The optional params are not arbitrary, are not really "optional".
+     *
+     * If you specify YEAR, MONTH and DAY, interval must be DAY_1
+     *
+     * If you specify YEAR and MONTH (omit day), interval must be HOUR_1
+     *
+     * If you only specify YEAR (omit month and day), interval must be MINUTE_1 or MINUTE_5
+     *
+     * In the future: Overload function to lock fixed params depending on the candleInterval value to avoid api call errors.
+     *
      * @param marketSymbol symbol of market to retrieve candles for
      * @param candleInterval desired time interval between candles
      * @param year desired year to start from
@@ -357,6 +369,68 @@ declare class BittrexClient {
      */
     marketCandlesDate(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', year: number, candleType?: 'TRADE' | 'MIDPOINT', month?: number, day?: number): Promise<BTT.Candle[]>;
     /**
+     * List closed orders.
+     * StartDate and EndDate filters apply to the ClosedAt field.
+     * Pagination and the sort order of the results are in inverse order of the ClosedAt field.
+     * @param props
+     * @returns
+     */
+    ordersClosed(props?: {
+        marketSymbol?: string;
+        nextPageToken?: string;
+        previousPageToken?: string;
+        pageSize?: number;
+        startDate: string;
+        endDate: string;
+    }): Promise<BTT.Order[]>;
+    /**
+     * List open orders.
+     * @param marketSymbol filter by market (optional)
+     * @returns
+     */
+    ordersOpen(marketSymbol: string): Promise<BTT.Order[]>;
+    /**
+     * Bulk cancel all open orders (can be limited to a specified market)
+     * @param marketSymbol
+     * @returns
+     */
+    ordersDelete(marketSymbol: string): Promise<BTT.BulkCancelResult[]>;
+    /**
+     * Get sequence of open orders snapshot.
+     * @returns
+     */
+    headOrdersOpen(): Promise<void>;
+    /**
+     * Retrieve information on a specific order.
+     * @param orderId (uuid-formatted string) - ID of order to retrieve
+     * @returns
+     */
+    order(orderId: string): Promise<BTT.Order>;
+    /**
+     * Cancel an order.
+     * @param orderId (uuid-formatted string) - ID of order to cancel
+     * @returns
+     */
+    orderDelete(orderId: string): Promise<BTT.Order>;
+    /**
+     * Retrieve executions for a specific order.
+     *
+     * Results are sorted in inverse order of execution time, and are limited to the first 1000.
+     *
+     * NOTE: Executions from before 5/27/2019 are not available.
+     *
+     * Also, there may be a delay before an executed trade is visible in this endpoint.
+     * @param orderId
+     * @returns
+     */
+    ordersExecutions(orderId: string): Promise<BTT.Execution[]>;
+    /**
+     * Create a new order.
+     * @param newOrder information specifying the order to create
+     * @returns
+     */
+    orderCreate(newOrder: BTT.NewOrder): Promise<BTT.Order>;
+    /**
      * Pings the service
      * @returns {Promise<ServicePing>}
      */
@@ -365,8 +439,8 @@ declare class BittrexClient {
      * List subaccounts.
      *
      * (NOTE: This API is limited to partners and not available for traders.)
-     * Pagination and the sort order of the results
-     * are in inverse order of the CreatedAt field.
+     *
+     * Pagination and the sort order of the results are in inverse order of the CreatedAt field.
      * @returns
      */
     subaccounts(): Promise<BTT.Subaccount[]>;
@@ -376,13 +450,19 @@ declare class BittrexClient {
      */
     subaccounts(subaccountId: string): Promise<BTT.Subaccount>;
     /**
-     * Create a new subaccount. (NOTE: This API is limited to partners and not available for traders.)
-     * @param payload information specifying the subaccount to create (WARNING: Official docs doesn't specify the structure of body payload)
+     * Create a new subaccount.
+     *
+     * (NOTE: This API is limited to partners and not available for traders.)
+     *
+     * (WARNING: Official API doesn't provide information about NewSubaccount body payload)
+     * @param payload information specifying the subaccount to create
      * @returns
      */
     subaccountCreate(newSubaccount: {}): Promise<BTT.Subaccount>;
     /**
-     * List open withdrawals for all subaccounts. Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
+     * List open withdrawals for all subaccounts.
+     *
+     * Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
      * @param options
      * @returns
      */
@@ -396,7 +476,11 @@ declare class BittrexClient {
         endDate?: string;
     }): Promise<BTT.Withdrawal>;
     /**
-     * List closed withdrawals for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+     * List closed withdrawals for all subaccounts.
+     *
+     * StartDate and EndDate filters apply to the CompletedAt field.
+     *
+     * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
      * @param options
      * @returns
      */
@@ -410,7 +494,11 @@ declare class BittrexClient {
         endDate?: string;
     }): Promise<BTT.Withdrawal>;
     /**
-     * List closed deposits for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+     * List closed deposits for all subaccounts.
+     *
+     * StartDate and EndDate filters apply to the CompletedAt field.
+     *
+     * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
      * @param options
      * @returns
      */
@@ -471,6 +559,66 @@ declare class BittrexClient {
      * @returns
      */
     transferCreate(newTransfer: BTT.NewTransfer): Promise<BTT.NewTransfer>;
+    /**
+     * List open withdrawals. Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
+     * @param props
+     * @returns
+     */
+    withdrawalsOpen(props?: {
+        status?: 'REQUESTED' | 'AUTHORIZED' | 'PENDING' | 'ERROR_INVALID_ADDRESS';
+        currencySymbol?: string;
+    }): Promise<BTT.Withdrawal[]>;
+    /**
+     * List closed withdrawals.
+     *
+     * StartDate and EndDate filters apply to the CompletedAt field.
+     *
+     * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+     * @param props
+     * @returns
+     */
+    withdrawalsClosed(props?: {
+        status?: 'COMPLETED' | 'CANCELLED';
+        currencySymbol?: string;
+        nextPageToken?: string;
+        previousPageToken?: string;
+        pageSize?: number;
+        startDate?: string;
+        endDate?: string;
+    }): Promise<BTT.Withdrawal[]>;
+    /**
+     * Retrieves all withdrawals for this account with the given TxId
+     * @param txId the transaction id to lookup
+     * @returns
+     */
+    withdrawalByTxId(txId: string): Promise<BTT.Withdrawal[]>;
+    /**
+     * Retrieve information on a specified withdrawal.
+     * @param withdrawalId (uuid-formatted string) - ID of withdrawal to retrieve
+     * @returns
+     */
+    withdrawal(withdrawalId: string): Promise<BTT.Withdrawal>;
+    /**
+     * Cancel a withdrawal.
+     *
+     * (Withdrawals can only be cancelled if status is REQUESTED, AUTHORIZED, or ERROR_INVALID_ADDRESS.)
+     * @param withdrawalId
+     * @returns
+     */
+    withdrawalDelete(withdrawalId: string): Promise<BTT.Withdrawal>;
+    /**
+     * Create a new withdrawal.
+     *
+     * To initiate a fiat withdrawal specify a funds transfer method id instead of a crypto address.
+     * @param newWithdrawal information specifying the withdrawal to create
+     * @returns
+     */
+    withdrawalCreate(newWithdrawal: BTT.NewWithdrawal): Promise<BTT.Withdrawal>;
+    /**
+     * Returns a list of allowed addresses.
+     * @returns
+     */
+    withdrawalsAllowedAddresses(): Promise<BTT.AllowedAddress>;
     /**
      * Creates an axios request with signed headers
      * @param method request method (GET, POST, HEAD...)

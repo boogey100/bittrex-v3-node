@@ -57,9 +57,7 @@ var BittrexClient = /** @class */ (function () {
     /**
      * REFERENCE: https://bittrex.github.io/api/v3
      */
-    /*-------------------------------------------------------------------------*
-     * V3 ACCOUNT ENDPOINTS (8 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#region V3 ACCOUNT ENDPOINTS (8 endpoints)
     /**
      * Retrieve information for the account associated with the request.
      * For now, it only echoes the subaccount if one was specified in the header,
@@ -167,9 +165,8 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 BALANCES ENDPOINTS (3 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 BALANCES ENDPOINTS (3 endpoints)
     /**
      * List account balances across available currencies.
      * Returns a Balance entry for each currency for which there
@@ -208,9 +205,8 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 BATCH ENDPOINTS (1 endpoint)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 BATCH ENDPOINTS (1 endpoint)
     /**
      * Create a new batch request.
      * Currently batch requests are limited to placing and cancelling orders.
@@ -231,9 +227,8 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 ConditionalOrders ENDPOINTS (6 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 ConditionalOrders ENDPOINTS (6 endpoints)
     /**
      * Retrieve information on a specific conditional order.
      * @param conditionalOrderId (uuid-formatted string) - ID of conditional order to retrieve
@@ -318,9 +313,8 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 DEPOSITS ENDPOINTS (5 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 DEPOSITS ENDPOINTS (5 endpoints)
     /**
      * List open deposits.
      * Results are sorted in inverse order of UpdatedAt,
@@ -356,7 +350,7 @@ var BittrexClient = /** @class */ (function () {
     BittrexClient.prototype.depositsClosed = function (props) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/deposit/closed', { params: props })];
+                return [2 /*return*/, this.request('get', '/deposits/closed', { params: props })];
             });
         });
     };
@@ -387,6 +381,9 @@ var BittrexClient = /** @class */ (function () {
     BittrexClient.prototype.executions = function (props) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                if (typeof props === 'string') {
+                    return [2 /*return*/, this.request('get', '/executions/' + props)];
+                }
                 return [2 /*return*/, this.request('get', '/executions', { params: props })];
             });
         });
@@ -413,9 +410,8 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 FundsTransferMethods ENDPOINTS (1 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 FundsTransferMethods ENDPOINTS (1 endpoints)
     /**
      * Get details about a linked bank account
      * @param fundsTransferMethodId (uuid-formatted string) - ID of funds transfer method to retrieve
@@ -428,9 +424,8 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 Markets ENDPOINTS (15 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 Markets ENDPOINTS (15 endpoints)
     /**
      * List markets.
      * @returns
@@ -543,6 +538,9 @@ var BittrexClient = /** @class */ (function () {
     BittrexClient.prototype.marketOrderBook = function (marketSymbol, depth) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                if (depth && ![1, 25, 500].includes(depth)) {
+                    throw Error('DEPTH_INVALID');
+                }
                 return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/orderbook', { params: { depth: depth } })];
             });
         });
@@ -599,7 +597,7 @@ var BittrexClient = /** @class */ (function () {
     BittrexClient.prototype.marketCandles = function (marketSymbol, candleInterval, candleType) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')];
+                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/recent')];
             });
         });
     };
@@ -613,7 +611,7 @@ var BittrexClient = /** @class */ (function () {
     BittrexClient.prototype.headMarketCandles = function (marketSymbol, candleInterval, candleType) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('head', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/recent')];
+                return [2 /*return*/, this.request('head', '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/recent')];
             });
         });
     };
@@ -623,6 +621,18 @@ var BittrexClient = /** @class */ (function () {
      * (MINUTE_1: 1 day, MINUTE_5: 1 day, HOUR_1: 31 days, DAY_1: 366 days).
      * Candles for intervals without any trading activity
      * will match the previous close and volume will be zero.
+     *
+     * WARNING: (Not documented in the official API).
+     * The optional params are not arbitrary, are not really "optional".
+     *
+     * If you specify YEAR, MONTH and DAY, interval must be DAY_1
+     *
+     * If you specify YEAR and MONTH (omit day), interval must be HOUR_1
+     *
+     * If you only specify YEAR (omit month and day), interval must be MINUTE_1 or MINUTE_5
+     *
+     * In the future: Overload function to lock fixed params depending on the candleInterval value to avoid api call errors.
+     *
      * @param marketSymbol symbol of market to retrieve candles for
      * @param candleInterval desired time interval between candles
      * @param year desired year to start from
@@ -633,17 +643,130 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.marketCandlesDate = function (marketSymbol, candleInterval, year, candleType, month, day) {
         return __awaiter(this, void 0, void 0, function () {
+            var url;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/candles/' + candleType + '/' + candleInterval + '/historical/' + year + (month && '/' + month) + (day && '/' + day))];
+                if (!year)
+                    throw Error('Invalid year');
+                if (!month && candleInterval !== 'DAY_1')
+                    throw Error('Years can only be DAY_1 interval');
+                if (year && month && !day && candleInterval !== 'HOUR_1')
+                    throw Error('Year+month can only be HOUR_1 interval');
+                if (day && (candleInterval !== 'MINUTE_1' && candleInterval !== 'MINUTE_5'))
+                    throw Error('Year+month+day and only be MINUTE_5 or MINUTE_1 interval');
+                url = '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/historical/' + year + (!!month ? '/' + month : '') + (!!day ? '/' + day : '');
+                return [2 /*return*/, this.request('get', url)];
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 Orders ENDPOINTS (8 endpoints)
-     *-------------------------------------------------------------------------*/
-    /*-------------------------------------------------------------------------*
-     * V3 Ping ENDPOINTS (1 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 Orders ENDPOINTS (8 endpoints)
+    /**
+     * List closed orders.
+     * StartDate and EndDate filters apply to the ClosedAt field.
+     * Pagination and the sort order of the results are in inverse order of the ClosedAt field.
+     * @param props
+     * @returns
+     */
+    BittrexClient.prototype.ordersClosed = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/orders/closed', {
+                        params: props
+                    })];
+            });
+        });
+    };
+    /**
+     * List open orders.
+     * @param marketSymbol filter by market (optional)
+     * @returns
+     */
+    BittrexClient.prototype.ordersOpen = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/orders/open', { params: { marketSymbol: marketSymbol } })];
+            });
+        });
+    };
+    /**
+     * Bulk cancel all open orders (can be limited to a specified market)
+     * @param marketSymbol
+     * @returns
+     */
+    BittrexClient.prototype.ordersDelete = function (marketSymbol) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('delete', '/orders/open', { params: { marketSymbol: marketSymbol } })];
+            });
+        });
+    };
+    /**
+     * Get sequence of open orders snapshot.
+     * @returns
+     */
+    BittrexClient.prototype.headOrdersOpen = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('head', '/orders/open')];
+            });
+        });
+    };
+    /**
+     * Retrieve information on a specific order.
+     * @param orderId (uuid-formatted string) - ID of order to retrieve
+     * @returns
+     */
+    BittrexClient.prototype.order = function (orderId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/orders/' + orderId)];
+            });
+        });
+    };
+    /**
+     * Cancel an order.
+     * @param orderId (uuid-formatted string) - ID of order to cancel
+     * @returns
+     */
+    BittrexClient.prototype.orderDelete = function (orderId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('delete', '/orders/' + orderId)];
+            });
+        });
+    };
+    /**
+     * Retrieve executions for a specific order.
+     *
+     * Results are sorted in inverse order of execution time, and are limited to the first 1000.
+     *
+     * NOTE: Executions from before 5/27/2019 are not available.
+     *
+     * Also, there may be a delay before an executed trade is visible in this endpoint.
+     * @param orderId
+     * @returns
+     */
+    BittrexClient.prototype.ordersExecutions = function (orderId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/orders/' + orderId + '/executions')];
+            });
+        });
+    };
+    /**
+     * Create a new order.
+     * @param newOrder information specifying the order to create
+     * @returns
+     */
+    BittrexClient.prototype.orderCreate = function (newOrder) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('post', '/orders', { body: newOrder })];
+            });
+        });
+    };
+    //#endregion
+    //#region V3 Ping ENDPOINTS (1 endpoints)
     /**
      * Pings the service
      * @returns {Promise<ServicePing>}
@@ -666,8 +789,12 @@ var BittrexClient = /** @class */ (function () {
         });
     };
     /**
-     * Create a new subaccount. (NOTE: This API is limited to partners and not available for traders.)
-     * @param payload information specifying the subaccount to create (WARNING: Official docs doesn't specify the structure of body payload)
+     * Create a new subaccount.
+     *
+     * (NOTE: This API is limited to partners and not available for traders.)
+     *
+     * (WARNING: Official API doesn't provide information about NewSubaccount body payload)
+     * @param payload information specifying the subaccount to create
      * @returns
      */
     BittrexClient.prototype.subaccountCreate = function (newSubaccount) {
@@ -678,7 +805,9 @@ var BittrexClient = /** @class */ (function () {
         });
     };
     /**
-     * List open withdrawals for all subaccounts. Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
+     * List open withdrawals for all subaccounts.
+     *
+     * Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
      * @param options
      * @returns
      */
@@ -690,7 +819,11 @@ var BittrexClient = /** @class */ (function () {
         });
     };
     /**
-     * List closed withdrawals for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+     * List closed withdrawals for all subaccounts.
+     *
+     * StartDate and EndDate filters apply to the CompletedAt field.
+     *
+     * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
      * @param options
      * @returns
      */
@@ -702,7 +835,11 @@ var BittrexClient = /** @class */ (function () {
         });
     };
     /**
-     * List closed deposits for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+     * List closed deposits for all subaccounts.
+     *
+     * StartDate and EndDate filters apply to the CompletedAt field.
+     *
+     * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
      * @param options
      * @returns
      */
@@ -713,9 +850,8 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 Transfers ENDPOINTS (4 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 Transfers ENDPOINTS (4 endpoints)
     /**
      * List sent transfers.
      * (NOTE: This API is limited to partners and not available for traders.)
@@ -770,9 +906,101 @@ var BittrexClient = /** @class */ (function () {
             });
         });
     };
-    /*-------------------------------------------------------------------------*
-     * V3 Withdrawals ENDPOINTS (7 endpoints)
-     *-------------------------------------------------------------------------*/
+    //#endregion
+    //#region V3 Withdrawals ENDPOINTS (7 endpoints)
+    /**
+     * List open withdrawals. Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
+     * @param props
+     * @returns
+     */
+    BittrexClient.prototype.withdrawalsOpen = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/withdrawals/open', { params: props })];
+            });
+        });
+    };
+    /**
+     * List closed withdrawals.
+     *
+     * StartDate and EndDate filters apply to the CompletedAt field.
+     *
+     * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+     * @param props
+     * @returns
+     */
+    BittrexClient.prototype.withdrawalsClosed = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/withdrawals/closed', { params: props })];
+            });
+        });
+    };
+    /**
+     * Retrieves all withdrawals for this account with the given TxId
+     * @param txId the transaction id to lookup
+     * @returns
+     */
+    BittrexClient.prototype.withdrawalByTxId = function (txId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/withdrawals/ByTxId/' + txId)];
+            });
+        });
+    };
+    /**
+     * Retrieve information on a specified withdrawal.
+     * @param withdrawalId (uuid-formatted string) - ID of withdrawal to retrieve
+     * @returns
+     */
+    BittrexClient.prototype.withdrawal = function (withdrawalId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/withdrawals/' + withdrawalId)];
+            });
+        });
+    };
+    /**
+     * Cancel a withdrawal.
+     *
+     * (Withdrawals can only be cancelled if status is REQUESTED, AUTHORIZED, or ERROR_INVALID_ADDRESS.)
+     * @param withdrawalId
+     * @returns
+     */
+    BittrexClient.prototype.withdrawalDelete = function (withdrawalId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('delete', '/withdrawals/' + withdrawalId)];
+            });
+        });
+    };
+    /**
+     * Create a new withdrawal.
+     *
+     * To initiate a fiat withdrawal specify a funds transfer method id instead of a crypto address.
+     * @param newWithdrawal information specifying the withdrawal to create
+     * @returns
+     */
+    BittrexClient.prototype.withdrawalCreate = function (newWithdrawal) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('post', '/withdrawals', { body: newWithdrawal })];
+            });
+        });
+    };
+    /**
+     * Returns a list of allowed addresses.
+     * @returns
+     */
+    BittrexClient.prototype.withdrawalsAllowedAddresses = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request('get', '/withdrawals/allowed-addresses')];
+            });
+        });
+    };
+    //#endregion
+    //#region private methods
     /**
      * Creates an axios request with signed headers
      * @param method request method (GET, POST, HEAD...)
@@ -800,9 +1028,8 @@ var BittrexClient = /** @class */ (function () {
                                 if (err.isAxiosError) {
                                     return err.response;
                                 }
-                                else {
-                                    throw err;
-                                }
+                                /* istanbul ignore next */
+                                throw err;
                             })];
                     case 1:
                         data = (_f.sent()).data;
@@ -868,3 +1095,4 @@ var BittrexClient = /** @class */ (function () {
     return BittrexClient;
 }());
 exports.default = BittrexClient;
+//# sourceMappingURL=bittrex-client.js.map
