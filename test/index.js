@@ -221,6 +221,18 @@ describe('bittrex v3 api', () => {
     })
   })
 
+  describe('# fund transfer methods', () => {
+    it('should get fund transfer method', async () => {
+      try {
+        const customFundTransferId = '00000000-0000-4000-00000000'
+        let results = await client.fundsTransferMethods(customFundTransferId)
+        results.id.should.be.equals(customFundTransferId)
+      } catch (err) {
+        err.message.should.be.equals("NOT_FOUND")
+      }
+    })
+  })
+
   describe('# markets', () => {
     it('should get all markets', async () => {
       let results = await client.markets()
