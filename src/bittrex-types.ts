@@ -335,7 +335,7 @@ export interface NewWithdrawal {
   cryptoAddress?: string
   cryptoAddressTag?: string
   fundsTransferMethodId?: string
-  clientWithdrawalId: string
+  clientWithdrawalId?: string
 }
 
 export interface AllowedAddress {

@@ -2,8 +2,6 @@ const should = require('should')
 const { BittrexClient } = require('../src')
 require('dotenv').config()
 
-const xdescribe = () => { }
-
 const client = new BittrexClient({
   apiKey: process.env.API_KEY,
   apiSecret: process.env.API_SECRET
@@ -422,7 +420,6 @@ describe('bittrex v3 api', () => {
         await client.orderCreate({
           type: 'market',
           direction: 'sell',
-          type: 'limit',
           timeInForce: 'buy_now',
           marketSymbol: 'XXX-XXX'
         })
@@ -482,11 +479,88 @@ describe('bittrex v3 api', () => {
   })
 
   describe('# transfers', () => {
+    it('should list sent transfers', async () => {
+      try {
+        let results = await client.transfersSent()
+        results.length.should.be.aboveOrEqual(0)
+      } catch (err) {
+        err.message.should.be.equals("INVALID_PERMISSION")
+      }
+    })
 
+    it('should list received transfers', async () => {
+      try {
+        let results = await client.transfersReceived()
+        results.length.should.be.aboveOrEqual(0)
+      } catch (err) {
+        err.message.should.be.equals("INVALID_PERMISSION")
+      }
+    })
+
+    it('should get transfer by id', async () => {
+      try {
+        let results = await client.transfer('00000000-0000-4000-b000-000000000000')
+        results.id.should.be.equals('00000000-0000-4000-b000-000000000000')
+      } catch (err) {
+        err.message.should.be.equals("INVALID_PERMISSION")
+      }
+    })
+
+    it('should create a new transfer', async () => {
+      try {
+        let results = await client.transferCreate({ currencySymbol: 'XXX' })
+        results.id.should.be.equals('00000000-0000-4000-b000-000000000000')
+      } catch (err) {
+        err.message.should.be.equals("INVALID_PERMISSION")
+      }
+    })
   })
 
   describe('# withdraws', () => {
+    it('should list open withdrawals', async () => {
+      let results = await client.withdrawalsOpen()
+      results.length.should.be.aboveOrEqual(0)
+    })
 
+    it('should list closed withdrawals', async () => {
+      let results = await client.withdrawalsClosed()
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get withdrawal by transaction id', async () => {
+      let results = await client.withdrawalByTxId('00000000-0000-4000-b000-000000000000')
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get withdrawal by id', async () => {
+      try {
+        let results = await client.withdrawal('00000000-0000-4000-b000-000000000000')
+        results.id.should.be.equals('00000000-0000-4000-b000-000000000000')
+      } catch (err) {
+        err.message.should.be.equals("NOT_FOUND")
+      }
+    })
+
+    it('should delete withdrawal by id', async () => {
+      try {
+        await client.withdrawalDelete('00000000-0000-4000-b000-000000000000')
+      } catch (err) {
+        err.message.should.be.equals("INVALID_WITHDRAWAL")
+      }
+    })
+
+    it('should create new withdrawal', async () => {
+      try {
+        await client.withdrawalCreate({ currencySymbol: 'XXX', quantity: 1 })
+      } catch (err) {
+        err.message.should.be.equals("BAD_REQUEST")
+      }
+    })
+
+    it('should get withdrawal allowed addresses', async () => {
+      let results = await client.withdrawalsAllowedAddresses()
+      results.length.should.be.aboveOrEqual(0)
+    })
   })
 
 })

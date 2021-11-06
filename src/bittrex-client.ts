@@ -895,7 +895,7 @@ class BittrexClient {
    * @param txId the transaction id to lookup
    * @returns 
    */
-  async withdrawalByTxId(txId: string): Promise<BTT.Withdrawal> {
+  async withdrawalByTxId(txId: string): Promise<BTT.Withdrawal[]> {
     return this.request('get', '/withdrawals/ByTxId/' + txId)
   }
 
