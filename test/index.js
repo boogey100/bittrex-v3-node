@@ -361,6 +361,75 @@ describe('bittrex v3 api', () => {
   })
 
   describe('# orders', () => {
+    it('should get orders closed', async () => {
+      let results = await client.ordersClosed()
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get orders closed by marketSymbol', async () => {
+      let results = await client.ordersClosed({ marketSymbol: 'BTC-EUR' })
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get orders open', async () => {
+      let results = await client.ordersOpen()
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should delete open orders', async () => {
+      // WARNING: Don't make tests delete your orders.
+      // To test the endpoint, expect at least a wrong market symbol
+      try {
+        await client.ordersDelete('XXX-XXX')
+      } catch (err) {
+        err.message.should.be.equals("MARKET_DOES_NOT_EXIST")
+      }
+    })
+
+    it('should head open orders', async () => {
+      await client.headOrdersOpen()
+    })
+
+    it('should get order by id', async () => {
+      try {
+        await client.order('00000000-0000-4000-b000-000000000000')
+      } catch (err) {
+        err.message.should.be.equals("NOT_FOUND")
+      }
+    })
+
+    it('should delete order by id', async () => {
+      try {
+        await client.orderDelete('00000000-0000-4000-b000-000000000000')
+      } catch (err) {
+        err.message.should.be.equals("ORDER_DOES_NOT_EXIST")
+      }
+    })
+
+    it('should get order executions', async () => {
+      try {
+        await client.ordersExecutions('00000000-0000-4000-b000-0000000000')
+      } catch (err) {
+        err.message.should.be.equals("NOT_FOUND")
+      }
+    })
+
+    it('should create order', async () => {
+      // WARNING: In order to avoid tests creating real orders,
+      // use REQUIRED params (or you will get a BAD_REQUEST)
+      // and place a wrong marketSymbol to receive MARKET_DOES_NOT_EXIST
+      try {
+        await client.orderCreate({
+          type: 'market',
+          direction: 'sell',
+          type: 'limit',
+          timeInForce: 'buy_now',
+          marketSymbol: 'XXX-XXX'
+        })
+      } catch (err) {
+        err.message.should.be.equals("MARKET_DOES_NOT_EXIST")
+      }
+    })
 
   })
 
@@ -369,15 +438,15 @@ describe('bittrex v3 api', () => {
   })
 
   describe('# subaccounts', () => {
-    
+
   })
 
   describe('# transfers', () => {
-    
+
   })
 
   describe('# withdraws', () => {
-    
+
   })
 
 })

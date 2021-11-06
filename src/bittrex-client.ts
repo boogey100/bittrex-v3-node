@@ -670,9 +670,7 @@ class BittrexClient {
    * @returns 
    */
   async orderCreate(newOrder: BTT.NewOrder): Promise<BTT.Order> {
-    return this.request('post', '/orders', {
-      body: newOrder
-    })
+    return this.request('post', '/orders', { body: newOrder })
   }
 
   //#endregion
@@ -688,7 +686,7 @@ class BittrexClient {
   }
 
   //#endregion
-  
+
   //#region V3 Subaccounts ENDPOINTS (7 endpoints)
 
   /*-------------------------------------------------------------------------*
