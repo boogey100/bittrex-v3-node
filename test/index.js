@@ -120,7 +120,7 @@ describe('bittrex v3 api', () => {
       try {
         await client.conditionalOrderDelete('00000000-0000-4000-b000-000000000000')
       } catch (err) {
-        err.message.should.be.equals("NOT_FOUND")
+        err.message.should.be.equals("INVALID_ORDER")
       }
     })
 
@@ -228,7 +228,7 @@ describe('bittrex v3 api', () => {
         let results = await client.fundsTransferMethods(customFundTransferId)
         results.id.should.be.equals(customFundTransferId)
       } catch (err) {
-        err.message.should.be.equals("NOT_FOUND")
+        err.message.should.be.equals("INVALID_ADDRESS")
       }
     })
   })
@@ -434,7 +434,10 @@ describe('bittrex v3 api', () => {
   })
 
   describe('# ping', () => {
-
+    it('should ping', async () => {
+      let results = await client.ping()
+      results.serverTime.should.be.Number()
+    })
   })
 
   describe('# subaccounts', () => {
