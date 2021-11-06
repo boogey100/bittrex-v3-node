@@ -4,7 +4,7 @@
   "description": "Bittrex API client for Node.js",
   "author": "Andrew Barba <abarba.77@gmail.com>",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "engines": {
     "node": ">=8.10.0"
   },
