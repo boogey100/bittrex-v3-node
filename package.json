@@ -45,7 +45,10 @@
     "build": "tsc --build",
     "cover": "nyc npm run test",
     "cover:report": "nyc report --reporter=lcov --reporter=text",
+    "cover:publish": "codecov",
     "docs": "typedoc --out docs src",
-    "docs:publish": "gh-pages -d docs --repo git@github.com:JAlbertoGonzalez/bittrex-v3-node.git"
+    "docs:publish": "gh-pages -d docs --repo git@github.com:JAlbertoGonzalez/bittrex-v3-node.git",
+    "build:all": "npm run build && npm run docs && npm run cover && npm run cover:report",
+    "publish:all": "npm docs:publish && npm cover:publish"
   }
 }
