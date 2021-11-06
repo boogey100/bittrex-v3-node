@@ -328,3 +328,21 @@ export interface BulkCancelResult {
   statusCode: string
   result: Order
 }
+
+export interface NewWithdrawal {
+  currencySymbol: string
+  quantity: number
+  cryptoAddress?: string
+  cryptoAddressTag?: string
+  fundsTransferMethodId?: string
+  clientWithdrawalId: string
+}
+
+export interface AllowedAddress {
+  currencySymbol: string
+  createdAt: string
+  status: 'ACTIVE' | 'PENDING'
+  activeAt?: string
+  cryptoAddress: string
+  cryptoAddressTag?: string
+}

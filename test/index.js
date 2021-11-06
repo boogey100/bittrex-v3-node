@@ -161,21 +161,21 @@ describe('bittrex v3 api', () => {
 
   describe('# deposits', () => {
     it('should get open deposits', async () => {
-      let results = await client.depositsOpen();
+      let results = await client.depositsOpen()
       results.length.should.be.aboveOrEqual(0)
     })
 
     it('should head open deposits', async () => {
-      await client.headDepositsOpen();
+      await client.headDepositsOpen()
     })
 
     it('should get closed deposits', async () => {
-      let results = await client.depositsClosed();
+      let results = await client.depositsClosed()
       results.length.should.be.aboveOrEqual(0)
     })
 
     it('should get deposits by tx id', async () => {
-      let results = await client.depositsByTxId();
+      let results = await client.depositsByTxId()
       results.length.should.be.aboveOrEqual(0)
     })
 
@@ -286,7 +286,7 @@ describe('bittrex v3 api', () => {
       let results = await client.marketOrderBook('BTC-EUR', 2).catch(() => null)
       try {
         should(results).be.exactly(null)
-      } catch {
+      } catch (err) {
         throw Error('Invalid depth got valid response')
       }
     })
@@ -358,7 +358,26 @@ describe('bittrex v3 api', () => {
       results1.length.should.be.aboveOrEqual(0)
       results2.length.should.be.aboveOrEqual(0)
     })
+  })
 
+  describe('# orders', () => {
+
+  })
+
+  describe('# ping', () => {
+
+  })
+
+  describe('# subaccounts', () => {
+    
+  })
+
+  describe('# transfers', () => {
+    
+  })
+
+  describe('# withdraws', () => {
+    
   })
 
 })

@@ -845,6 +845,87 @@ class BittrexClient {
 
   //#region V3 Withdrawals ENDPOINTS (7 endpoints)
 
+  /**
+   * List open withdrawals. Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
+   * @param props 
+   * @returns 
+   */
+  async withdrawalsOpen(props?: {
+    status?: 'REQUESTED' | 'AUTHORIZED' | 'PENDING' | 'ERROR_INVALID_ADDRESS'
+    currencySymbol?: string
+  }): Promise<BTT.Withdrawal[]> {
+    return this.request('get', '/withdrawals/open', { params: props })
+  }
+
+  /**
+   * List closed withdrawals.
+   * 
+   * StartDate and EndDate filters apply to the CompletedAt field.
+   * 
+   * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+   * @param props 
+   * @returns 
+   */
+  async withdrawalsClosed(props?: {
+    status?: 'COMPLETED' | 'CANCELLED'
+    currencySymbol?: string
+    nextPageToken?: string
+    previousPageToken?: string
+    pageSize?: number
+    startDate?: string
+    endDate?: string
+  }): Promise<BTT.Withdrawal[]> {
+    return this.request('get', '/withdrawals/closed', { params: props })
+  }
+
+  /**
+   * Retrieves all withdrawals for this account with the given TxId
+   * @param txId the transaction id to lookup
+   * @returns 
+   */
+  async withdrawalByTxId(txId: string): Promise<BTT.Withdrawal> {
+    return this.request('get', '/withdrawals/ByTxId/' + txId)
+  }
+
+  /**
+   * Retrieve information on a specified withdrawal.
+   * @param withdrawalId (uuid-formatted string) - ID of withdrawal to retrieve
+   * @returns 
+   */
+  async withdrawal(withdrawalId: string): Promise<BTT.Withdrawal> {
+    return this.request('get', '/withdrawals/' + withdrawalId)
+  }
+
+  /**
+   * Cancel a withdrawal.
+   * 
+   * (Withdrawals can only be cancelled if status is REQUESTED, AUTHORIZED, or ERROR_INVALID_ADDRESS.)
+   * @param withdrawalId 
+   * @returns 
+   */
+  async withdrawalDelete(withdrawalId: string): Promise<BTT.Withdrawal> {
+    return this.request('delete', '/withdrawals/' + withdrawalId)
+  }
+
+  /**
+   * Create a new withdrawal.
+   * 
+   * To initiate a fiat withdrawal specify a funds transfer method id instead of a crypto address.
+   * @param newWithdrawal information specifying the withdrawal to create
+   * @returns 
+   */
+  async withdrawalCreate(newWithdrawal: BTT.NewWithdrawal): Promise<BTT.Withdrawal> {
+    return this.request('post', '/withdrawals', { body: newWithdrawal })
+  }
+
+  /**
+   * Returns a list of allowed addresses.
+   * @returns 
+   */
+  async withdrawalsAllowedAddresses(): Promise<BTT.AllowedAddress> {
+    return this.request('get', '/withdrawals/allowed-addresses')
+  }
+
   //#endregion
 
   //#region private methods
