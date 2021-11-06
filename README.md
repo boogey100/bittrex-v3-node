@@ -1,7 +1,7 @@
 # bittrex-v3-node
 
 [![wercker status](https://app.wercker.com/status/feb7e7d87d5a4a29ea9c04b4a1350a44/s/master "wercker status")](https://app.wercker.com/project/byKey/feb7e7d87d5a4a29ea9c04b4a1350a44)
-[![codecov](https://codecov.io/gh/JAlbertoGonzalez/bittrex-node/branch/master/graph/badge.svg?token=4OAXQYECUQ)](https://codecov.io/gh/JAlbertoGonzalez/bittrex-node)
+[![codecov](https://codecov.io/gh/JAlbertoGonzalez/bittrex-v3-node/branch/master/graph/badge.svg?token=4OAXQYECUQ)](https://codecov.io/gh/JAlbertoGonzalez/bittrex-v3-node)
 [![npm version](https://badge.fury.io/js/bittrex-v3-node.svg)](https://badge.fury.io/js/bittrex-v3-node)
 
 This project is based on [Andrew Barba](https://github.com/AndrewBarba) [bittrex-node](https://github.com/AndrewBarba/bittrex-node). It is mainly developed for personal use, but feel free to fork, notify issues or pull request contributions.
