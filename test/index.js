@@ -441,7 +441,44 @@ describe('bittrex v3 api', () => {
   })
 
   describe('# subaccounts', () => {
+    it('should get all subaccount', async () => {
+      try {
+        await client.subaccounts()
+      } catch (err) {
+        err.message.should.be.equals("INVALID_PERMISSION")
+      }
+    })
 
+    it('should get subaccount by id', async () => {
+      try {
+        await client.subaccounts('00000000-0000-4000-b000-000000000000')
+      } catch (err) {
+        err.message.should.be.equals("INVALID_PERMISSION")
+      }
+    })
+
+    it('should create new subaccount', async () => {
+      try {
+        await client.subaccountCreate({})
+      } catch (err) {
+        err.message.should.be.equals("INVALID_PERMISSION")
+      }
+    })
+
+    it('should get subaccount open withdrawals', async () => {
+      let results = await client.subaccountWithdrawalsOpen()
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get subaccount closed withdrawals', async () => {
+      let results = await client.subaccountWithdrawalsClosed()
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get subaccount closed deposits', async () => {
+      let results = await client.subaccountsDepositsClosed()
+      results.length.should.be.aboveOrEqual(0)
+    })
   })
 
   describe('# transfers', () => {

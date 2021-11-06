@@ -346,3 +346,6 @@ export interface AllowedAddress {
   cryptoAddress: string
   cryptoAddressTag?: string
 }
+
+export interface NewSubaccount {
+}

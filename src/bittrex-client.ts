@@ -698,8 +698,8 @@ class BittrexClient {
    * List subaccounts.
    * 
    * (NOTE: This API is limited to partners and not available for traders.)
-   * Pagination and the sort order of the results
-   * are in inverse order of the CreatedAt field.
+   * 
+   * Pagination and the sort order of the results are in inverse order of the CreatedAt field.
    * @returns 
    */
   async subaccounts(): Promise<BTT.Subaccount[]>;
@@ -716,8 +716,12 @@ class BittrexClient {
   }
 
   /**
-   * Create a new subaccount. (NOTE: This API is limited to partners and not available for traders.)
-   * @param payload information specifying the subaccount to create (WARNING: Official docs doesn't specify the structure of body payload)
+   * Create a new subaccount.
+   * 
+   * (NOTE: This API is limited to partners and not available for traders.)
+   * 
+   * (WARNING: Official API doesn't provide information about NewSubaccount body payload)
+   * @param payload information specifying the subaccount to create
    * @returns 
    */
   async subaccountCreate(newSubaccount: {}): Promise<BTT.Subaccount> {
@@ -725,7 +729,9 @@ class BittrexClient {
   }
 
   /**
-   * List open withdrawals for all subaccounts. Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
+   * List open withdrawals for all subaccounts.
+   * 
+   * Results are sorted in inverse order of the CreatedAt field, and are limited to the first 1000.
    * @param options 
    * @returns 
    */
@@ -742,7 +748,11 @@ class BittrexClient {
   }
 
   /**
-   * List closed withdrawals for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+   * List closed withdrawals for all subaccounts.
+   * 
+   * StartDate and EndDate filters apply to the CompletedAt field.
+   * 
+   * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
    * @param options 
    * @returns 
    */
@@ -759,7 +769,11 @@ class BittrexClient {
   }
 
   /**
-   * List closed deposits for all subaccounts. StartDate and EndDate filters apply to the CompletedAt field. Pagination and the sort order of the results are in inverse order of the CompletedAt field.
+   * List closed deposits for all subaccounts.
+   * 
+   * StartDate and EndDate filters apply to the CompletedAt field.
+   * 
+   * Pagination and the sort order of the results are in inverse order of the CompletedAt field.
    * @param options 
    * @returns 
    */
