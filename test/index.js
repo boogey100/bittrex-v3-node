@@ -240,11 +240,16 @@ describe('bittrex v3 api', () => {
       let results = await client.marketsSummaries()
       results.length.should.be.aboveOrEqual(0)
     })
+    it('should head market summaries', async () => {
+      await client.headMarketsSummaries()
+    })
     it('should get all markets tickers', async () => {
       let results = await client.marketsTickers()
       results.length.should.be.aboveOrEqual(0)
     })
-
+    it('should head market tickers', async () => {
+      await client.headMarketsTickers()
+    })
     it('should get market ticker by symbol', async () => {
       let results = await client.marketTicker('BTC-EUR')
       results.symbol.should.be.equals('BTC-EUR')
