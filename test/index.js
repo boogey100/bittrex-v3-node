@@ -188,6 +188,39 @@ describe('bittrex v3 api', () => {
     })
   })
 
+  describe('# executions', () => {
+    it('should get all execution', async () => {
+      let results = await client.executions()
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get filtered execution', async () => {
+      let results = await client.executions({
+        marketSymbol: 'BTC-EUR'
+      })
+      results.length.should.be.aboveOrEqual(0)
+    })
+
+    it('should get execution by id', async () => {
+      try {
+        const customExecutionId = '00000000-0000-4000-00000000'
+        let results = await client.executions(customExecutionId)
+        results.id.should.be.equals(customExecutionId)
+      } catch (err) {
+        err.message.should.be.equals("NOT_FOUND")
+      }
+    })
+
+    it('should get last execution', async () => {
+      let results = await client.executionLastId()
+      results.lastId.should.be.not.null()
+    })
+
+    it('should head last execution', async () => {
+      await client.headExecutionLastId()
+    })
+  })
+
   describe('# markets', () => {
     it('should get all markets', async () => {
       let results = await client.markets()

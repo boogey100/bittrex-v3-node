@@ -377,6 +377,9 @@ class BittrexClient {
    */
   async executions(props: BTT.ExecutionsRequestParams): Promise<BTT.Execution[]>;
   async executions(props: any) {
+    if (typeof props === 'string') {
+      return this.request('get', '/executions/' + props)
+    }
     return this.request('get', '/executions', { params: props });
   }
 
