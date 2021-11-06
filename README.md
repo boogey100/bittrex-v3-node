@@ -2,14 +2,9 @@
 
 [![wercker status](https://app.wercker.com/status/feb7e7d87d5a4a29ea9c04b4a1350a44/s/master "wercker status")](https://app.wercker.com/project/byKey/feb7e7d87d5a4a29ea9c04b4a1350a44)
 [![codecov](https://codecov.io/gh/JAlbertoGonzalez/bittrex-node/branch/master/graph/badge.svg?token=4OAXQYECUQ)](https://codecov.io/gh/JAlbertoGonzalez/bittrex-node)
+[![npm version](https://badge.fury.io/js/bittrex-v3-node.svg)](https://badge.fury.io/js/bittrex-v3-node)
 
 This project is based on [Andrew Barba](https://github.com/AndrewBarba) [bittrex-node](https://github.com/AndrewBarba/bittrex-node). It is mainly developed for personal use, but feel free to fork, notify issues or pull request contributions.
-
-## Development status
-
-> :warning: **This package is under development**: Use at your own risk.
-
-This warning will be removed when all base endpoints and tests are finished.
 
 ### Assumptions
 
@@ -56,15 +51,14 @@ A full-featured Bittrex API client for Node.js
 
 ## Documentation
 
-
 ## Get started
 
 If you're using the Bittrex REST API, I can assure you this is the only library worth using. Here's why:
 
 - It doesn't make you parse the Bittrex response and look for errors
-- It properly parses all timestamps to JavaScript Date objects
+- ~~It properly parses all timestamps to JavaScript Date objects~~ (work in progress)
 - It uses proper JavaScript and Node conventions
-- It throws proper errors when parameters are missing
+- ~~It throws proper errors when parameters are missing~~ (work in progress)
 - It uses a single https client with Keep-Alive enabled
 - It's faster than every other node Bittrex library
 
@@ -77,38 +71,4 @@ let client = new BittrexClient({
   apiKey: '12345',
   apiSecret: 'abcde'
 })
-```
-
-## Public Methods
-
-```javascript
-await client.markets()
-await client.currencies()
-await client.ticker('BTC-ETH')
-await client.marketSummaries()
-await client.marketSummary('BTC-ETH')
-await client.marketHistory('BTC-ETH')
-await client.orderBook('BTC-ETH', { type: 'both' })
-```
-
-## Market Methods
-
-```javascript
-await client.buyLimit('BTC-ETH', { quantity: 2.1, price: 0.1 })
-await client.sellLimit('BTC-ETH', { quantity: 2.1, price: 0.1 })
-await client.cancelOrder('1234-5678')
-await client.openOrders('BTC-ETH')
-```
-
-## Account Methods
-
-```javascript
-await client.balances()
-await client.balance('BTC')
-await client.depositAddress('BTC')
-await client.withdraw('BTC', { quantity: 1.2, address: 'abcde' })
-await client.order('30594e6e-ba54-4914-96f3-5b9d5de2468e')
-await client.orderHistory('BTC-ETH')
-await client.withdrawalHistory('BTC')
-await client.depositHistory('BTC')
 ```
