@@ -963,9 +963,9 @@ class BittrexClient {
     const { data } = await this._client.request({ method, url, headers, params, data: body }).catch(err => {
       if (err.isAxiosError) {
         return err.response
-      } else {
-        throw err
       }
+      /* istanbul ignore next */
+      throw err
     })
 
     if (data.code) {
