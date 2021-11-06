@@ -31,9 +31,7 @@ class BittrexClient {
    * REFERENCE: https://bittrex.github.io/api/v3
    */
 
-  /*-------------------------------------------------------------------------*
-   * V3 ACCOUNT ENDPOINTS (8 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#region V3 ACCOUNT ENDPOINTS (8 endpoints)
 
   /**
    * Retrieve information for the account associated with the request.
@@ -99,9 +97,9 @@ class BittrexClient {
     return this.request('get', '/account/permissions/currencies')
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 ADDRESSES ENDPOINTS (3 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
+
+  //#region V3 ADDRESSES ENDPOINTS (3 endpoints)
 
   /**
    * List deposit addresses that have been requested or provisioned.
@@ -148,9 +146,9 @@ class BittrexClient {
     })
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 BALANCES ENDPOINTS (3 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
+
+  //#region V3 BALANCES ENDPOINTS (3 endpoints)
 
   /**
    * List account balances across available currencies.
@@ -181,9 +179,9 @@ class BittrexClient {
     return this.request('head', '/balances')
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 BATCH ENDPOINTS (1 endpoint)
-   *-------------------------------------------------------------------------*/
+  //#endregion
+
+  //#region V3 BATCH ENDPOINTS (1 endpoint)
 
   /**
    * Create a new batch request.
@@ -204,10 +202,10 @@ class BittrexClient {
   }[]> {
     return this.request('post', '/batch', { body: payload })
   }
-  /*-------------------------------------------------------------------------*
-   * V3 ConditionalOrders ENDPOINTS (6 endpoints)
-   *-------------------------------------------------------------------------*/
 
+  //#endregion
+
+  //#region V3 ConditionalOrders ENDPOINTS (6 endpoints)
   /**
    * Retrieve information on a specific conditional order.
    * @param conditionalOrderId (uuid-formatted string) - ID of conditional order to retrieve
@@ -271,10 +269,9 @@ class BittrexClient {
     return this.request('post', '/conditional-orders', { body: newConditionalOrder })
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 CURRENCIES ENDPOINTS (2 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
 
+  //#region V3 CURRENCIES ENDPOINTS (2 endpoints)
   /**
    * List currencies.
    */
@@ -290,11 +287,9 @@ class BittrexClient {
     }
     return this.request('get', '/currencies');
   }
+  //#endregion
 
-  /*-------------------------------------------------------------------------*
-   * V3 DEPOSITS ENDPOINTS (5 endpoints)
-   *-------------------------------------------------------------------------*/
-
+  //#region V3 DEPOSITS ENDPOINTS (5 endpoints)
   /**
    * List open deposits.
    * Results are sorted in inverse order of UpdatedAt,
@@ -354,10 +349,9 @@ class BittrexClient {
     return this.request('get', '/deposits/' + depositId)
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 EXECUTIONS ENDPOINTS (4 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
 
+  //#region V3 EXECUTIONS ENDPOINTS (4 endpoints)
   /**
    * Retrieve information on a specific execution.
    * NOTE: Executions from before 5/27/2019 are not available.
@@ -399,10 +393,9 @@ class BittrexClient {
     return this.request('head', '/executions/last-id')
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 FundsTransferMethods ENDPOINTS (1 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
 
+  //#region V3 FundsTransferMethods ENDPOINTS (1 endpoints)
   /**
    * Get details about a linked bank account
    * @param fundsTransferMethodId (uuid-formatted string) - ID of funds transfer method to retrieve
@@ -412,9 +405,9 @@ class BittrexClient {
     return this.request('get', '/funds-transfer-methods/' + fundsTransferMethodId)
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 Markets ENDPOINTS (15 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
+
+  //#region V3 Markets ENDPOINTS (15 endpoints)
 
   /**
    * List markets.
@@ -588,9 +581,9 @@ class BittrexClient {
     return this.request('get', url)
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 Orders ENDPOINTS (8 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
+
+  //#region V3 Orders ENDPOINTS (8 endpoints)
 
   /**
    * List closed orders.
@@ -682,9 +675,9 @@ class BittrexClient {
     })
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 Ping ENDPOINTS (1 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
+
+  //#region V3 Ping ENDPOINTS (1 endpoints)
 
   /**
    * Pings the service
@@ -693,8 +686,12 @@ class BittrexClient {
   async ping(): Promise<BTT.ServicePing> {
     return this.request('get', '/ping');
   }
+
+  //#endregion
+  
+  //#region V3 Subaccounts ENDPOINTS (7 endpoints)
+
   /*-------------------------------------------------------------------------*
-   * V3 Subaccounts ENDPOINTS (7 endpoints)
    * WARNING: Subaccounts API are only for partners.
    * Regular traders cannot use it.
    *-------------------------------------------------------------------------*/
@@ -780,9 +777,9 @@ class BittrexClient {
     return this.request('get', '/subaccounts/deposits/closed', { params: options })
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 Transfers ENDPOINTS (4 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
+
+  //#region V3 Transfers ENDPOINTS (4 endpoints)
 
   /**
    * List sent transfers.
@@ -844,10 +841,13 @@ class BittrexClient {
     return this.request('post', '/transfers', { body: newTransfer })
   }
 
-  /*-------------------------------------------------------------------------*
-   * V3 Withdrawals ENDPOINTS (7 endpoints)
-   *-------------------------------------------------------------------------*/
+  //#endregion
 
+  //#region V3 Withdrawals ENDPOINTS (7 endpoints)
+
+  //#endregion
+
+  //#region private methods
   /**
    * Creates an axios request with signed headers
    * @param method request method (GET, POST, HEAD...)
@@ -929,6 +929,8 @@ class BittrexClient {
     }
     return results
   }
+
+  //#endregion
 }
 
 export default BittrexClient
