@@ -302,3 +302,29 @@ export interface NewTransfer {
   amount: number
   toMasterAccount?: boolean
 }
+
+export interface Order {
+  id: string
+  marketSymbol: string
+  direction: 'BUY' | 'SELL'
+  type: 'LIMIT' | 'MARKET' | 'CEILING_LIMIT' | 'CEILING_MARKET'
+  quantity?: number
+  limit?: number
+  ceiling?: number
+  timeInForce: 'GOOD_TIL_CANCELLED' | 'IMMEDIATE_OR_CANCEL' | 'FILL_OR_KILL' | 'POST_ONLY_GOOD_TIL_CANCELLED' | 'BUY_NOW' | 'INSTANT'
+  clientOrderId?: string
+  fillQuantity: number
+  commision: number
+  proceeds: number
+  status: 'OPEN' | 'CLOSED'
+  createdAt: string
+  updatedAt?: string
+  closedAt?: string
+  orderToCancel?: NewCancelConditionalOrder
+}
+
+export interface BulkCancelResult {
+  id: string
+  statusCode: string
+  result: Order
+}

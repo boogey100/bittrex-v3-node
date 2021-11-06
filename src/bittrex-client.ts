@@ -591,6 +591,97 @@ class BittrexClient {
   /*-------------------------------------------------------------------------*
    * V3 Orders ENDPOINTS (8 endpoints)
    *-------------------------------------------------------------------------*/
+
+  /**
+   * List closed orders.
+   * StartDate and EndDate filters apply to the ClosedAt field.
+   * Pagination and the sort order of the results are in inverse order of the ClosedAt field.
+   * @param props 
+   * @returns 
+   */
+  async ordersClosed(props?: {
+    marketSymbol?: string
+    nextPageToken?: string
+    previousPageToken?: string
+    pageSize?: number
+    startDate: string
+    endDate: string
+  }): Promise<BTT.Order[]> {
+    return this.request('get', '/orders/closed', {
+      params: props
+    })
+  }
+
+  /**
+   * List open orders.
+   * @param marketSymbol filter by market (optional)
+   * @returns 
+   */
+  async ordersOpen(marketSymbol: string): Promise<BTT.Order[]> {
+    return this.request('get', '/orders/open', { params: { marketSymbol } })
+  }
+
+  /**
+   * Bulk cancel all open orders (can be limited to a specified market)
+   * @param marketSymbol 
+   * @returns 
+   */
+  async ordersDelete(marketSymbol: string): Promise<BTT.BulkCancelResult[]> {
+    return this.request('delete', '/orders/open', { params: { marketSymbol } })
+  }
+
+  /**
+   * Get sequence of open orders snapshot.
+   * @returns 
+   */
+  async headOrdersOpen(): Promise<void> {
+    return this.request('head', '/orders/open')
+  }
+
+  /**
+   * Retrieve information on a specific order.
+   * @param orderId (uuid-formatted string) - ID of order to retrieve
+   * @returns 
+   */
+  async order(orderId: string): Promise<BTT.Order> {
+    return this.request('get', '/orders/' + orderId)
+  }
+
+  /**
+   * Cancel an order.
+   * @param orderId (uuid-formatted string) - ID of order to cancel
+   * @returns 
+   */
+  async orderDelete(orderId: string): Promise<BTT.Order> {
+    return this.request('delete', '/orders/' + orderId)
+  }
+
+  /**
+   * Retrieve executions for a specific order.
+   * 
+   * Results are sorted in inverse order of execution time, and are limited to the first 1000.
+   * 
+   * NOTE: Executions from before 5/27/2019 are not available.
+   * 
+   * Also, there may be a delay before an executed trade is visible in this endpoint.
+   * @param orderId 
+   * @returns 
+   */
+  async ordersExecutions(orderId: string): Promise<BTT.Execution[]> {
+    return this.request('get', '/orders/' + orderId + '/executions')
+  }
+
+  /**
+   * Create a new order.
+   * @param newOrder information specifying the order to create
+   * @returns 
+   */
+  async orderCreate(newOrder: BTT.NewOrder): Promise<BTT.Order> {
+    return this.request('post', '/orders', {
+      body: newOrder
+    })
+  }
+
   /*-------------------------------------------------------------------------*
    * V3 Ping ENDPOINTS (1 endpoints)
    *-------------------------------------------------------------------------*/
