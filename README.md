@@ -23,10 +23,11 @@ This warning will be removed when all base endpoints and tests are finished.
 
 - [x] V3 Authenticated requests
 - [ ] Rate Limits control
-- [ ] Pagination support
+- [x] Pagination support
 - [ ] Error codes
 - [ ] Parse number and Date response fields
 - [ ] Websockets support
+- [ ] Unit tests (safe to run with real API keys)
 
 ### API Endpoints
 
@@ -38,13 +39,13 @@ This warning will be removed when all base endpoints and tests are finished.
 - [x] Currencies
 - [x] Deposits
 - [x] Executions
-- [ ] FundsTransferMethods
+- [x] FundsTransferMethods
 - [x] Markets
-- [ ] Orders
+- [x] Orders
 - [x] Ping
 - [x] Subaccounts
 - [x] Transfers
-- [ ] Withdrawals
+- [x] Withdrawals
 
 A full-featured Bittrex API client for Node.js
 
