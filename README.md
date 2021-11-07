@@ -20,9 +20,9 @@ This project is based on [Andrew Barba](https://github.com/AndrewBarba) [bittrex
 - [ ] Rate Limits control
 - [x] Pagination support
 - [ ] Error codes
-- [ ] Parse number and Date response fields
+- [x] Parse Date fields
 - [ ] Websockets support
-- [ ] Unit tests (safe to run with real API keys)
+- [x] Unit tests (safe to run with real API keys)
 
 ### API Endpoints
 
@@ -54,9 +54,9 @@ A full-featured Bittrex API client for Node.js
 If you're using the Bittrex REST API, I can assure you this is the only library worth using. Here's why:
 
 - It doesn't make you parse the Bittrex response and look for errors
-- ~~It properly parses all timestamps to JavaScript Date objects~~ (:warning: work in progress)
+- It properly parses all timestamps to JavaScript Date objects
 - It uses proper JavaScript and Node conventions
-- ~~It throws proper errors when parameters are missing~~ (:warning: work in progress)
+- It throws proper errors when parameters are missing
 - It uses a single https client with Keep-Alive enabled
 - It's faster than every other node Bittrex library
 

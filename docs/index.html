@@ -26,9 +26,9 @@
 <li><input disabled="" type="checkbox"> Rate Limits control</li>
 <li><input checked="" disabled="" type="checkbox"> Pagination support</li>
 <li><input disabled="" type="checkbox"> Error codes</li>
-<li><input disabled="" type="checkbox"> Parse number and Date response fields</li>
+<li><input checked="" disabled="" type="checkbox"> Parse Date fields</li>
 <li><input disabled="" type="checkbox"> Websockets support</li>
-<li><input disabled="" type="checkbox"> Unit tests (safe to run with real API keys)</li>
+<li><input checked="" disabled="" type="checkbox"> Unit tests (safe to run with real API keys)</li>
 </ul>
 
 <a href="#api-endpoints" id="api-endpoints" style="color: inherit; text-decoration: none;">
@@ -65,9 +65,9 @@
 <p>If you&#39;re using the Bittrex REST API, I can assure you this is the only library worth using. Here&#39;s why:</p>
 <ul>
 <li>It doesn&#39;t make you parse the Bittrex response and look for errors</li>
-<li><del>It properly parses all timestamps to JavaScript Date objects</del> (:warning: work in progress)</li>
+<li>It properly parses all timestamps to JavaScript Date objects</li>
 <li>It uses proper JavaScript and Node conventions</li>
-<li><del>It throws proper errors when parameters are missing</del> (:warning: work in progress)</li>
+<li>It throws proper errors when parameters are missing</li>
 <li>It uses a single https client with Keep-Alive enabled</li>
 <li>It&#39;s faster than every other node Bittrex library</li>
 </ul>

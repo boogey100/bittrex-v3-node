@@ -68,7 +68,8 @@ class BittrexClient {
    * @returns {Promise}
    */
   async accountVolume(): Promise<BTT.AccountVolume> {
-    return this.request('get', '/account/volume')
+    const result = await this.request('get', '/account/volume')
+    return this.parseDates(result, ['updated'])
   }
 
   /**
@@ -168,7 +169,8 @@ class BittrexClient {
    * @returns {Promise}
    */
   async balance(marketSymbol: string): Promise<BTT.Balance> {
-    return this.request('get', '/balances/' + marketSymbol);
+    const results = await this.request('get', '/balances/' + marketSymbol);
+    return this.parseDates(results, ['updatedAt'])
   }
 
   /**
@@ -212,7 +214,8 @@ class BittrexClient {
    * @returns 
    */
   async conditionalOrders(conditionalOrderId: string): Promise<BTT.ConditionalOrder> {
-    return this.request('get', '/conditional-orders/' + conditionalOrderId)
+    const results = await this.request('get', '/conditional-orders/' + conditionalOrderId)
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   /**
@@ -221,7 +224,8 @@ class BittrexClient {
    * @returns 
    */
   async conditionalOrderDelete(conditionalOrderId: string): Promise<BTT.ConditionalOrder> {
-    return this.request('delete', '/conditional-orders/' + conditionalOrderId)
+    const results = await this.request('delete', '/conditional-orders/' + conditionalOrderId)
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   /**
@@ -240,7 +244,8 @@ class BittrexClient {
     startDate: string
     endDate: string
   }): Promise<BTT.ConditionalOrder[]> {
-    return this.request('get', '/conditional-orders/closed', { params: props })
+    const results = await this.request('get', '/conditional-orders/closed', { params: props })
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   /**
@@ -249,7 +254,8 @@ class BittrexClient {
    * @returns 
    */
   async conditionalOrdersOpen(marketSymbol?: string): Promise<BTT.ConditionalOrder[]> {
-    return this.request('get', '/conditional-orders/open', { params: { marketSymbol } })
+    const results = await this.request('get', '/conditional-orders/open', { params: { marketSymbol } })
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   /**
@@ -266,7 +272,8 @@ class BittrexClient {
    * @returns 
    */
   async conditionalOrdersCreate(newConditionalOrder: BTT.NewConditionalOrder): Promise<BTT.ConditionalOrder> {
-    return this.request('post', '/conditional-orders', { body: newConditionalOrder })
+    const results = await this.request('post', '/conditional-orders', { body: newConditionalOrder })
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   //#endregion
@@ -301,7 +308,8 @@ class BittrexClient {
     status: string
     currencySymbol: string
   }): Promise<BTT.Deposit[]> {
-    return this.request('get', '/deposits/open', { params: props })
+    const results = await this.request('get', '/deposits/open', { params: props })
+    return this.parseDates(results, ['updatedAt', 'completedAt'])
   }
 
   /**
@@ -328,7 +336,8 @@ class BittrexClient {
     startSate?: string
     endDate?: string
   }): Promise<BTT.Deposit[]> {
-    return this.request('get', '/deposits/closed', { params: props })
+    const results = await this.request('get', '/deposits/closed', { params: props })
+    return this.parseDates(results, ['updatedAt', 'completedAt'])
   }
 
   /**
@@ -337,7 +346,8 @@ class BittrexClient {
    * @returns 
    */
   async depositsByTxId(txId: string): Promise<BTT.Deposit[]> {
-    return this.request('get', '/deposits/ByTxId/' + txId)
+    const results = await this.request('get', '/deposits/ByTxId/' + txId)
+    return this.parseDates(results, ['updatedAt', 'completedAt'])
   }
 
   /**
@@ -371,10 +381,13 @@ class BittrexClient {
    */
   async executions(props: BTT.ExecutionsRequestParams): Promise<BTT.Execution[]>;
   async executions(props: any) {
+    let results
     if (typeof props === 'string') {
-      return this.request('get', '/executions/' + props)
+      results = await this.request('get', '/executions/' + props)
+    } else {
+      results = await this.request('get', '/executions', { params: props });
     }
-    return this.request('get', '/executions', { params: props });
+    return this.parseDates(results, ['executedAt'])
   }
 
   /**
@@ -466,7 +479,8 @@ class BittrexClient {
    * @returns 
    */
   async market(marketSymbol: string): Promise<BTT.Market> {
-    return this.request('get', '/markets/' + marketSymbol)
+    const results = await this.request('get', '/markets/' + marketSymbol)
+    return this.parseDates(results, ['createdAt'])
   }
 
   /**
@@ -475,7 +489,8 @@ class BittrexClient {
    * @returns 
    */
   async marketSummary(marketSymbol: string): Promise<BTT.MarketSummary> {
-    return this.request('get', '/markets/' + marketSymbol + '/summary')
+    const results = await this.request('get', '/markets/' + marketSymbol + '/summary')
+    return this.parseDates(results, ['updatedAt'])
   }
 
   /**
@@ -507,7 +522,8 @@ class BittrexClient {
    * @returns 
    */
   async marketTrades(marketSymbol: string): Promise<BTT.Trade[]> {
-    return this.request('get', '/markets/' + marketSymbol + '/trades')
+    const results = await this.request('get', '/markets/' + marketSymbol + '/trades')
+    return this.parseDates(results, ['executedAt'])
   }
 
   /**
@@ -532,7 +548,8 @@ class BittrexClient {
    * @returns 
    */
   async marketCandles(marketSymbol: string, candleInterval: 'MINUTE_1' | 'MINUTE_5' | 'HOUR_1' | 'DAY_1', candleType?: 'TRADE' | 'MIDPOINT'): Promise<BTT.Candle[]> {
-    return this.request('get', '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/recent')
+    const results = await this.request('get', '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/recent')
+    return this.parseDates(results, ['startsAt'])
   }
 
   /**
@@ -578,7 +595,8 @@ class BittrexClient {
     if (year && month && !day && candleInterval !== 'HOUR_1') throw Error('Year+month can only be HOUR_1 interval')
     if (day && (candleInterval !== 'MINUTE_1' && candleInterval !== 'MINUTE_5')) throw Error('Year+month+day and only be MINUTE_5 or MINUTE_1 interval')
     const url = '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/historical/' + year + (!!month ? '/' + month : '') + (!!day ? '/' + day : '')
-    return this.request('get', url)
+    const results = await this.request('get', url)
+    return this.parseDates(results, ['startsAt'])
   }
 
   //#endregion
@@ -600,9 +618,8 @@ class BittrexClient {
     startDate: string
     endDate: string
   }): Promise<BTT.Order[]> {
-    return this.request('get', '/orders/closed', {
-      params: props
-    })
+    const results = await this.request('get', '/orders/closed', { params: props })
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   /**
@@ -611,7 +628,8 @@ class BittrexClient {
    * @returns 
    */
   async ordersOpen(marketSymbol: string): Promise<BTT.Order[]> {
-    return this.request('get', '/orders/open', { params: { marketSymbol } })
+    const results = await this.request('get', '/orders/open', { params: { marketSymbol } })
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   /**
@@ -637,7 +655,8 @@ class BittrexClient {
    * @returns 
    */
   async order(orderId: string): Promise<BTT.Order> {
-    return this.request('get', '/orders/' + orderId)
+    const results = await this.request('get', '/orders/' + orderId)
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   /**
@@ -646,7 +665,8 @@ class BittrexClient {
    * @returns 
    */
   async orderDelete(orderId: string): Promise<BTT.Order> {
-    return this.request('delete', '/orders/' + orderId)
+    const results = await this.request('delete', '/orders/' + orderId)
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   /**
@@ -661,7 +681,8 @@ class BittrexClient {
    * @returns 
    */
   async ordersExecutions(orderId: string): Promise<BTT.Execution[]> {
-    return this.request('get', '/orders/' + orderId + '/executions')
+    const results = await this.request('get', '/orders/' + orderId + '/executions')
+    return this.parseDates(results, ['executedAt'])
   }
 
   /**
@@ -670,7 +691,8 @@ class BittrexClient {
    * @returns 
    */
   async orderCreate(newOrder: BTT.NewOrder): Promise<BTT.Order> {
-    return this.request('post', '/orders', { body: newOrder })
+    const results = await this.request('post', '/orders', { body: newOrder })
+    return this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])
   }
 
   //#endregion
@@ -712,7 +734,8 @@ class BittrexClient {
     if (subaccountId) {
       return this.request('get', '/subaccounts/' + subaccountId)
     }
-    return this.request('get', '/subaccounts')
+    const results = await this.request('get', '/subaccounts')
+    return this.parseDates(results, ['createdAt'])
   }
 
   /**
@@ -725,7 +748,8 @@ class BittrexClient {
    * @returns 
    */
   async subaccountCreate(newSubaccount: {}): Promise<BTT.Subaccount> {
-    return this.request('post', '/subaccounts', { body: newSubaccount })
+    const results = await this.request('post', '/subaccounts', { body: newSubaccount })
+    return this.parseDates(results, ['createdAt'])
   }
 
   /**
@@ -744,7 +768,8 @@ class BittrexClient {
     startDate?: string
     endDate?: string
   }): Promise<BTT.Withdrawal> {
-    return this.request('get', '/subaccounts/withdrawals/open', { params: options })
+    const results = await this.request('get', '/subaccounts/withdrawals/open', { params: options })
+    return this.parseDates(results, ['createdAt', 'executedAt'])
   }
 
   /**
@@ -765,7 +790,8 @@ class BittrexClient {
     startDate?: string
     endDate?: string
   }): Promise<BTT.Withdrawal> {
-    return this.request('get', '/subaccounts/withdrawals/closed', { params: options })
+    const results = await this.request('get', '/subaccounts/withdrawals/closed', { params: options })
+    return this.parseDates(results, ['createdAt', 'executedAt'])
   }
 
   /**
@@ -785,8 +811,9 @@ class BittrexClient {
     pageSize?: number
     startDate?: string
     endDate?: string
-  }) {
-    return this.request('get', '/subaccounts/deposits/closed', { params: options })
+  }): Promise<BTT.Deposit[]> {
+    const results = await this.request('get', '/subaccounts/deposits/closed', { params: options })
+    return this.parseDates(results, ['updatedAt', 'completedAt'])
   }
 
   //#endregion
@@ -810,7 +837,8 @@ class BittrexClient {
     startDate?: string
     endDate?: string
   }): Promise<BTT.SentTransferInfo[]> {
-    return this.request('get', '/transfers/sent', { params: options })
+    const results = await this.request('get', '/transfers/sent', { params: options })
+    return this.parseDates(results, ['executedAt'])
   }
 
   /**
@@ -830,7 +858,8 @@ class BittrexClient {
     startDate?: string
     endDate?: string
   }): Promise<BTT.ReceivedTransferInfo[]> {
-    return this.request('get', '/transfers/received', { params: options })
+    const results = await this.request('get', '/transfers/received', { params: options })
+    return this.parseDates(results, ['executedAt'])
   }
 
   /**
@@ -840,7 +869,8 @@ class BittrexClient {
    * @returns 
    */
   async transfer(transferId: string): Promise<BTT.ReceivedTransferInfo> {
-    return this.request('get', '/transfers/' + transferId)
+    const results = await this.request('get', '/transfers/' + transferId)
+    return this.parseDates(results, ['executedAt'])
   }
 
   /**
@@ -866,7 +896,8 @@ class BittrexClient {
     status?: 'REQUESTED' | 'AUTHORIZED' | 'PENDING' | 'ERROR_INVALID_ADDRESS'
     currencySymbol?: string
   }): Promise<BTT.Withdrawal[]> {
-    return this.request('get', '/withdrawals/open', { params: props })
+    const results = await this.request('get', '/withdrawals/open', { params: props })
+    return this.parseDates(results, ['createdAt', 'executedAt'])
   }
 
   /**
@@ -887,7 +918,8 @@ class BittrexClient {
     startDate?: string
     endDate?: string
   }): Promise<BTT.Withdrawal[]> {
-    return this.request('get', '/withdrawals/closed', { params: props })
+    const results = await this.request('get', '/withdrawals/closed', { params: props })
+    return this.parseDates(results, ['createdAt', 'executedAt'])
   }
 
   /**
@@ -896,7 +928,8 @@ class BittrexClient {
    * @returns 
    */
   async withdrawalByTxId(txId: string): Promise<BTT.Withdrawal[]> {
-    return this.request('get', '/withdrawals/ByTxId/' + txId)
+    const results = await this.request('get', '/withdrawals/ByTxId/' + txId)
+    return this.parseDates(results, ['createdAt', 'executedAt'])
   }
 
   /**
@@ -905,7 +938,8 @@ class BittrexClient {
    * @returns 
    */
   async withdrawal(withdrawalId: string): Promise<BTT.Withdrawal> {
-    return this.request('get', '/withdrawals/' + withdrawalId)
+    const results = await this.request('get', '/withdrawals/' + withdrawalId)
+    return this.parseDates(results, ['createdAt', 'executedAt'])
   }
 
   /**
@@ -927,7 +961,8 @@ class BittrexClient {
    * @returns 
    */
   async withdrawalCreate(newWithdrawal: BTT.NewWithdrawal): Promise<BTT.Withdrawal> {
-    return this.request('post', '/withdrawals', { body: newWithdrawal })
+    const results = await this.request('post', '/withdrawals', { body: newWithdrawal })
+    return this.parseDates(results, ['createdAt', 'executedAt'])
   }
 
   /**
@@ -935,7 +970,8 @@ class BittrexClient {
    * @returns 
    */
   async withdrawalsAllowedAddresses(): Promise<BTT.AllowedAddress> {
-    return this.request('get', '/withdrawals/allowed-addresses')
+    const results = await this.request('get', '/withdrawals/allowed-addresses')
+    return this.parseDates(results, ['createdAt', 'activeAt'])
   }
 
   //#endregion

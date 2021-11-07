@@ -41,7 +41,7 @@ export interface Account {
 }
 
 export interface AccountVolume {
-  updated: string
+  updated: Date
   volume30days: number
 }
 
@@ -83,7 +83,7 @@ export interface Balance {
   currencySymbol: string,
   total: string
   available: string
-  updatedAt: string
+  updatedAt: Date
 }
 
 export interface Currency {
@@ -112,7 +112,7 @@ export interface Market {
   minTradeSize: number
   precision: number
   status: 'online' | 'offline'
-  createdAt: string
+  createdAt: Date
   notice: string
   prohibitedIn: string[]
   associatedTermsOfService: string[]
@@ -126,7 +126,7 @@ export interface MarketSummary {
   volume: number
   quoteVolume: number
   percentChange: number
-  updatedAt: string
+  updatedAt: Date
 }
 
 export interface Ticker {
@@ -148,14 +148,14 @@ export interface OrderBook {
 
 export interface Trade {
   id: string
-  executedAt: string
+  executedAt: Date
   quantity: number
   rate: number
   takerSide: 'buy' | 'sell'
 }
 
 export interface Candle {
-  startsAt: string
+  startsAt: Date
   open: number
   high: number
   low: number
@@ -166,12 +166,12 @@ export interface Candle {
 
 export interface Subaccount {
   id: string
-  createdAt: string
+  createdAt: Date
 }
 export interface Execution {
   id: string
   marketSymbol: string
-  executedAt: string
+  executedAt: Date
   quantity: number
   rate: number
   orderId: string
@@ -201,8 +201,8 @@ export interface Deposit {
   cryptoAddressTag: string
   txId: string
   confirmations: number
-  updatedAt: string
-  completedAt: string
+  updatedAt: Date
+  completedAt: Date
   status: 'pending' | 'completed' | 'orphaned' | 'invalidated'
   source: 'blockchain' | 'wire_transfer' | 'credit_card' | 'ach' | 'airdrop'
   accountId: string
@@ -232,9 +232,9 @@ export interface ConditionalOrder {
   clientConditionalOrderId: string
   status: 'open' | 'completed' | 'cancelled' | 'failed'
   orderCreationErrorCode: string
-  createdAt: string
-  updatedAt: string
-  closedAt: string
+  createdAt: Date
+  updatedAt: Date
+  closedAt: Date
 }
 
 export interface NewConditionalOrder {
@@ -267,8 +267,8 @@ export interface Withdrawal {
   txCost?: number
   txId?: string
   status: 'requested' | 'authorized' | 'pending' | 'completed' | 'error_invalid_address' | 'cancelled' | 'new'
-  createdAt: string
-  completedAt?: string
+  createdAt: Date
+  completedAt?: Date
   clientWithdrawalId: string
   target?: 'blockchain' | 'wire_transfer' | 'credit_card' | 'ach'
   accountId?: string
@@ -282,7 +282,7 @@ export interface SentTransferInfo {
   requestId?: string
   currencySymbol: string
   amount: number
-  executedAt: string
+  executedAt: Date
 }
 
 export interface ReceivedTransferInfo {
@@ -292,7 +292,7 @@ export interface ReceivedTransferInfo {
   requestId?: string
   currencySymbol: string
   amount: number
-  executedAt: string
+  executedAt: Date
 }
 
 export interface NewTransfer {
@@ -317,9 +317,9 @@ export interface Order {
   commision: number
   proceeds: number
   status: 'OPEN' | 'CLOSED'
-  createdAt: string
-  updatedAt?: string
-  closedAt?: string
+  createdAt: Date
+  updatedAt?: Date
+  closedAt?: Date
   orderToCancel?: NewCancelConditionalOrder
 }
 
@@ -340,9 +340,9 @@ export interface NewWithdrawal {
 
 export interface AllowedAddress {
   currencySymbol: string
-  createdAt: string
+  createdAt: Date
   status: 'ACTIVE' | 'PENDING'
-  activeAt?: string
+  activeAt?: Date
   cryptoAddress: string
   cryptoAddressTag?: string
 }

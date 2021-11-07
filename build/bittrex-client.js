@@ -88,8 +88,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.accountVolume = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/account/volume')];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/account/volume')];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, this.parseDates(result, ['updated'])];
+                }
             });
         });
     };
@@ -189,8 +195,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.balance = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/balances/' + marketSymbol)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/balances/' + marketSymbol)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['updatedAt'])];
+                }
             });
         });
     };
@@ -236,8 +248,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.conditionalOrders = function (conditionalOrderId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/conditional-orders/' + conditionalOrderId)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/conditional-orders/' + conditionalOrderId)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -248,8 +266,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.conditionalOrderDelete = function (conditionalOrderId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('delete', '/conditional-orders/' + conditionalOrderId)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('delete', '/conditional-orders/' + conditionalOrderId)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -263,8 +287,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.conditionalOrdersClosed = function (props) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/conditional-orders/closed', { params: props })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/conditional-orders/closed', { params: props })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -275,8 +305,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.conditionalOrdersOpen = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/conditional-orders/open', { params: { marketSymbol: marketSymbol } })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/conditional-orders/open', { params: { marketSymbol: marketSymbol } })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -298,8 +334,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.conditionalOrdersCreate = function (newConditionalOrder) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('post', '/conditional-orders', { body: newConditionalOrder })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('post', '/conditional-orders', { body: newConditionalOrder })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -324,8 +366,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.depositsOpen = function (props) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/deposits/open', { params: props })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/deposits/open', { params: props })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['updatedAt', 'completedAt'])];
+                }
             });
         });
     };
@@ -349,8 +397,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.depositsClosed = function (props) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/deposits/closed', { params: props })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/deposits/closed', { params: props })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['updatedAt', 'completedAt'])];
+                }
             });
         });
     };
@@ -361,8 +415,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.depositsByTxId = function (txId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/deposits/ByTxId/' + txId)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/deposits/ByTxId/' + txId)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['updatedAt', 'completedAt'])];
+                }
             });
         });
     };
@@ -380,11 +440,21 @@ var BittrexClient = /** @class */ (function () {
     };
     BittrexClient.prototype.executions = function (props) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                if (typeof props === 'string') {
-                    return [2 /*return*/, this.request('get', '/executions/' + props)];
+                switch (_a.label) {
+                    case 0:
+                        if (!(typeof props === 'string')) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.request('get', '/executions/' + props)];
+                    case 1:
+                        results = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, this.request('get', '/executions', { params: props })];
+                    case 3:
+                        results = _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, this.parseDates(results, ['executedAt'])];
                 }
-                return [2 /*return*/, this.request('get', '/executions', { params: props })];
             });
         });
     };
@@ -512,8 +582,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.market = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/markets/' + marketSymbol)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt'])];
+                }
             });
         });
     };
@@ -524,8 +600,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.marketSummary = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/summary')];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/markets/' + marketSymbol + '/summary')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['updatedAt'])];
+                }
             });
         });
     };
@@ -565,8 +647,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.marketTrades = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/trades')];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/markets/' + marketSymbol + '/trades')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['executedAt'])];
+                }
             });
         });
     };
@@ -596,8 +684,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.marketCandles = function (marketSymbol, candleInterval, candleType) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/recent')];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/recent')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['startsAt'])];
+                }
             });
         });
     };
@@ -643,18 +737,24 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.marketCandlesDate = function (marketSymbol, candleInterval, year, candleType, month, day) {
         return __awaiter(this, void 0, void 0, function () {
-            var url;
+            var url, results;
             return __generator(this, function (_a) {
-                if (!year)
-                    throw Error('Invalid year');
-                if (!month && candleInterval !== 'DAY_1')
-                    throw Error('Years can only be DAY_1 interval');
-                if (year && month && !day && candleInterval !== 'HOUR_1')
-                    throw Error('Year+month can only be HOUR_1 interval');
-                if (day && (candleInterval !== 'MINUTE_1' && candleInterval !== 'MINUTE_5'))
-                    throw Error('Year+month+day and only be MINUTE_5 or MINUTE_1 interval');
-                url = '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/historical/' + year + (!!month ? '/' + month : '') + (!!day ? '/' + day : '');
-                return [2 /*return*/, this.request('get', url)];
+                switch (_a.label) {
+                    case 0:
+                        if (!year)
+                            throw Error('Invalid year');
+                        if (!month && candleInterval !== 'DAY_1')
+                            throw Error('Years can only be DAY_1 interval');
+                        if (year && month && !day && candleInterval !== 'HOUR_1')
+                            throw Error('Year+month can only be HOUR_1 interval');
+                        if (day && (candleInterval !== 'MINUTE_1' && candleInterval !== 'MINUTE_5'))
+                            throw Error('Year+month+day and only be MINUTE_5 or MINUTE_1 interval');
+                        url = '/markets/' + marketSymbol + '/candles/' + (!!candleType ? candleType + '/' : '') + candleInterval + '/historical/' + year + (!!month ? '/' + month : '') + (!!day ? '/' + day : '');
+                        return [4 /*yield*/, this.request('get', url)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['startsAt'])];
+                }
             });
         });
     };
@@ -669,10 +769,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.ordersClosed = function (props) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/orders/closed', {
-                        params: props
-                    })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/orders/closed', { params: props })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -683,8 +787,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.ordersOpen = function (marketSymbol) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/orders/open', { params: { marketSymbol: marketSymbol } })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/orders/open', { params: { marketSymbol: marketSymbol } })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -718,8 +828,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.order = function (orderId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/orders/' + orderId)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/orders/' + orderId)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -730,8 +846,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.orderDelete = function (orderId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('delete', '/orders/' + orderId)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('delete', '/orders/' + orderId)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -748,8 +870,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.ordersExecutions = function (orderId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/orders/' + orderId + '/executions')];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/orders/' + orderId + '/executions')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['executedAt'])];
+                }
             });
         });
     };
@@ -760,8 +888,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.orderCreate = function (newOrder) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('post', '/orders', { body: newOrder })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('post', '/orders', { body: newOrder })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'updatedAt', 'closedAt'])];
+                }
             });
         });
     };
@@ -780,11 +914,18 @@ var BittrexClient = /** @class */ (function () {
     };
     BittrexClient.prototype.subaccounts = function (subaccountId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                if (subaccountId) {
-                    return [2 /*return*/, this.request('get', '/subaccounts/' + subaccountId)];
+                switch (_a.label) {
+                    case 0:
+                        if (subaccountId) {
+                            return [2 /*return*/, this.request('get', '/subaccounts/' + subaccountId)];
+                        }
+                        return [4 /*yield*/, this.request('get', '/subaccounts')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt'])];
                 }
-                return [2 /*return*/, this.request('get', '/subaccounts')];
             });
         });
     };
@@ -799,8 +940,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.subaccountCreate = function (newSubaccount) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('post', '/subaccounts', { body: newSubaccount })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('post', '/subaccounts', { body: newSubaccount })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt'])];
+                }
             });
         });
     };
@@ -813,8 +960,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.subaccountWithdrawalsOpen = function (options) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/subaccounts/withdrawals/open', { params: options })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/subaccounts/withdrawals/open', { params: options })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'executedAt'])];
+                }
             });
         });
     };
@@ -829,8 +982,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.subaccountWithdrawalsClosed = function (options) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/subaccounts/withdrawals/closed', { params: options })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/subaccounts/withdrawals/closed', { params: options })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'executedAt'])];
+                }
             });
         });
     };
@@ -845,8 +1004,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.subaccountsDepositsClosed = function (options) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/subaccounts/deposits/closed', { params: options })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/subaccounts/deposits/closed', { params: options })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['updatedAt', 'completedAt'])];
+                }
             });
         });
     };
@@ -861,8 +1026,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.transfersSent = function (options) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/transfers/sent', { params: options })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/transfers/sent', { params: options })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['executedAt'])];
+                }
             });
         });
     };
@@ -875,8 +1046,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.transfersReceived = function (options) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/transfers/received', { params: options })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/transfers/received', { params: options })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['executedAt'])];
+                }
             });
         });
     };
@@ -888,8 +1065,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.transfer = function (transferId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/transfers/' + transferId)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/transfers/' + transferId)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['executedAt'])];
+                }
             });
         });
     };
@@ -915,8 +1098,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.withdrawalsOpen = function (props) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/withdrawals/open', { params: props })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/withdrawals/open', { params: props })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'executedAt'])];
+                }
             });
         });
     };
@@ -931,8 +1120,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.withdrawalsClosed = function (props) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/withdrawals/closed', { params: props })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/withdrawals/closed', { params: props })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'executedAt'])];
+                }
             });
         });
     };
@@ -943,8 +1138,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.withdrawalByTxId = function (txId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/withdrawals/ByTxId/' + txId)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/withdrawals/ByTxId/' + txId)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'executedAt'])];
+                }
             });
         });
     };
@@ -955,8 +1156,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.withdrawal = function (withdrawalId) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/withdrawals/' + withdrawalId)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/withdrawals/' + withdrawalId)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'executedAt'])];
+                }
             });
         });
     };
@@ -983,8 +1190,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.withdrawalCreate = function (newWithdrawal) {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('post', '/withdrawals', { body: newWithdrawal })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('post', '/withdrawals', { body: newWithdrawal })];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'executedAt'])];
+                }
             });
         });
     };
@@ -994,8 +1207,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.withdrawalsAllowedAddresses = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/withdrawals/allowed-addresses')];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/withdrawals/allowed-addresses')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['createdAt', 'activeAt'])];
+                }
             });
         });
     };

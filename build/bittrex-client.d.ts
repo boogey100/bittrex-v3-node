@@ -510,7 +510,7 @@ declare class BittrexClient {
         pageSize?: number;
         startDate?: string;
         endDate?: string;
-    }): Promise<unknown>;
+    }): Promise<BTT.Deposit[]>;
     /**
      * List sent transfers.
      * (NOTE: This API is limited to partners and not available for traders.)
