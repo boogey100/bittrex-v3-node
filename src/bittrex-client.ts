@@ -158,7 +158,8 @@ class BittrexClient {
    * @returns {Promise}
    */
   async balances(): Promise<BTT.Balance[]> {
-    return this.request('get', '/balances');
+    const results = await this.request('get', '/balances');
+    return this.parseDates(results, ['updatedAt'])
   }
 
   /**
@@ -1050,10 +1051,18 @@ class BittrexClient {
    * @returns 
    */
   private parseDates(results: any, keys: string[]) {
+    // results is array
     for (const result of results) {
       for (const key of keys) {
-        if (!result[key]) continue
-        result[key] = new Date(`${result[key]}`)
+        if (result[key]) {
+          result[key] = new Date(`${result[key]}`)
+        }
+      }
+    }
+    // results is object
+    for (const key of keys) {
+      if (results[key]) {
+        results[key] = new Date(`${results[key]}`)
       }
     }
     return results

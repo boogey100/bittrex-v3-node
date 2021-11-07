@@ -181,8 +181,14 @@ var BittrexClient = /** @class */ (function () {
      */
     BittrexClient.prototype.balances = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('get', '/balances')];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request('get', '/balances')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, this.parseDates(results, ['updatedAt'])];
+                }
             });
         });
     };
@@ -1300,13 +1306,21 @@ var BittrexClient = /** @class */ (function () {
      * @returns
      */
     BittrexClient.prototype.parseDates = function (results, keys) {
+        // results is array
         for (var _i = 0, results_1 = results; _i < results_1.length; _i++) {
             var result = results_1[_i];
             for (var _a = 0, keys_1 = keys; _a < keys_1.length; _a++) {
                 var key = keys_1[_a];
-                if (!result[key])
-                    continue;
-                result[key] = new Date("" + result[key]);
+                if (result[key]) {
+                    result[key] = new Date("" + result[key]);
+                }
+            }
+        }
+        // results is object
+        for (var _b = 0, keys_2 = keys; _b < keys_2.length; _b++) {
+            var key = keys_2[_b];
+            if (results[key]) {
+                results[key] = new Date("" + results[key]);
             }
         }
         return results;
