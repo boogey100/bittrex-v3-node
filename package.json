@@ -18,7 +18,7 @@
     "https"
   ],
   "repository": {
-    "url": "https://github.com/JAlbertoGonzalez/bittrex-node"
+    "url": "https://github.com/JAlbertoGonzalez/bittrex-v3-node"
   },
   "dependencies": {
     "axios": "0.24.0"
