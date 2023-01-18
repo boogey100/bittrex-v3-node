@@ -1236,7 +1236,7 @@ var BittrexClient = /** @class */ (function () {
     BittrexClient.prototype.request = function (method, url, _a) {
         var _b = _a === void 0 ? {} : _a, _c = _b.headers, headers = _c === void 0 ? {} : _c, _d = _b.params, params = _d === void 0 ? {} : _d, _e = _b.body, body = _e === void 0 ? '' : _e;
         return __awaiter(this, void 0, void 0, function () {
-            var nonce, contentHash, data;
+            var nonce, contentHash, data, headers;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
@@ -1260,6 +1260,10 @@ var BittrexClient = /** @class */ (function () {
                         data = (_f.sent()).data;
                         if (data.code) {
                             throw new Error(data.code);
+                        }
+                        headers = (_f.sent()).headers;
+                        if(headers.hasOwnProperty('sequence')) {
+                            data.sequence=headers.sequence;
                         }
                         return [2 /*return*/, data];
                 }
