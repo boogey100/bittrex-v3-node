@@ -1012,7 +1012,7 @@ class BittrexClient {
     if (response.headers.hasOwnProperty('sequence')) {
       response.data.sequence = response.headers.sequence;
     }
-    return data
+    return response.data
   }
 
   /**
