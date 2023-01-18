@@ -997,7 +997,7 @@ class BittrexClient {
       headers['Api-Signature'] = this.requestSignature(nonce, url, method, contentHash, params)
     }
 
-    const { data } = await this._client.request({ method, url, headers, params, data: body }).catch(err => {
+    const response = await this._client.request({ method, url, headers, params, data: body }).catch(err => {
       if (err.isAxiosError) {
         return err.response
       }
@@ -1005,10 +1005,13 @@ class BittrexClient {
       throw err
     })
 
-    if (data.code) {
-      throw new Error(data.code)
+    if (response.data.code) {
+      throw new Error(response.data.code)
     }
 
+    if (response.headers.hasOwnProperty('sequence')) {
+      response.data.sequence = response.headers.sequence;
+    }
     return data
   }
 
